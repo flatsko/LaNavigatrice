@@ -1,0 +1,8 @@
+@import "./globals.css";
+@import "./header.css";
+@import "./welcome.css";
+@import "./worldmap.css";
+@import "./victory.css";
+@import "./failure.css";
+@import "./qrscanner.css";
+@import "tailwindcss";

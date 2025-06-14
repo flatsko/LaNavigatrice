@@ -1,0 +1,219 @@
+/* ========== STYLES GÉNÉRAUX ========== */
+.qr-generator {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  padding: 2rem;
+}
+
+.qr-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  background: white;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.qr-header h1 {
+  color: #1e3a5f;
+  font-family: "Pirata One", serif;
+  margin-bottom: 1rem;
+}
+
+.instruction {
+  color: #666;
+  font-style: italic;
+  max-width: 600px;
+  margin: 1rem auto;
+}
+
+/* ========== GRILLE DES CARTES ========== */
+.qr-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ========== CARTE QR ========== */
+.qr-card {
+  background: white;
+  border: 3px solid #1e3a5f;
+  border-radius: 15px;
+  padding: 1.5rem;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.qr-card:nth-child(even) {
+  background: linear-gradient(45deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+/* ========== EN-TÊTE DE CARTE ========== */
+.qr-card-header {
+  border-bottom: 2px dashed #ffd700;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.card-number {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  background: #ffd700;
+  color: #1e3a5f;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.card-title {
+  color: #1e3a5f;
+  margin: 0.5rem 0;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.card-flag {
+  font-size: 2rem;
+  margin: 0.5rem 0;
+}
+
+/* ========== QR CODE ========== */
+.qr-code-container {
+  background: white;
+  border: 2px solid #1e3a5f;
+  border-radius: 10px;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+/* ========== CONTENU DE LA CARTE ========== */
+.qr-card-content {
+  text-align: left;
+  margin: 1.5rem 0;
+}
+
+.qr-card-content h4 {
+  color: #1e3a5f;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.qr-card-content ol {
+  color: #333;
+  padding-left: 1.5rem;
+}
+
+.qr-card-content li {
+  margin-bottom: 0.5rem;
+}
+
+.card-hint {
+  background: linear-gradient(45deg, #fff3cd, #ffeaa7);
+  border: 1px solid #ffd700;
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* ========== PIED DE CARTE ========== */
+.qr-card-footer {
+  border-top: 2px dashed #ffd700;
+  padding-top: 1rem;
+  margin-top: 1.5rem;
+}
+
+.enigma-code {
+  font-family: "Courier New", monospace;
+  background: #f8f9fa;
+  padding: 0.5rem;
+  border-radius: 5px;
+  color: #1e3a5f;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.captain-signature {
+  color: #1e3a5f;
+  font-style: italic;
+  font-weight: bold;
+}
+
+/* ========== LIGNE DE DÉCOUPAGE ========== */
+.cut-line {
+  position: absolute;
+  bottom: -15px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: #ccc;
+  font-size: 1.2rem;
+  background: white;
+  padding: 0 1rem;
+}
+
+/* ========== STYLES D'IMPRESSION ========== */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .qr-generator {
+    background: none !important;
+    padding: 0 !important;
+  }
+
+  .qr-cards-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem !important;
+  }
+
+  .qr-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 1rem;
+    border: 2px solid #000 !important;
+    box-shadow: none !important;
+  }
+
+  .card-number {
+    color: #000 !important;
+    background: #ffd700 !important;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .qr-generator {
+    padding: 1rem;
+  }
+
+  .qr-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .qr-card {
+    padding: 1rem;
+  }
+}

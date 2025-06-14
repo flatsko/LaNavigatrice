@@ -1,0 +1,334 @@
+.tips-trigger-btn {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--gradient-sunset);
+  color: white;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-medium);
+  z-index: 999;
+  transition: var(--transition-bounce);
+  animation: tipsPulse 3s ease-in-out infinite;
+}
+
+.tips-trigger-btn:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-strong), var(--shadow-glow);
+}
+
+@keyframes tipsPulse {
+  0%,
+  100% {
+    box-shadow: 0 4px 20px rgba(255, 107, 107, 0.3);
+  }
+  50% {
+    box-shadow: 0 8px 30px rgba(255, 107, 107, 0.6);
+  }
+}
+
+.tips-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.tips-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.tips-modal {
+  background: var(--gradient-pearl);
+  border-radius: var(--border-radius-xl);
+  width: 100%;
+  max-width: 500px;
+  overflow: hidden;
+  box-shadow: var(--shadow-strong);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transform: translateY(50px) scale(0.9);
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  position: relative;
+}
+
+.tips-overlay.visible .tips-modal {
+  transform: translateY(0) scale(1);
+}
+
+.tips-header {
+  background: var(--gradient-ocean);
+  color: white;
+  padding: 1.5rem;
+  text-align: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.tips-icon {
+  font-size: 2.5rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  animation: iconFloat 2s ease-in-out infinite;
+}
+
+@keyframes iconFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.tips-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  flex: 1;
+}
+
+.tips-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-smooth);
+  backdrop-filter: blur(10px);
+}
+
+.tips-close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg) scale(1.1);
+}
+
+.tips-content {
+  padding: 2rem;
+  text-align: center;
+}
+
+.tips-content p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--ocean-deep);
+  margin: 0 0 2rem 0;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 1.5rem;
+  border-radius: var(--border-radius-md);
+  border-left: 4px solid var(--ocean-medium);
+}
+
+.tips-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.tips-btn {
+  background: var(--gradient-sunset);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: var(--border-radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-bounce);
+  position: relative;
+  overflow: hidden;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.tips-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: var(--transition-smooth);
+}
+
+.tips-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: var(--shadow-medium);
+}
+
+.tips-btn:hover::before {
+  left: 100%;
+}
+
+.tips-footer {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tips-signature {
+  font-style: italic;
+  color: var(--ocean-medium);
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Decorative elements */
+.tips-modal::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-wave);
+  z-index: 1;
+}
+
+.tips-modal::after {
+  content: "⚓";
+  position: absolute;
+  top: -10px;
+  right: 20px;
+  font-size: 1.5rem;
+  color: var(--gold-accent);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  animation: anchorSway 3s ease-in-out infinite;
+}
+
+@keyframes anchorSway {
+  0%,
+  100% {
+    transform: rotate(-5deg);
+  }
+  50% {
+    transform: rotate(5deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tips-trigger-btn {
+    bottom: 70px;
+    right: 15px;
+    width: 50px;
+    height: 50px;
+    font-size: 1.3rem;
+  }
+
+  .tips-modal {
+    margin: 1rem;
+    max-width: calc(100vw - 2rem);
+  }
+
+  .tips-header {
+    padding: 1rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .tips-icon {
+    font-size: 2rem;
+  }
+
+  .tips-header h3 {
+    font-size: 1.3rem;
+  }
+
+  .tips-content {
+    padding: 1.5rem;
+  }
+
+  .tips-content p {
+    font-size: 1rem;
+    padding: 1rem;
+  }
+
+  .tips-btn {
+    padding: 0.875rem 1.5rem;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tips-trigger-btn {
+    bottom: 60px;
+    right: 10px;
+    width: 45px;
+    height: 45px;
+    font-size: 1.2rem;
+  }
+
+  .tips-header {
+    padding: 1rem 0.5rem;
+  }
+
+  .tips-content {
+    padding: 1rem;
+  }
+
+  .tips-content p {
+    font-size: 0.95rem;
+    padding: 0.875rem;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .tips-trigger-btn,
+  .tips-icon,
+  .tips-modal::after {
+    animation: none !important;
+  }
+
+  .tips-overlay,
+  .tips-modal {
+    transition-duration: 0.1s !important;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .tips-content p {
+    background: rgba(42, 42, 42, 0.9);
+    color: white;
+  }
+
+  .tips-signature {
+    color: var(--ocean-light);
+  }
+}

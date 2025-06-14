@@ -1,0 +1,361 @@
+.camera-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* AJOUT: Forcer la position sur mobile */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+body.camera-open {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+.camera-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  /* MODIFICATION: Réduire la hauteur du header */
+  min-height: 50px;
+  flex-shrink: 0;
+}
+
+.camera-header h3 {
+  margin: 0;
+  font-size: 1rem; /* MODIFICATION: Réduire la taille */
+}
+
+.camera-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  /* MODIFICATION: Réduire la taille */
+  min-width: 40px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.camera-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.camera-viewport {
+  /* MODIFICATION: Prendre tout l'espace disponible */
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  min-height: 0;
+  /* AJOUT: S'assurer que le viewport prend bien toute la hauteur */
+  height: calc(100vh - 120px); /* 100vh - (header + controls) */
+}
+
+.camera-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* AJOUT: Empêcher la sélection */
+  user-select: none;
+  -webkit-user-select: none;
+  /* AJOUT: S'assurer que la vidéo remplit bien l'espace */
+  min-height: 100%;
+}
+
+.camera-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.camera-controls {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.8);
+  gap: 1rem;
+  min-height: 70px;
+  flex-shrink: 0;
+  /* AJOUT: S'assurer que les contrôles sont interactifs */
+  pointer-events: all;
+  z-index: 10000;
+}
+
+.camera-btn {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.85rem;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* AJOUT: S'assurer que les boutons sont cliquables */
+  pointer-events: all;
+  position: relative;
+  z-index: 10001;
+}
+.camera-btn.primary {
+  background: #2196f3;
+  color: white;
+  flex: 1;
+  max-width: 120px; /* MODIFICATION: Réduire la largeur max */
+}
+
+.camera-btn.primary:hover:not(:disabled) {
+  background: #1976d2;
+  transform: translateY(-2px);
+}
+
+.camera-btn.primary:disabled {
+  background: #666;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.camera-btn.secondary {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.camera-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.camera-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: white;
+  text-align: center;
+  padding: 2rem;
+}
+
+.camera-error p {
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+.camera-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.camera-indicator {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.2rem 0.6rem; /* MODIFICATION: Réduire le padding */
+  border-radius: 12px;
+  font-size: 0.75rem; /* MODIFICATION: Réduire la taille */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.camera-video.user {
+  /* Styles spécifiques pour caméra frontale si nécessaire */
+}
+
+.camera-video.environment {
+  /* Styles spécifiques pour caméra arrière si nécessaire */
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.force-start-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+.force-start-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.error-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.error-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+/* MODIFICATION: Styles spécifiques mobile pour maximiser l'espace vidéo */
+@media (max-width: 768px) {
+  .camera-container {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important; /* Dynamic viewport height pour mobile */
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .camera-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    min-height: 50px;
+    flex-shrink: 0;
+    /* AJOUT: S'assurer que le header est interactif */
+    pointer-events: all;
+    z-index: 10000;
+  }
+
+  .camera-header h3 {
+    font-size: 0.9rem;
+  }
+
+  .camera-viewport {
+    /* MODIFICATION: Maximiser l'espace vidéo sur mobile */
+    height: calc(100vh - 100px); /* header (45px) + controls (55px) */
+    height: calc(100dvh - 100px);
+  }
+
+  .camera-controls {
+    padding: 0.5rem; /* MODIFICATION: Réduire le padding */
+    gap: 0.5rem;
+    min-height: 55px; /* MODIFICATION: Réduire la hauteur */
+  }
+
+  .camera-btn {
+    padding: 0.5rem 0.8rem; /* MODIFICATION: Réduire encore plus */
+    font-size: 0.8rem;
+    min-height: 36px;
+  }
+  .camera-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    min-width: 40px;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+    /* AJOUT: S'assurer que le bouton fermer est cliquable */
+    pointer-events: all;
+    position: relative;
+    z-index: 10001;
+  }
+
+  .camera-indicator {
+    padding: 0.15rem 0.5rem;
+    font-size: 0.7rem;
+  }
+}
+
+/* MODIFICATION: Styles pour très petits écrans - maximiser encore plus */
+@media (max-height: 600px) {
+  .camera-header {
+    padding: 0.25rem 0.5rem;
+    min-height: 40px;
+  }
+
+  .camera-controls {
+    padding: 0.25rem;
+    min-height: 50px;
+  }
+
+  .camera-viewport {
+    height: calc(100vh - 90px); /* header (40px) + controls (50px) */
+  }
+
+  .camera-btn {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.75rem;
+    min-height: 32px;
+  }
+}
+
+/* AJOUT: Animation d'ouverture */
+.camera-container {
+  animation: cameraSlideIn 0.3s ease-out;
+}
+
+@keyframes cameraSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* AJOUT: Styles pour écrans très larges (desktop) */
+@media (min-width: 1024px) {
+  .camera-viewport {
+    height: calc(
+      100vh - 140px
+    ); /* Plus d'espace pour les contrôles sur desktop */
+  }
+}

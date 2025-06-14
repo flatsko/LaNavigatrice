@@ -1,0 +1,536 @@
+/* ========== STYLES GÉNÉRAUX ========== */
+.qr-variations {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 50%, #3182ce 100%);
+  padding: 2rem;
+}
+
+.format-selector {
+  background: white;
+  border-radius: 15px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.format-selector h1 {
+  color: #1e3a5f;
+  font-family: "Pirata One", serif;
+  margin-bottom: 1.5rem;
+}
+
+.format-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.format-btn {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #1e3a5f;
+  background: white;
+  color: #1e3a5f;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: bold;
+}
+
+.format-btn:hover {
+  background: #1e3a5f;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.format-btn.active {
+  background: #ffd700;
+  border-color: #ffd700;
+  color: #1e3a5f;
+  transform: scale(1.05);
+}
+
+.print-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.print-btn:hover {
+  background: #218838;
+  transform: translateY(-2px);
+}
+
+/* ========== CONTENEURS DE CARTES ========== */
+.cards-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Standard: 2 par page */
+.format-standard {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+/* Mini: 4 par page */
+.format-mini {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+/* Photo: 1 par page */
+.format-photo {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+/* Treasure: 1 par page */
+.format-treasure {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+/* Compact: 6 par page */
+.format-compact {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+/* Bookmark: 3 par page */
+.format-bookmark {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+/* ========== CARTE STANDARD ========== */
+.qr-card.standard {
+  background: white;
+  border: 3px solid #1e3a5f;
+  border-radius: 15px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.qr-card.standard .card-header h3 {
+  color: #1e3a5f;
+  margin: 0.5rem 0;
+}
+
+.qr-card.standard .flag {
+  font-size: 2rem;
+}
+
+.qr-card.standard .card-number {
+  background: #ffd700;
+  color: #1e3a5f;
+  padding: 0.5rem;
+  border-radius: 50%;
+  font-weight: bold;
+  position: absolute;
+  top: -10px;
+  left: -10px;
+}
+
+/* ========== MINI CARTES ========== */
+.qr-card.mini {
+  background: white;
+  border: 2px solid #1e3a5f;
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.mini-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.mini-number {
+  background: #ffd700;
+  color: #1e3a5f;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.mini-title {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #1e3a5f;
+  margin: 0.5rem 0;
+}
+
+.mini-code {
+  font-size: 0.7rem;
+  color: #666;
+  font-family: monospace;
+}
+
+/* ========== CARTES AVEC PHOTOS ========== */
+.qr-card.photo {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  margin-bottom: 2rem;
+}
+
+.photo-bg {
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.photo-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    rgba(30, 58, 95, 0.8),
+    rgba(255, 215, 0, 0.3)
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+}
+
+.photo-overlay h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.photo-number {
+  background: #ffd700;
+  color: #1e3a5f;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: bold;
+}
+
+.photo-content {
+  display: flex;
+  padding: 1.5rem;
+  gap: 1rem;
+}
+
+.photo-instructions h4 {
+  color: #1e3a5f;
+  margin-bottom: 0.5rem;
+}
+
+.hint {
+  font-style: italic;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+/* ========== CARTE AU TRÉSOR ========== */
+.qr-card.treasure {
+  background: linear-gradient(45deg, #f4f1e8, #f9f6f0);
+  border: none;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.treasure-border {
+  border: 4px solid #8b4513;
+  border-radius: 15px;
+  padding: 2rem;
+  position: relative;
+  background: radial-gradient(
+      circle at 20% 80%,
+      rgba(139, 69, 19, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(255, 215, 0, 0.1) 0%,
+      transparent 50%
+    ),
+    linear-gradient(45deg, #f4f1e8, #f9f6f0);
+}
+
+.treasure-header {
+  text-align: center;
+  border-bottom: 2px dashed #8b4513;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.compass-rose {
+  font-size: 2rem;
+  color: #8b4513;
+}
+
+.treasure-title {
+  color: #8b4513;
+  font-family: "Pirata One", serif;
+  margin: 0.5rem 0;
+}
+
+.treasure-map {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.qr-label {
+  font-size: 0.9rem;
+  color: #8b4513;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.treasure-coordinates {
+  font-family: "Courier New", monospace;
+  color: #8b4513;
+  background: rgba(139, 69, 19, 0.1);
+  padding: 0.5rem;
+  border-radius: 5px;
+  margin: 0.5rem 0;
+}
+
+.paper-corners .corner {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: #8b4513;
+}
+
+.corner.top-left {
+  top: -5px;
+  left: -5px;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+.corner.top-right {
+  top: -5px;
+  right: -5px;
+  clip-path: polygon(100% 0, 100% 100%, 0 0);
+}
+.corner.bottom-left {
+  bottom: -5px;
+  left: -5px;
+  clip-path: polygon(0 0, 100% 100%, 0 100%);
+}
+.corner.bottom-right {
+  bottom: -5px;
+  right: -5px;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+/* ========== FORMAT COMPACT ========== */
+.qr-card.compact {
+  background: white;
+  border: 1px solid #1e3a5f;
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.compact-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.compact-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.compact-number {
+  background: #ffd700;
+  color: #1e3a5f;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.compact-title {
+  font-weight: bold;
+  color: #1e3a5f;
+  font-size: 0.9rem;
+}
+
+.compact-code {
+  font-size: 0.7rem;
+  color: #666;
+  font-family: monospace;
+  text-align: center;
+}
+
+/* ========== MARQUE-PAGES ========== */
+.qr-card.bookmark {
+  background: linear-gradient(180deg, white, #f8f9fa);
+  border: 2px solid #1e3a5f;
+  border-radius: 15px 15px 0 0;
+  padding: 1rem;
+  height: 400px;
+  width: 120px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.bookmark-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+}
+
+.bookmark-header h4 {
+  color: #1e3a5f;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.bookmark-flag {
+  font-size: 1.5rem;
+}
+
+.bookmark-mission {
+  font-weight: bold;
+  color: #1e3a5f;
+  margin: 0.5rem 0;
+  font-size: 0.8rem;
+}
+
+.bookmark-code {
+  font-size: 0.7rem;
+  color: #666;
+  font-family: monospace;
+}
+
+.bookmark-decoration {
+  color: #1e3a5f;
+  margin: 0.5rem 0;
+}
+
+.bookmark-captain {
+  font-style: italic;
+  color: #1e3a5f;
+  font-size: 0.7rem;
+  transform: rotate(-90deg);
+  position: absolute;
+  bottom: 50px;
+  right: -45px;
+  width: 100px;
+}
+
+.bookmark-hole {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 15px;
+  height: 15px;
+  border: 2px solid #1e3a5f;
+  border-radius: 50%;
+  background: white;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ========== STYLES D'IMPRESSION ========== */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  .qr-variations {
+    background: none !important;
+    padding: 0.5rem !important;
+  }
+  .cards-container {
+    margin: 0 !important;
+  }
+  .qr-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Ajustements spécifiques par format */
+  .format-mini {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+  .format-compact {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .format-bookmark {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+  .format-standard {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .format-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  .format-mini {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .format-compact {
+    grid-template-columns: 1fr !important;
+  }
+  .format-bookmark {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .treasure-map {
+    grid-template-columns: 1fr !important;
+    text-align: center;
+  }
+}

@@ -1,0 +1,346 @@
+.mini-game-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  backdrop-filter: blur(10px);
+}
+
+.mini-game-modal {
+  background: var(--gradient-pearl);
+  border-radius: var(--border-radius-xl);
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: var(--shadow-strong);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+.mini-game-header {
+  background: var(--gradient-ocean);
+  color: white;
+  padding: 1.5rem;
+  text-align: center;
+  position: relative;
+}
+
+.mini-game-header h3 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.mini-game-content {
+  padding: 2rem;
+  max-height: calc(90vh - 120px);
+  overflow-y: auto;
+}
+
+/* Compass Game Styles */
+.compass-game .game-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: var(--border-radius-md);
+}
+
+.target-info h4 {
+  margin: 0 0 0.5rem 0;
+  color: var(--ocean-deep);
+  font-size: 1.1rem;
+}
+
+.target-direction {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: var(--ocean-medium);
+  background: rgba(87, 108, 188, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius-sm);
+}
+
+.game-stats {
+  text-align: right;
+}
+
+.time-left,
+.current-score {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0.25rem 0;
+}
+
+.time-left {
+  color: var(--coral-accent);
+}
+
+.current-score {
+  color: var(--gold-accent);
+}
+
+.compass-container {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.compass-face {
+  position: relative;
+  width: 250px;
+  height: 250px;
+  border: 4px solid var(--ocean-medium);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(165, 215, 232, 0.3) 100%
+  );
+  box-shadow: var(--shadow-medium);
+}
+
+.compass-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+}
+
+.compass-mark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 20px;
+  background: var(--ocean-deep);
+  transform-origin: center bottom;
+}
+
+.compass-mark span {
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: bold;
+  color: var(--ocean-deep);
+  font-size: 0.9rem;
+}
+
+.compass-needle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 80px;
+  transform-origin: center bottom;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+.target-needle {
+  background: var(--coral-accent);
+  box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+  z-index: 1;
+}
+
+.player-needle {
+  background: var(--ocean-medium);
+  box-shadow: 0 0 10px rgba(87, 108, 188, 0.5);
+  z-index: 2;
+  width: 6px;
+}
+
+.compass-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  background: var(--gold-accent);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+}
+
+.compass-controls {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 1.5rem;
+  border-radius: var(--border-radius-md);
+  margin-top: 2rem;
+}
+
+.direction-slider {
+  margin-bottom: 1rem;
+}
+
+.compass-slider {
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--ocean-light);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.compass-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--ocean-medium);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.compass-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--ocean-medium);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--ocean-medium);
+}
+
+.current-direction {
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--ocean-deep);
+}
+
+.success-message {
+  text-align: center;
+  padding: 2rem;
+  background: rgba(76, 175, 80, 0.1);
+  border-radius: var(--border-radius-md);
+  border: 2px solid var(--sea-foam);
+  margin-top: 2rem;
+  animation: successPulse 2s ease-in-out infinite;
+}
+
+.success-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: bounce 1s ease-in-out infinite;
+}
+
+.success-message h4 {
+  color: var(--sea-foam);
+  margin: 1rem 0;
+  font-size: 1.5rem;
+}
+
+.success-message p {
+  color: var(--ocean-deep);
+  margin: 0.5rem 0;
+}
+
+.final-score {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: var(--gold-accent);
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 215, 0, 0.2);
+  border-radius: var(--border-radius-sm);
+  display: inline-block;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .compass-face {
+    width: 200px;
+    height: 200px;
+  }
+
+  .compass-needle {
+    height: 60px;
+  }
+
+  .game-info {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .game-stats {
+    text-align: center;
+  }
+
+  .mini-game-content {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .compass-face {
+    width: 180px;
+    height: 180px;
+  }
+
+  .compass-needle {
+    height: 50px;
+  }
+
+  .target-direction {
+    font-size: 1.1rem;
+  }
+
+  .success-icon {
+    font-size: 3rem;
+  }
+}
+
+/* Animations */
+@keyframes successPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(76, 175, 80, 0.6);
+    transform: scale(1.02);
+  }
+}
+
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
