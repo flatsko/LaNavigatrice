@@ -40,7 +40,7 @@ const Header = ({
       );
     } else {
       return (
-        <div key={i} className="fragment pending" title="À découvrir">
+        <div key={i} className="fragment missing" title="À découvrir">
           ○
         </div>
       );
@@ -48,54 +48,46 @@ const Header = ({
   });
 
   return (
-    <header className="header">
-      <div className="header-container">
+    <header className="game-header">
+      <div className="header-content">
         {/* Section principale */}
-        <div className="header-main">
-          <div className="player-section">
-            <div className="player-avatar">🧭</div>
-            <div className="player-info">
-              <h1 className="player-name">{player.name}</h1>
-              <div className="player-stats">
-                <span className="stat completed">{completed} ✓</span>
-                <span className="stat failed">{failed} ✗</span>
-                <span className="stat pending">{totalEnigmas - totalProcessed} ○</span>
-                <span className="stat success-rate">{successRate}% 🎯</span>
-              </div>
+        <div className="player-info">
+          <div className="compass-decoration">🧭</div>
+          <div className="player-details">
+            <h1 className="player-name">{player.name}</h1>
+            <div className="player-stats">
+              <span className="stat completed">{completed} ✓</span>
+              <span className="stat failed">{failed} ✗</span>
+              <span className="stat pending">
+                {totalEnigmas - totalProcessed} ○
+              </span>
+              <span className="stat success-rate">{successRate}% 🎯</span>
             </div>
-          </div>
-
-          <div className="header-actions">
-            <button className="btn btn-primary" onClick={onScanQR}>
-              <span className="btn-icon">📱</span>
-              <span className="btn-text">Scanner</span>
-            </button>
-            <button className="btn btn-secondary" onClick={onShowAchievements}>
-              <span className="btn-icon">🏆</span>
-              <span className="btn-text">Exploits</span>
-            </button>
-            <button className="btn btn-secondary" onClick={onShowSharedGallery}>
-              <span className="btn-icon">📸</span>
-              <span className="btn-text">Galerie</span>
-            </button>
           </div>
         </div>
 
+        <div className="header-actions">
+          <button className="scan-btn" onClick={onScanQR}>
+            📱 Scanner
+          </button>
+          <button className="achievements-btn" onClick={onShowAchievements}>
+            🏆 Exploits
+          </button>
+        </div>
+
         {/* Barre de progression */}
-        <div className="progress-section">
-          <div className="progress-info">
-            <span className="progress-label">Progression</span>
+        <div className="progress-bar">
+          <div className="progress-label">
+            Progression
             <span className="progress-percentage">{progressPercentage}%</span>
           </div>
-          <div className="progress-bar">
-            <div 
-              className="progress-fill" 
+          <div className="progress-track">
+            <div
+              className="progress-fill"
               style={{ width: `${progressPercentage}%` }}
             />
           </div>
-          <div className="fragments-container">
-            {fragments}
-          </div>
+          <div className="fragments">{fragments}</div>
         </div>
       </div>
     </header>

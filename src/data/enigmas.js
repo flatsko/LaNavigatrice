@@ -19,6 +19,47 @@ export const ENIGMAS = [
       "Prenez une photo avec une pose élégante près du lac, comme si vous admiriez la Tour Eiffel au loin !",
   },
   {
+    id: "perou",
+    title: "Pérou 🇵🇪",
+    flag: "🇵🇪",
+    qrCode: "ENIGMA_PEROU",
+    coordinates: MAP_POSITIONS.perou,
+    image: "/images/perou.JPEG",
+    successImage: "/images/perou.JPEG",
+    question:
+      "Perchée dans les nuages andins, cette citadelle inca où le Capitaine a gravi les terrasses sacrées culmine à quelle altitude ?",
+    answers: ["2 430 mètres", "3 200 mètres", "1 980 mètres", "2 850 mètres"],
+    correctAnswer: "2 430 mètres",
+    funFact:
+      "Le chemin des incas mènent au Machu Pichu, 3 jours de marche, mais ce n'est pas digne d'un capitaine, le train était plus adapté ! ",
+    hasPhoto: true,
+    photoPrompt:
+      "Le célèbre Chemin de l'Inca demande 3 jours de trek épique... mais notre Capitaine a préféré l'élégance du train panoramique ! Après tout, pourquoi marcher quand on peut voguer sur les rails avec style ? 🚂⚓",
+  },
+  {
+    id: "argentine",
+    title: "Argentine 🇦🇷",
+    flag: "🇦🇷",
+    qrCode: "ENIGMA_ARGENTINE",
+    coordinates: MAP_POSITIONS.argentine,
+    image: "/images/argentine.JPEG",
+    successImage: "/images/argentine.JPEG",
+    question:
+      "À El Calafate, le Capitaine a contemplé ce mur de glace de 60 mètres de haut qui gronde et craque jour et nuit. Ce glacier de Patagonie porte le nom d'un explorateur argentin...",
+    answers: [
+      "Almirante Brown",
+      "San Martín",
+      "Perito Moreno",
+      "López Castelo",
+    ],
+    correctAnswer: "Perito Moreno",
+    funFact:
+      "Le glacier Perito Moreno est l'un des rares glaciers au monde qui continue de croître ! Elle a eu la chance d'avoir un morceau qui s'est décorchée et est tombée devant elle.",
+    hasPhoto: true,
+    photoPrompt:
+      "Prenez une photo de groupe avec les bras écartés comme si vous accueilliez la chute d'un iceberg, face au paysage !",
+  },
+  {
     id: "fidji",
     title: "Fidji 🇫🇯",
     flag: "🇫🇯",
@@ -26,18 +67,32 @@ export const ENIGMAS = [
     coordinates: MAP_POSITIONS.fidji,
     image: "/images/fidji.JPEG",
     successImage: "/images/fidji.JPEG",
-    question: "Que représente cette photo pour le capitaine?",
-    answers: [
-      "Une rencontre avec un guide local",
-      "Son premier voyage en solo",
-      "Le jour où nous nous sommes mis ensemble",
-      "Son retour après un long voyage",
-    ],
-    correctAnswer: "Le jour où nous nous sommes mis ensemble",
-    funFact: "Ce cliché immortalise le début de notre grande aventure à deux !",
+    question: "Comment s'apelle l'épice que vous avez sous le nez",
+    answers: ["Taro", "Kava", "Yaqona", "Bilo"],
+    correctAnswer: "Kava",
+    funFact:
+      "Cette poudre de racine est utilisée pour faire une boisson relaxante, Alison en a horreur",
     hasPhoto: true,
     photoPrompt:
-      "Prenez une photo romantique en duo au bord du lac, main dans la main, pour célébrer l'amour !",
+      "Prenez une photo de l'un de vous en train de boire un bol de Kava",
+  },
+  {
+    id: "vanuatu",
+    title: "Vanuatu 🇻🇺",
+    flag: "🇻🇺",
+    qrCode: "ENIGMA_VANUATU",
+    coordinates: MAP_POSITIONS.vanuatu,
+    image: "/images/vanuatu.JPEG",
+    successImage: "/images/vanuatu.JPEG",
+    question:
+      "Dans cet archipel volcanique du Pacifique Sud où le Capitaine a exploré les récifs coralliens, quelle langue créole est parlée aux côtés du français et de l'anglais ?",
+    answers: ["Bislama", "Tok Pisin", "Pijin", "Beach-la-Mar"],
+    correctAnswer: "Bislama",
+    funFact:
+      "Piège ! Tok Pisin est parlé en Papouasie-Nouvelle-Guinée, Pijin aux Îles Salomon, et Beach-la-Mar était l'ancien nom du Bislama ! Cette langue créole signifie littéralement 'langue du marché' et permet aux 100+ tribus de communiquer !",
+    hasPhoto: true,
+    photoPrompt:
+      "Prenez une photo en imitant un plongeur qui remonte à la surface, bras tendus vers le haut !",
   },
   {
     id: "tahiti",
@@ -48,19 +103,14 @@ export const ENIGMAS = [
     image: "/images/tahiti.JPEG",
     successImage: "/images/tahiti.JPEG",
     question:
-      "Comment s'appellent les deux nouveaux amis que le capitaine a découvert à Tahiti?",
-    answers: [
-      "Raie et manta",
-      "Greg et Marina",
-      "Kashia et Claude",
-      "Kevin et Adeline",
-    ],
-    correctAnswer: "Greg et Marina",
-    funFact:
-      "Un moment magique de notre que notre captaine a partagé avec ces Raies Manta",
+      "Deux invités ce présents ce soir on été recontrés sur l'arichpel des Tuamotu, mais sur quelle île précisement ?",
+    answers: ["Bora Bora", "Tikehau", "Rurutu", "Raiatea"],
+    correctAnswer: "Tikehau",
+
+    funFact: "De cette liste une seule île fait parti des Tuamotu : Tikehau ",
     hasPhoto: true,
     photoPrompt:
-      "Prenez une photo en imitant la nage avec les raies manta - allongez-vous et 'nagez' gracieusement près de l'eau !",
+      "Prenez une photo de l'équipe en imitant la nage avec les raies manta - allongez-vous et 'nagez' gracieusement près de l'eau !",
   },
 
   {

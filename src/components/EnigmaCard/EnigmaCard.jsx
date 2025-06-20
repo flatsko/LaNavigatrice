@@ -11,6 +11,7 @@ const EnigmaCard = ({ enigma, onSolve, onClose, player, onTriggerVictory, onPhot
   const [feedback, setFeedback] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isFailure, setIsFailure] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
   const [photoTaken, setPhotoTaken] = useState(false);
   const [notification, setNotification] = useState(null);
@@ -40,6 +41,7 @@ const EnigmaCard = ({ enigma, onSolve, onClose, player, onTriggerVictory, onPhot
       setFeedback(null);
       setIsSubmitting(false);
       setIsSuccess(false);
+      setIsFailure(false);
       setShowCamera(false);
       setPhotoTaken(false);
       setNotification(null);
@@ -96,6 +98,7 @@ const EnigmaCard = ({ enigma, onSolve, onClose, player, onTriggerVictory, onPhot
       ...photoData,
       enigmaId: enigma.id,
       enigmaTitle: enigma.title,
+      context: isSuccess ? "success" : "failure",
     });
 
     if (savedPhoto) {
@@ -218,28 +221,25 @@ const EnigmaCard = ({ enigma, onSolve, onClose, player, onTriggerVictory, onPhot
         //   }, 4000);
         // }
       } else {
-        const newRemainingAttempts = remainingAttempts - 1;
-
-        if (newRemainingAttempts > 0) {
-          setFeedback({
-            type: "error",
-            message: `❌ Réponse incorrecte !\n\nTentatives restantes : ${newRemainingAttempts}\nTaux de réussite actuel : ${Math.round(
-              currentSuccessRate
-            )}%`,
-          });
-          setSelectedAnswer("");
-        } else {
-          setFeedback({
-            type: "error",
-            message:
-              "❌ Nombre maximum de tentatives atteint !\nVous devez passer à une autre énigme.",
-          });
-          closeTimeoutRef.current = setTimeout(() => {
+        // Avec une seule tentative, toute mauvaise réponse épuise les tentatives
+        setIsFailure(true);
+        setFeedback({
+          type: "error",
+          message:
+            "❌ Réponse incorrecte !\nVous devez passer à une autre énigme.",
+        });
+        
+        // Logique photo/fermeture pour échec
+        if (enigma.hasPhoto && isMobile) {
+          console.log("📸 Proposition photo après échec dans 2 secondes");
+          photoTimeoutRef.current = setTimeout(() => {
             if (!isClosing) {
-              handleFinalClose();
+              console.log("📸 Ouverture caméra après échec");
+              // Ne pas ouvrir automatiquement, laisser le choix à l'utilisateur
             }
-          }, 3000);
+          }, 2000);
         }
+        // Pas de fermeture automatique pour laisser le temps de prendre des photos
       }
     } catch (error) {
       console.error("Erreur lors de la soumission:", error);
@@ -482,6 +482,47 @@ const EnigmaCard = ({ enigma, onSolve, onClose, player, onTriggerVictory, onPhot
                 </div>
               )}
 
+              {/* Section photo mobile - ÉCHEC */}
+              {isFailure && enigma.hasPhoto && isMobile && !showCamera && (
+                <div className="photo-section failure">
+                  <div className="photo-prompt">
+                    <h4>📸 Moment Souvenir</h4>
+                    <p>
+                      {enigma.photoPrompt ||
+                        "Même si cette énigme n'a pas été résolue, immortalisez ce moment !"}
+                    </p>
+
+                    <div className="photo-actions">
+                      {!photoTaken ? (
+                        <>
+                          <button
+                            onClick={handleTakePhoto}
+                            className="photo-btn primary"
+                            disabled={isClosing}
+                          >
+                            📸 Prendre une photo
+                          </button>
+                          <button
+                            onClick={handleContinueWithoutPhoto}
+                            className="photo-btn secondary"
+                            disabled={isClosing}
+                          >
+                            Continuer sans photo
+                          </button>
+                        </>
+                      ) : (
+                        <div className="photo-taken">
+                          <span className="photo-success">
+                            ✅ Photo prise !
+                          </span>
+                          <p>Fermeture automatique...</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Section photo desktop */}
               {isSuccess && enigma.hasPhoto && !isMobile && (
                 <div className="desktop-photo-section">
@@ -505,11 +546,34 @@ const EnigmaCard = ({ enigma, onSolve, onClose, player, onTriggerVictory, onPhot
                   </div>
                 </div>
               )}
+
+              {/* Section photo desktop - ÉCHEC */}
+              {isFailure && enigma.hasPhoto && !isMobile && (
+                <div className="desktop-photo-section failure">
+                  <div className="desktop-photo-prompt">
+                    <h4>📱 Photos Souvenirs</h4>
+                    <p>
+                      Même si cette énigme n'a pas été résolue, vous pouvez prendre des photos souvenirs avec votre téléphone portable !
+                    </p>
+                    <p className="desktop-photo-hint">
+                      💡 Scannez le QR code de cette énigme avec votre téléphone
+                      pour accéder à la fonctionnalité photo.
+                    </p>
+                    <button
+                      onClick={handleContinueWithoutPhoto}
+                      className="photo-btn primary desktop-continue"
+                      disabled={isClosing}
+                    >
+                      Continuer l'aventure
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Actions - Masquer après succès */}
-          {!isSuccess && canAttempt && (
+          {/* Actions - Masquer après succès ou échec */}
+          {!isSuccess && !isFailure && canAttempt && (
             <div className="enigma-actions">
               <button
                 className="submit-btn"
@@ -522,9 +586,9 @@ const EnigmaCard = ({ enigma, onSolve, onClose, player, onTriggerVictory, onPhot
               </button>
 
               <div className="action-warning">
-                {remainingAttempts <= 2 && (
+                {remainingAttempts === 1 && (
                   <small className="warning-text">
-                    ⚠️ Attention : {remainingAttempts} tentative(s) restante(s)
+                    ⚠️ Attention : Une seule tentative possible !
                   </small>
                 )}
               </div>

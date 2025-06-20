@@ -297,8 +297,8 @@
 .scan-frame {
   position: relative;
 
-  width: 150px; /* Réduit de 220px */
-  height: 150px; /* Réduit de 220px */
+  width: 220px;
+  height: 220px;
   border: 3px solid rgba(255, 255, 255, 0.8);
   border-radius: var(--border-radius-md);
   background: rgba(255, 255, 255, 0.05);
@@ -329,8 +329,8 @@
 .corner {
   position: absolute;
 
-  width: 15px; /* Réduit de 22px */
-  height: 15px; /* Réduit de 22px */
+  width: 22px;
+  height: 22px;
   border: 3px solid;
   animation: cornerPulse 2s ease-in-out infinite;
 }
@@ -732,13 +732,13 @@ canvas {
   }
 
   .scan-frame {
-    width: 130px; /* Réduit de 200px pour tablettes */
-  height: 130px; /* Réduit de 200px pour tablettes */
+    width: 200px;
+    height: 200px;
   }
 
   .corner {
-    width: 12px; /* Réduit de 20px pour tablettes */
-  height: 12px; /* Réduit de 20px pour tablettes */
+    width: 20px;
+    height: 20px;
   }
 
   .camera-indicator {
@@ -884,14 +884,14 @@ canvas {
   }
 
   .scan-frame {
-    width: 120px; /* Réduit de 170px pour mobiles */
-  height: 120px; /* Réduit de 170px pour mobiles */
+    width: 170px;
+    height: 170px;
     border-width: 2px;
   }
 
   .corner {
-    width: 10px; /* Réduit de 18px pour mobiles */
-  height: 10px; /* Réduit de 18px pour mobiles */
+    width: 18px;
+    height: 18px;
     border-width: 2px;
   }
 
@@ -998,14 +998,14 @@ canvas {
   }
 
   .scan-frame {
-    width: 100px; /* Réduit pour paysage mobile */
-  height: 100px; /* Réduit pour paysage mobile */
+    width: 140px;
+    height: 140px;
     border-width: 1px;
   }
 
   .corner {
-    width: 8px;  /* Réduit pour paysage mobile */
-  height: 8px;   /* Réduit pour paysage mobile */
+    width: 15px;
+    height: 15px;
   }
 
   .camera-indicator {

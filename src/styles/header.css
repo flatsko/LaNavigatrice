@@ -1,241 +1,177 @@
-/* Variables CSS pour la cohérence du design */
-:root {
-  --header-bg: #ffffff;
-  --header-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  --text-primary: #1a1a1a;
-  --text-secondary: #666666;
-  --text-muted: #999999;
-  --accent-primary: #007bff;
-  --accent-secondary: #6c757d;
-  --success-color: #28a745;
-  --danger-color: #dc3545;
-  --warning-color: #ffc107;
-  --border-radius: 12px;
-  --border-radius-sm: 8px;
-  --spacing-xs: 4px;
-  --spacing-sm: 8px;
-  --spacing-md: 16px;
-  --spacing-lg: 24px;
-  --spacing-xl: 32px;
-  --font-size-sm: 0.875rem;
-  --font-size-base: 1rem;
-  --font-size-lg: 1.125rem;
-  --font-size-xl: 1.25rem;
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
-  --transition: all 0.2s ease;
+/* ===== HEADER COMPONENT STYLES - VERSION MODERNE ===== */
+/* ===== ADAPTATIONS THÉMATIQUES ===== */
+
+/* Variables pour le thème Tour du monde en mer */
+[data-theme="tour_du_monde"] .game-header {
+  --header-primary: var(--primary);
+  --header-primary-deep: var(--primary-deep);
+  --header-accent: var(--accent);
+  --header-gold: var(--gold);
+  --header-gradient-ocean: var(--gradient-ocean);
+  --header-gradient-treasure: var(--gradient-treasure);
 }
 
-/* Mode sombre */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --header-bg: #1a1a1a;
-    --header-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
-    --text-primary: #ffffff;
-    --text-secondary: #cccccc;
-    --text-muted: #888888;
-    --accent-primary: #0d6efd;
-    --accent-secondary: #6c757d;
-  }
+/* Variables pour le thème D'une page à l'autre */
+[data-theme="dune_page_a_lautre"] .game-header {
+  --header-primary: var(--primary);
+  --header-primary-deep: var(--primary-deep);
+  --header-accent: var(--accent);
+  --header-gold: var(--gold);
+  --header-gradient-ocean: var(--gradient-ocean);
+  --header-gradient-treasure: var(--gradient-treasure);
 }
 
-/* Header principal */
-.header {
-  background: var(--header-bg);
-  box-shadow: var(--header-shadow);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+.game-header {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 250, 252, 0.98) 100%
+  );
+  backdrop-filter: blur(20px);
+  border-radius: 0 0 24px 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  margin-bottom: 1.5rem;
   position: sticky;
   top: 0;
   z-index: 100;
-  backdrop-filter: blur(10px);
+  animation: slideInDown 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--header-primary, rgba(29, 161, 242, 0.1));
 }
 
-.header-container {
-  max-width: 1200px;
+.header-content {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "player-info actions"
+    "progress progress";
+  gap: 1.5rem;
+  padding: 1.5rem 2rem;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: var(--spacing-md) var(--spacing-lg);
+  align-items: start;
 }
 
-/* Section principale */
-.header-main {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--spacing-lg);
-  gap: var(--spacing-md);
-}
-
-/* Section joueur */
-.player-section {
+/* ===== PLAYER INFO SECTION ===== */
+.player-info {
+  grid-area: player-info;
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
-  flex: 1;
-  min-width: 0;
+  gap: 1rem;
+  min-width: 0; /* Pour éviter l'overflow */
 }
 
-.player-avatar {
+.compass-decoration {
   font-size: 2.5rem;
-  width: 60px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--accent-primary), #0056b3);
-  border-radius: 50%;
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+  animation: spin 20s linear infinite;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.15));
   flex-shrink: 0;
 }
 
-.player-info {
+.player-details {
   flex: 1;
   min-width: 0;
 }
 
 .player-name {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--text-primary);
-  margin: 0 0 var(--spacing-sm) 0;
-  white-space: nowrap;
+  font-size: clamp(1.2rem, 4vw, 1.8rem);
+  font-weight: 700;
+  color: var(--header-primary-deep, #0f4c75);
+  margin: 0 0 0.5rem 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: var(--header-gradient-ocean, linear-gradient(135deg, #0f4c75 0%, #1da1f2 100%));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+/* ===== PROGRESS BAR SECTION - REDESIGN COMPLET ===== */
+.progress-bar {
+  grid-area: progress;
+  background: linear-gradient(
+    135deg,
+    rgba(29, 161, 242, 0.08) 0%,
+    rgba(78, 205, 196, 0.12) 100%
+  );
+  border-radius: 20px;
+  padding: 1.5rem;
+  border: 2px solid var(--header-primary, rgba(29, 161, 242, 0.15));
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
   overflow: hidden;
-  text-overflow: ellipsis;
+  min-height: 90px;
 }
 
-.player-stats {
-  display: flex;
-  gap: var(--spacing-md);
-  flex-wrap: wrap;
+.progress-bar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(29, 161, 242, 0.1),
+    transparent
+  );
+  animation: shimmer 3s infinite;
 }
 
-.stat {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border-radius: var(--border-radius-sm);
-  background: rgba(0, 0, 0, 0.05);
-  color: var(--text-secondary);
-  white-space: nowrap;
-}
-
-.stat.completed {
-  background: rgba(40, 167, 69, 0.1);
-  color: var(--success-color);
-}
-
-.stat.failed {
-  background: rgba(220, 53, 69, 0.1);
-  color: var(--danger-color);
-}
-
-.stat.pending {
-  background: rgba(108, 117, 125, 0.1);
-  color: var(--text-muted);
-}
-
-.stat.success-rate {
-  background: rgba(255, 193, 7, 0.1);
-  color: var(--warning-color);
-}
-
-/* Actions du header */
-.header-actions {
-  display: flex;
-  gap: var(--spacing-sm);
-  flex-shrink: 0;
-}
-
-.btn {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  padding: var(--spacing-sm) var(--spacing-md);
-  border: none;
-  border-radius: var(--border-radius-sm);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  cursor: pointer;
-  transition: var(--transition);
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.btn-primary {
-  background: var(--accent-primary);
-  color: white;
-  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
-}
-
-.btn-primary:hover {
-  background: #0056b3;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
-}
-
-.btn-secondary {
-  background: rgba(108, 117, 125, 0.1);
-  color: var(--text-secondary);
-  border: 1px solid rgba(108, 117, 125, 0.2);
-}
-
-.btn-secondary:hover {
-  background: rgba(108, 117, 125, 0.2);
-  color: var(--text-primary);
-  transform: translateY(-1px);
-}
-
-.btn-icon {
-  font-size: 1.1em;
-}
-
-/* Section de progression */
-.progress-section {
-  background: rgba(0, 0, 0, 0.02);
-  border-radius: var(--border-radius);
-  padding: var(--spacing-md);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.progress-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--spacing-sm);
+.progress-bar:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(29, 161, 242, 0.12) 0%,
+    rgba(78, 205, 196, 0.18) 100%
+  );
+  border-color: rgba(29, 161, 242, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(29, 161, 242, 0.2);
 }
 
 .progress-label {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
-  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+  color: #1da1f2;
+  margin-bottom: 1rem;
+  font-size: clamp(1rem, 3vw, 1.2rem);
 }
 
 .progress-percentage {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  color: var(--accent-primary);
+  background: rgba(29, 161, 242, 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--header-primary-deep, #0f4c75);
 }
 
-.progress-bar {
-  height: 8px;
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
+/* ===== BARRE DE PROGRESSION VISUELLE ===== */
+.progress-track {
+  width: 100%;
+  height: 12px;
+  background: rgba(29, 161, 242, 0.1);
+  border-radius: 6px;
+  margin: 1rem 0;
   overflow: hidden;
-  margin-bottom: var(--spacing-md);
   position: relative;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--accent-primary), #0056b3);
-  border-radius: 4px;
-  transition: width 0.3s ease;
+  background: linear-gradient(90deg, #1da1f2 0%, #4ecdc4 100%);
+  border-radius: 6px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
+  overflow: hidden;
 }
 
 .progress-fill::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -247,160 +183,899 @@
     rgba(255, 255, 255, 0.3),
     transparent
   );
-  animation: shimmer 2s infinite;
+  animation: progressShine 2s infinite;
 }
 
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-/* Fragments */
-.fragments-container {
+/* ===== FRAGMENTS VISUALIZATION - AMÉLIORÉE ===== */
+.fragments {
   display: flex;
-  gap: var(--spacing-xs);
+  gap: 0.75rem;
+  margin: 1rem 0;
   flex-wrap: wrap;
+  align-items: center;
   justify-content: center;
 }
 
 .fragment {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  display: flex;
+  font-size: 2rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
-  font-weight: var(--font-weight-bold);
-  transition: var(--transition);
-  cursor: pointer;
+  cursor: default;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
 }
 
-.fragment.completed {
-  background: var(--success-color);
-  color: white;
-  box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+.fragment.collected {
+  animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 215, 0, 0.2) 0%,
+    rgba(255, 193, 7, 0.3) 100%
+  );
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+  border: 2px solid rgba(255, 215, 0, 0.5);
+}
+
+.fragment.collected:hover {
+  transform: scale(1.15) rotate(5deg);
+  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
 }
 
 .fragment.failed {
-  background: var(--danger-color);
-  color: white;
-  box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+  animation: shake 0.5s ease-in-out;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 107, 107, 0.2) 0%,
+    rgba(231, 76, 60, 0.3) 100%
+  );
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+  border: 2px solid rgba(255, 107, 107, 0.5);
 }
 
-.fragment.pending {
-  background: rgba(108, 117, 125, 0.2);
-  color: var(--text-muted);
-  border: 2px solid rgba(108, 117, 125, 0.3);
-}
-
-.fragment:hover {
+.fragment.failed:hover {
   transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .header-container {
-    padding: var(--spacing-md);
+.fragment.missing {
+  opacity: 0.4;
+  background: rgba(148, 163, 184, 0.1);
+  border: 2px dashed rgba(148, 163, 184, 0.3);
+  transition: all 0.3s ease;
+}
+
+.fragment.missing:hover {
+  opacity: 0.7;
+  transform: scale(1.05);
+  background: rgba(148, 163, 184, 0.15);
+}
+
+/* ===== PROGRESS DETAILS - REDESIGN ===== */
+.progress-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.progress-stat {
+  background: rgba(255, 255, 255, 0.7);
+  padding: 0.75rem;
+  border-radius: 12px;
+  border: 1px solid rgba(29, 161, 242, 0.15);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.progress-stat:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(29, 161, 242, 0.15);
+}
+
+.stat-icon {
+  font-size: 1.2rem;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.stat-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--header-primary-deep, #0f4c75);
+  display: block;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* ===== HEADER ACTIONS ===== */
+.header-actions {
+  grid-area: actions;
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  flex-shrink: 0;
+  flex-wrap: nowrap;
+  justify-content: flex-end;
+}
+
+/* Bouton Scanner QR */
+.scan-btn {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  padding: 1rem 1.5rem;
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3),
+    0 2px 8px rgba(34, 197, 94, 0.2);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  white-space: nowrap;
+}
+
+/* Bouton Exploits/Achievements */
+.achievements-btn {
+  background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+  color: var(--header-primary-deep, #0f4c75);
+  border: none;
+  border-radius: 16px;
+  padding: 1rem 1.5rem;
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3),
+    0 2px 8px rgba(255, 215, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  white-space: nowrap;
+}
+
+/* Bouton Galerie */
+.gallery-btn {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+  color: white;
+  border: 2px solid #ff6b6b;
+  border-radius: 16px;
+  padding: 1rem 1.5rem;
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3),
+    0 2px 8px rgba(255, 107, 107, 0.2);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  white-space: nowrap;
+}
+
+.gallery-btn:hover {
+  background: linear-gradient(135deg, #ee5a24, #ff6b6b);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4),
+    0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.gallery-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.gallery-btn:hover::before {
+  left: 100%;
+}
+
+.gallery-btn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3),
+    0 2px 8px rgba(255, 107, 107, 0.2);
+}
+
+.gallery-btn:focus-visible {
+  outline: 3px solid rgba(255, 107, 107, 0.5);
+  outline-offset: 2px;
+}
+
+/* Bouton Classement */
+.leaderboard-btn {
+  background: linear-gradient(135deg, #1da1f2 0%, #0f4c75 100%);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  padding: 1rem 1.5rem;
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(29, 161, 242, 0.3),
+    0 2px 8px rgba(29, 161, 242, 0.2);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  white-space: nowrap;
+}
+
+/* Effets communs pour tous les boutons */
+.scan-btn::before,
+.achievements-btn::before,
+.leaderboard-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.scan-btn:hover::before,
+.achievements-btn:hover::before,
+.leaderboard-btn:hover::before {
+  left: 100%;
+}
+
+/* Effets hover spécifiques */
+.scan-btn:hover {
+  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4),
+    0 4px 15px rgba(34, 197, 94, 0.3);
+}
+
+.achievements-btn:hover {
+  background: linear-gradient(135deg, #ffb347 0%, #ffa500 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4),
+    0 4px 15px rgba(255, 215, 0, 0.3);
+}
+
+.leaderboard-btn:hover {
+  background: linear-gradient(135deg, #0f4c75 0%, #0a3a5c 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(29, 161, 242, 0.4),
+    0 4px 15px rgba(29, 161, 242, 0.3);
+}
+
+/* Effets active */
+.scan-btn:active,
+.achievements-btn:active,
+.leaderboard-btn:active {
+  transform: translateY(-1px);
+}
+
+.scan-btn:active {
+  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3),
+    0 2px 8px rgba(34, 197, 94, 0.2);
+}
+
+.achievements-btn:active {
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3),
+    0 2px 8px rgba(255, 215, 0, 0.2);
+}
+
+.leaderboard-btn:active {
+  box-shadow: 0 4px 15px rgba(29, 161, 242, 0.3),
+    0 2px 8px rgba(29, 161, 242, 0.2);
+}
+
+/* Effets focus */
+.scan-btn:focus-visible {
+  outline: 3px solid rgba(34, 197, 94, 0.5);
+  outline-offset: 2px;
+}
+
+.achievements-btn:focus-visible {
+  outline: 3px solid rgba(255, 215, 0, 0.5);
+  outline-offset: 2px;
+}
+
+.leaderboard-btn:focus-visible {
+  outline: 3px solid rgba(29, 161, 242, 0.5);
+  outline-offset: 2px;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) rotate(-180deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05) rotate(-90deg);
+  }
+  70% {
+    transform: scale(0.9) rotate(-45deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-5px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@keyframes progressShine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Tablettes (768px - 1024px) */
+@media (max-width: 1024px) {
+  .header-content {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "player-info"
+      "actions"
+      "progress";
+    gap: 1.25rem;
+    padding: 1.25rem 1.5rem;
   }
 
-  .header-main {
-    flex-direction: column;
-    align-items: stretch;
-    gap: var(--spacing-md);
-  }
-
-  .player-section {
+  .player-info {
     justify-content: center;
     text-align: center;
   }
 
-  .player-stats {
-    justify-content: center;
-  }
-
   .header-actions {
     justify-content: center;
-    flex-wrap: wrap;
   }
 
-  .btn {
-    flex: 1;
-    min-width: 100px;
+  .fragments {
     justify-content: center;
   }
 
-  .progress-section {
-    padding: var(--spacing-sm);
-  }
-
-  .fragments-container {
-    gap: var(--spacing-xs);
-  }
-
-  .fragment {
-    width: 20px;
-    height: 20px;
-    font-size: 10px;
+  .progress-details {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.5rem;
   }
 }
 
-@media (max-width: 480px) {
-  .player-avatar {
-    width: 50px;
-    height: 50px;
+/* Mobiles (max-width: 768px) */
+@media (max-width: 768px) {
+  .game-header {
+    border-radius: 0 0 20px 20px;
+    margin-bottom: 1rem;
+  }
+
+  .header-content {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .player-info {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .compass-decoration {
     font-size: 2rem;
   }
 
   .player-name {
-    font-size: var(--font-size-lg);
+    font-size: clamp(1.1rem, 5vw, 1.4rem);
+    text-align: center;
   }
 
-  .btn-text {
-    display: none;
+  .progress-bar {
+    padding: 1rem;
+    border-radius: 16px;
   }
 
-  .btn {
-    min-width: auto;
-    padding: var(--spacing-sm);
+  .progress-label {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
   }
 
-  .stat {
+  .progress-percentage {
+    align-self: center;
+  }
+
+  .fragments {
+    gap: 0.5rem;
+    justify-content: center;
+  }
+
+  .fragment {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.5rem;
+  }
+
+  .progress-details {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  .progress-stat {
+    padding: 0.5rem;
+  }
+
+  .stat-value {
+    font-size: 1rem;
+  }
+
+  .stat-label {
     font-size: 0.75rem;
-    padding: 2px var(--spacing-xs);
+  }
+
+  .scan-btn {
+    padding: 0.875rem 1.25rem;
+    font-size: 0.9rem;
+    border-radius: 14px;
+    width: 100%;
+    justify-content: center;
   }
 }
 
-/* Animations d'entrée */
-.header {
-  animation: slideDown 0.3s ease-out;
-}
-
-@keyframes slideDown {
-  from {
-    transform: translateY(-100%);
-    opacity: 0;
+/* Petits mobiles (max-width: 480px) */
+@media (max-width: 480px) {
+  .header-content {
+    padding: 0.75rem;
   }
-  to {
-    transform: translateY(0);
-    opacity: 1;
+
+  .compass-decoration {
+    font-size: 1.75rem;
+  }
+
+  .player-name {
+    font-size: clamp(1rem, 6vw, 1.2rem);
+  }
+
+  .progress-bar {
+    padding: 0.75rem;
+  }
+
+  .fragments {
+    gap: 0.375rem;
+  }
+
+  .fragment {
+    width: 2rem;
+    height: 2rem;
+    font-size: 1.25rem;
+  }
+
+  .progress-details {
+    grid-template-columns: 1fr;
+    gap: 0.375rem;
+  }
+
+  .progress-stat {
+    padding: 0.5rem;
+    border-radius: 10px;
+  }
+
+  .scan-btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    border-radius: 12px;
+    min-height: 44px;
   }
 }
 
-/* Amélioration de l'accessibilité */
-.btn:focus {
-  outline: 2px solid var(--accent-primary);
-  outline-offset: 2px;
+/* Mode paysage mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .game-header {
+    position: relative;
+    margin-bottom: 0.5rem;
+  }
+
+  .header-content {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "player-info actions"
+      "progress progress";
+    padding: 0.75rem 1rem;
+    gap: 0.75rem;
+  }
+
+  .player-info {
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+
+  .compass-decoration {
+    font-size: 1.5rem;
+  }
+
+  .progress-bar {
+    padding: 0.75rem;
+  }
+
+  .fragments {
+    gap: 0.25rem;
+  }
+
+  .fragment {
+    width: 1.75rem;
+    height: 1.75rem;
+    font-size: 1rem;
+  }
+
+  .progress-details {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+  }
 }
 
-.fragment:focus {
-  outline: 2px solid var(--accent-primary);
-  outline-offset: 2px;
+/* Mode sombre (si supporté) */
+@media (prefers-color-scheme: dark) {
+  .game-header {
+    background: linear-gradient(
+      135deg,
+      rgba(30, 41, 59, 0.95) 0%,
+      rgba(15, 23, 42, 0.98) 100%
+    );
+    border-color: rgba(29, 161, 242, 0.2);
+  }
+
+  .player-name {
+    color: #e2e8f0;
+    background: linear-gradient(135deg, #60a5fa 0%, #4ecdc4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .progress-bar {
+    background: linear-gradient(
+      135deg,
+      rgba(29, 161, 242, 0.15) 0%,
+      rgba(78, 205, 196, 0.2) 100%
+    );
+    border-color: rgba(29, 161, 242, 0.25);
+  }
+
+  .progress-stat {
+    background: rgba(30, 41, 59, 0.7);
+    border-color: rgba(29, 161, 242, 0.2);
+  }
+
+  .stat-value {
+    color: #e2e8f0;
+  }
+
+  .stat-label {
+    color: #94a3b8;
+  }
+}
+
+/* Réduction de mouvement pour l'accessibilité */
+@media (prefers-reduced-motion: reduce) {
+  .compass-decoration {
+    animation: none;
+  }
+
+  .progress-bar::before,
+  .progress-fill::after,
+  .scan-btn::before {
+    animation: none;
+  }
+
+  .fragment.collected {
+    animation: none;
+  }
+
+  .fragment.failed {
+    animation: none;
+  }
+
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* Amélioration du contraste pour l'accessibilité */
+@media (prefers-contrast: high) {
+  .game-header {
+    border: 2px solid #1da1f2;
+    background: rgba(255, 255, 255, 1);
+  }
+
+  .player-name {
+    color: var(--header-primary-deep, #0f4c75);
+    -webkit-text-fill-color: #0f4c75;
+  }
+
+  .progress-bar {
+    border: 2px solid #1da1f2;
+    background: rgba(255, 255, 255, 0.9);
+  }
+
+  .scan-btn {
+    border: 2px solid #16a34a;
+  }
+
+  .fragment {
+    border-width: 3px;
+  }
 }
 
 /* Optimisations pour les écrans haute résolution */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .header {
-    border-bottom-width: 0.5px;
+  .compass-decoration,
+  .fragment {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+}
+
+/* États de focus améliorés pour l'accessibilité clavier */
+.scan-btn:focus-visible,
+.fragment:focus-visible {
+  outline: 3px solid #1da1f2;
+  outline-offset: 2px;
+}
+
+/* Amélioration de la lisibilité sur petits écrans */
+@media (max-width: 320px) {
+  .header-content {
+    padding: 0.5rem;
+  }
+
+  .player-name {
+    font-size: 1rem;
+    line-height: 1.3;
+  }
+
+  .progress-label {
+    font-size: 0.9rem;
+  }
+
+  .fragment {
+    width: 1.75rem;
+    height: 1.75rem;
+    font-size: 1rem;
+  }
+
+  .scan-btn {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.8rem;
+    min-height: 40px;
+  }
+
+  .progress-stat {
+    padding: 0.375rem;
+  }
+
+  .stat-value {
+    font-size: 0.9rem;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+  }
+}
+
+/* Optimisation pour les écrans très larges */
+@media (min-width: 1400px) {
+  .header-content {
+    padding: 2rem 3rem;
+  }
+
+  .compass-decoration {
+    font-size: 3rem;
+  }
+
+  .fragment {
+    width: 3.5rem;
+    height: 3.5rem;
+    font-size: 2.25rem;
+  }
+
+  .progress-details {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+
+  .scan-btn {
+    padding: 1.25rem 2rem;
+    font-size: 1.1rem;
+  }
+}
+
+/* Animation de chargement pour les fragments */
+.fragment-loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.fragment-loading::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: fragmentShimmer 1.5s infinite;
+}
+
+@keyframes fragmentShimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Indicateur de succès pour les statistiques */
+.stat-success {
+  background: linear-gradient(
+    135deg,
+    rgba(34, 197, 94, 0.1) 0%,
+    rgba(22, 163, 74, 0.15) 100%
+  );
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.stat-warning {
+  background: linear-gradient(
+    135deg,
+    rgba(245, 158, 11, 0.1) 0%,
+    rgba(217, 119, 6, 0.15) 100%
+  );
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.stat-danger {
+  background: linear-gradient(
+    135deg,
+    rgba(239, 68, 68, 0.1) 0%,
+    rgba(220, 38, 38, 0.15) 100%
+  );
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* Effet de pulsation pour les éléments importants */
+.pulse-success {
+  animation: pulseSuccess 2s infinite;
+}
+
+@keyframes pulseSuccess {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+  }
+}
+
+/* Amélioration de l'état de chargement */
+.header-loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.header-loading .compass-decoration {
+  animation: spin 1s linear infinite;
+}
+
+/* Transition fluide entre les états */
+.game-header * {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Optimisation des performances */
+.game-header {
+  contain: layout style paint;
+  will-change: transform;
+}
+
+.progress-fill {
+  will-change: width;
+}
+
+.fragment {
+  will-change: transform;
 }

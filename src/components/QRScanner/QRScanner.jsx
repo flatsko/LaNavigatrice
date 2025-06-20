@@ -115,7 +115,7 @@ const QRScanner = ({ onScan, onClose }) => {
       if (cameraFacing === "environment" && track.applyConstraints) {
         try {
           const constraints = {};
-
+          
           // Focus - priorité à la mise au point continue
           if (capabilities.focusMode) {
             if (capabilities.focusMode.includes("continuous")) {
@@ -124,16 +124,16 @@ const QRScanner = ({ onScan, onClose }) => {
               constraints.focusMode = "single-shot";
             }
           }
-
+          
           // Distance de focus optimale pour QR codes (environ 20-30cm)
           if (capabilities.focusDistance) {
             constraints.focusDistance = {
               ideal: 0.25, // 25cm
               min: 0.1,
-              max: 1.0,
+              max: 1.0
             };
           }
-
+          
           // Exposition
           if (capabilities.exposureMode?.includes("manual")) {
             constraints.exposureMode = "manual";
@@ -141,50 +141,51 @@ const QRScanner = ({ onScan, onClose }) => {
               constraints.exposureTime = {
                 ideal: 0.01, // 10ms
                 min: 0.005,
-                max: 0.02,
+                max: 0.02
               };
             }
           } else if (capabilities.exposureMode?.includes("continuous")) {
             constraints.exposureMode = "continuous";
           }
-
+          
           // Balance des blancs
           if (capabilities.whiteBalanceMode?.includes("continuous")) {
             constraints.whiteBalanceMode = "continuous";
           }
-
+          
           // ISO pour réduire le bruit
           if (capabilities.iso) {
             constraints.iso = {
               ideal: 200,
               min: 100,
-              max: 800,
+              max: 800
             };
           }
-
+          
           // Zoom léger pour améliorer la netteté
           if (capabilities.zoom) {
             constraints.zoom = {
               ideal: Math.min(1.2, capabilities.zoom.max),
               min: 1.0,
-              max: Math.min(2.0, capabilities.zoom.max),
+              max: Math.min(2.0, capabilities.zoom.max)
             };
           }
-
+          
           // Netteté
           if (capabilities.sharpness) {
             constraints.sharpness = {
               ideal: 0.8,
               min: 0.5,
-              max: 1.0,
+              max: 1.0
             };
           }
-
+          
           await track.applyConstraints(constraints);
           console.log("✅ Paramètres optimisés appliqués:", constraints);
-
+          
           // Attendre un peu pour que les paramètres se stabilisent
-          await new Promise((resolve) => setTimeout(resolve, 500));
+          await new Promise(resolve => setTimeout(resolve, 500));
+          
         } catch (constraintError) {
           console.log(
             "⚠️ Impossible d'appliquer les contraintes optimisées:",
@@ -385,77 +386,76 @@ const QRScanner = ({ onScan, onClose }) => {
 
         // Dessiner l'image de base
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        let imageDataForJsQR = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
+        
         // Amélioration de l'image pour la caméra arrière
         if (cameraFacing === "environment") {
-          const data = imageDataForJsQR.data;
-          // Conversion en niveaux de gris standard
+          // Appliquer des filtres après le dessin pour la caméra arrière
+          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const data = imageData.data;
+          
+          // Amélioration du contraste et de la luminosité pixel par pixel
           for (let i = 0; i < data.length; i += 4) {
-            const r_val = data[i];
-            const g_val = data[i + 1];
-            const b_val = data[i + 2];
-            const gray = 0.299 * r_val + 0.587 * g_val + 0.114 * b_val;
-            data[i] = gray;
-            data[i + 1] = gray;
-            data[i + 2] = gray;
+            // Convertir en niveaux de gris pour améliorer la détection
+            const gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+            
+            // Appliquer un seuil adaptatif
+            const threshold = gray > 128 ? 255 : 0;
+            
+            data[i] = threshold;     // Rouge
+            data[i + 1] = threshold; // Vert
+            data[i + 2] = threshold; // Bleu
+            // Alpha reste inchangé
           }
+          
+          ctx.putImageData(imageData, 0, 0);
         }
 
+        // Obtenir les données d'image après traitement
+        let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        
         // Essayer plusieurs approches de détection
         const scanMethods = [
           { inversionAttempts: "attemptBoth" },
           { inversionAttempts: "dontInvert" },
           { inversionAttempts: "onlyInvert" },
         ];
-
-        // Essayer la détection avec l'image traitée (ou originale si caméra frontale)
+        
+        // Essayer la détection avec l'image traitée
         for (const method of scanMethods) {
           const code = jsQR(
-            imageDataForJsQR.data,
-            imageDataForJsQR.width,
-            imageDataForJsQR.height,
+            imageData.data,
+            imageData.width,
+            imageData.height,
             method
           );
-
+          
           if (code && code.data && code.data.trim()) {
             const qrText = code.data.trim();
             const now = Date.now();
-            console.log(`[${cameraFacing}] Tentative détection (principale): ${qrText}, méthode: ${JSON.stringify(method)}, ts: ${now}`);
 
             if (qrText !== detectedQR || now - lastScanTime > 2000) {
-              console.log("🎯 QR détecté (principale) avec", cameraFacing, ":", qrText);
+              console.log("🎯 QR détecté avec", cameraFacing, ":", qrText);
               handleQRDetection(qrText, now, canvas);
               return;
-            } else {
-              console.log(`[${cameraFacing}] QR détecté (principale) mais ignoré: ${qrText}, lastScan: ${lastScanTime}, detectedQR: ${detectedQR}`);
             }
           }
         }
-
-        // Pour la caméra arrière, essayer aussi avec une résolution réduite (image vidéo brute)
+        
+        // Pour la caméra arrière, essayer aussi avec une résolution réduite
         if (cameraFacing === "environment") {
-          const smallCanvas = document.createElement("canvas");
-          const smallCtx = smallCanvas.getContext("2d");
-          const scale = 0.7;
+          // Créer une version réduite pour améliorer la détection
+          const smallCanvas = document.createElement('canvas');
+          const smallCtx = smallCanvas.getContext('2d');
+          const scale = 0.7; // Augmenter légèrement la taille
           smallCanvas.width = canvas.width * scale;
           smallCanvas.height = canvas.height * scale;
-
-          smallCtx.drawImage(
-            video, // Utilise la vidéo brute, non l'image traitée
-            0,
-            0,
-            smallCanvas.width,
-            smallCanvas.height
-          );
-
-          const smallImageData = smallCtx.getImageData(
-            0,
-            0,
-            smallCanvas.width,
-            smallCanvas.height
-          );
-
+          
+          // Redessiner l'image originale (sans traitement) à une taille réduite
+          smallCtx.drawImage(video, 0, 0, smallCanvas.width, smallCanvas.height);
+          
+          const smallImageData = smallCtx.getImageData(0, 0, smallCanvas.width, smallCanvas.height);
+          
+          // Essayer avec l'image réduite
           for (const method of scanMethods) {
             const code = jsQR(
               smallImageData.data,
@@ -463,53 +463,43 @@ const QRScanner = ({ onScan, onClose }) => {
               smallImageData.height,
               method
             );
-
+            
             if (code && code.data && code.data.trim()) {
               const qrText = code.data.trim();
               const now = Date.now();
-              console.log(`[${cameraFacing}] Tentative détection (réduite): ${qrText}, méthode: ${JSON.stringify(method)}, ts: ${now}`);
 
               if (qrText !== detectedQR || now - lastScanTime > 2000) {
                 console.log("🎯 QR détecté (image réduite) avec", cameraFacing, ":", qrText);
                 handleQRDetection(qrText, now, canvas);
                 return;
-              } else {
-                console.log(`[${cameraFacing}] QR détecté (réduite) mais ignoré: ${qrText}, lastScan: ${lastScanTime}, detectedQR: ${detectedQR}`);
               }
             }
           }
         }
 
-        // Une dernière tentative avec l'image traitée (imageDataForJsQR) si les autres échouent
-        // (Cette boucle est redondante avec la première si cameraFacing n'est pas 'environment' ou si la première a réussi)
-        // Pourrait être retirée si la logique ci-dessus est suffisante.
-        // Cependant, pour maintenir une structure similaire à l'original pour le moment :
         for (const method of scanMethods) {
           const code = jsQR(
-            imageDataForJsQR.data, // Utilise l'image potentiellement traitée
-            imageDataForJsQR.width,
-            imageDataForJsQR.height,
+            imageData.data,
+            imageData.width,
+            imageData.height,
             method
           );
 
           if (code && code.data && code.data.trim()) {
-            const qrText = code.data.trim();
-            const now = Date.now();
-            console.log(`[${cameraFacing}] Tentative détection (dernier essai): ${qrText}, méthode: ${JSON.stringify(method)}, ts: ${now}`);
+              const qrText = code.data.trim();
+              const now = Date.now();
 
-            if (qrText !== detectedQR || now - lastScanTime > 2000) {
-              console.log("🎯 QR détecté (dernier essai) avec", cameraFacing, ":", qrText);
-              handleQRDetection(qrText, now, canvas);
-              return;
-            } else {
-              console.log(`[${cameraFacing}] QR détecté (dernier essai) mais ignoré: ${qrText}, lastScan: ${lastScanTime}, detectedQR: ${detectedQR}`);
+              if (qrText !== detectedQR || now - lastScanTime > 2000) {
+                console.log("🎯 QR détecté (image normale) avec", cameraFacing, ":", qrText);
+                handleQRDetection(qrText, now, canvas);
+                return; // Sortir de la boucle des méthodes
+              }
             }
-          }
         }
 
+        // Nettoyer l'affichage si aucun QR
         const now = Date.now();
         if (detectedQR && now - lastScanTime > 4000) {
-          console.log(`[${cameraFacing}] Nettoyage ancien QR détecté: ${detectedQR}`);
           setDetectedQR("");
         }
       } catch (scanError) {
@@ -587,9 +577,7 @@ const QRScanner = ({ onScan, onClose }) => {
 
     // Vérifier que la vidéo a des dimensions valides
     if (!video.videoWidth || !video.videoHeight || video.readyState < 3) {
-      alert(
-        "❌ Vidéo non prête. Vérifiez que la caméra fonctionne correctement."
-      );
+      alert("❌ Vidéo non prête. Vérifiez que la caméra fonctionne correctement.");
       return;
     }
 
@@ -616,9 +604,9 @@ const QRScanner = ({ onScan, onClose }) => {
 
         if (code && code.data) {
           console.log(`✅ QR trouvé avec mode ${mode}:`, code.data);
-          // alert(
-          //   `✅ QR détecté: "${code.data}"\nMode: ${mode}\nCaméra: ${cameraFacing}`
-          // );
+          alert(
+            `✅ QR détecté: "${code.data}"\nMode: ${mode}\nCaméra: ${cameraFacing}`
+          );
           onScan(code.data.trim());
           return;
         }
@@ -629,9 +617,7 @@ const QRScanner = ({ onScan, onClose }) => {
       );
     } catch (error) {
       console.error("Erreur lors du test scan:", error);
-      alert(
-        "Problème lors de la lecture du QR, réessayez, passez sur la caméra frontale ou entrez le code manuellement"
-      );
+      alert(`❌ Erreur lors du scan: ${error.message}`);
     }
   };
 
@@ -731,6 +717,8 @@ const QRScanner = ({ onScan, onClose }) => {
                 </button>
               </div>
             )}
+
+
           </div>
 
           <div className="scanner-instructions">
@@ -749,21 +737,12 @@ const QRScanner = ({ onScan, onClose }) => {
 
               {cameraFacing === "environment" && (
                 <div className="rear-camera-tips">
-                  <p
-                    style={{
-                      fontSize: "0.9em",
-                      color: "#666",
-                      marginTop: "10px",
-                    }}
-                  >
-                    💡 <strong>Conseils caméra arrière :</strong>
-                    <br />
-                    • Assurez-vous d'avoir un bon éclairage
-                    <br />
-                    • Tenez le téléphone stable (30-50cm du QR)
-                    <br />
-                    • Attendez la mise au point automatique
-                    <br />• Utilisez le bouton "Test scan" si nécessaire
+                  <p style={{fontSize: '0.9em', color: '#666', marginTop: '10px'}}>
+                    💡 <strong>Conseils caméra arrière :</strong><br/>
+                    • Assurez-vous d'avoir un bon éclairage<br/>
+                    • Tenez le téléphone stable (30-50cm du QR)<br/>
+                    • Attendez la mise au point automatique<br/>
+                    • Utilisez le bouton "Test scan" si nécessaire
                   </p>
                 </div>
               )}

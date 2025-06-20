@@ -1,6 +1,6 @@
 export const GAME_RULES = {
   MIN_SUCCESS_RATE: 0.49, // 50% minimum
-  MAX_ATTEMPTS_PER_ENIGMA: 3,
+  MAX_ATTEMPTS_PER_ENIGMA: 1,
   PENALTY_PER_WRONG_ANSWER: 100,
   TIME_PENALTY_THRESHOLD: 300000, // 5 minutes
   TOTAL_ENIGMAS: 4, // AJOUT: Centraliser le nombre total d'énigmes

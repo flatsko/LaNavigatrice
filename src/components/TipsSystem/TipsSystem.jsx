@@ -30,7 +30,7 @@ const TIPS = [
     id: "strategy",
     title: "Stratégie de Navigation",
     content:
-      "Vous avez 3 tentatives par énigme. Réfléchissez bien avant de répondre pour maintenir un bon taux de réussite !",
+      "Vous avez une seule tentative par énigme. Réfléchissez bien avant de répondre pour maintenir un bon taux de réussite !",
     icon: "🧠",
     trigger: "wrongAnswer",
   },
@@ -180,14 +180,15 @@ const TipsSystem = ({ player, gameState, onClose }) => {
 
           <div className="tips-actions">
             <button className="tips-btn primary" onClick={closeTip}>
-              Compris, Capitaine ! ⚓
+              <span>Compris, Capitaine !</span>
+              <span style={{ marginLeft: '8px' }}>⚓</span>
             </button>
           </div>
         </div>
 
         <div className="tips-footer">
           <span className="tips-signature">
-            — Conseils du Capitaine Alison —
+            ✨ Conseils du Capitaine Alison ✨
           </span>
         </div>
       </div>

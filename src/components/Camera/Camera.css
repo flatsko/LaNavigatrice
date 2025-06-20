@@ -70,6 +70,7 @@ body.camera-open {
   min-height: 0;
   /* AJOUT: S'assurer que le viewport prend bien toute la hauteur */
   height: calc(100vh - 120px); /* 100vh - (header + controls) */
+  padding-bottom: 70px; /* Espace pour les contrôles fixes */
 }
 
 .camera-video {
@@ -96,6 +97,10 @@ body.camera-open {
 }
 
 .camera-controls {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -103,7 +108,6 @@ body.camera-open {
   background: rgba(0, 0, 0, 0.8);
   gap: 1rem;
   min-height: 70px;
-  flex-shrink: 0;
   /* AJOUT: S'assurer que les contrôles sont interactifs */
   pointer-events: all;
   z-index: 10000;
@@ -273,6 +277,7 @@ body.camera-open {
     /* MODIFICATION: Maximiser l'espace vidéo sur mobile */
     height: calc(100vh - 100px); /* header (45px) + controls (55px) */
     height: calc(100dvh - 100px);
+    padding-bottom: 55px; /* Espace pour les contrôles fixes sur mobile */
   }
 
   .camera-controls {
@@ -326,6 +331,7 @@ body.camera-open {
 
   .camera-viewport {
     height: calc(100vh - 90px); /* header (40px) + controls (50px) */
+    padding-bottom: 50px; /* Espace pour les contrôles fixes sur très petits écrans */
   }
 
   .camera-btn {

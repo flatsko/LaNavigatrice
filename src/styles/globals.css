@@ -792,7 +792,7 @@ body {
   padding: var(--spacing-lg);
 }
 
-.game-header {
+.game-title-header {
   text-align: center;
   margin-bottom: var(--spacing-xl);
 }

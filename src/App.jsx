@@ -18,12 +18,10 @@ import ParticleEffect from "./components/ParticleEffect/ParticleEffect";
 import TipsSystem from "./components/TipsSystem/TipsSystem";
 import SoundManager from "./components/SoundManager/SoundManager";
 
-
-// Styles
-import "./styles/globals.css";
+// Styles - globals.css est importé via index.css
 
 // Data
-import { ENIGMAS } from "./data/enigmasTest"; // A MODIFIER EN PROD
+import { ENIGMAS } from "./data/enigmas"; // A MODIFIER EN PROD
 import { ENIGMAS_ALSACE_CHARENTE } from "./data/enigmasAlsaceCharente";
 import { getCurrentTheme, applyThemeVariables, THEMES } from "./data/themes";
 
@@ -543,6 +541,7 @@ function App() {
           reason={failureReason}
           onRestart={restartGame}
           onViewStats={() => setShowLeaderboard(true)}
+          onPhotoShared={addPhotoToSharedGallery}
         />
 
         {showLeaderboard && (
@@ -604,7 +603,7 @@ function App() {
         onShowSharedGallery={() => setShowSharedGallery(true)}
         totalEnigmas={ENIGMAS.length}
       />
-      {<QRVariations></QRVariations>}
+      {/* {<QRVariations></QRVariations>} */}
 
       {/* Carte du monde interactive */}
       <WorldMap

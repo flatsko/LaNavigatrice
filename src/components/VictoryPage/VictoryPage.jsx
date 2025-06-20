@@ -9,9 +9,7 @@ const VictoryPage = ({ player, onRestart, allPlayers = [] }) => {
 
   // NOUVEAU: Récupérer les photos du joueur
   const allPhotos = getStoredPhotos();
-  const playerPhotos = allPhotos.filter((photo) =>
-    player?.completed?.includes(photo.enigmaId)
-  );
+  const playerPhotos = allPhotos;
 
   // Fonction pour calculer le temps total
   const calculateTotalTime = () => {

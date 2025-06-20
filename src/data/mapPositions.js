@@ -8,7 +8,13 @@ export const MAP_POSITIONS = {
     region: "Europe occidentale",
     country: "France",
   },
-
+  vanuatu: {
+    x: 720, // Pacifique Sud-Ouest
+    y: 540,
+    continent: "oceanie",
+    region: "Mélanésie",
+    country: "Vanuatu",
+  },
   fidji: {
     x: 780, // Pacifique Sud-Ouest
     y: 480,
@@ -16,7 +22,20 @@ export const MAP_POSITIONS = {
     region: "Mélanésie",
     country: "Fidji",
   },
-
+  argentine: {
+    x: 220, // Patagonie - côte ouest près des Andes
+    y: 620,
+    continent: "amerique_du_sud",
+    region: "Patagonie",
+    country: "Argentine",
+  },
+  perou: {
+    x: 240, // Andes centrales - côte pacifique
+    y: 510,
+    continent: "amerique_du_sud",
+    region: "Andes",
+    country: "Pérou",
+  },
   tahiti: {
     x: 70, // Pacifique Sud-Est
     y: 450,
