@@ -18,6 +18,8 @@ const QRVariations = () => {
     treasure: { name: "Carte au Trésor", component: TreasureCard },
     compact: { name: "Compact (6 par page)", component: CompactCard },
     bookmark: { name: "Marque-pages", component: BookmarkCard },
+    a4landscape: { name: "A4 Paysage Complet", component: A4LandscapeCard },
+    presentation: { name: "Page de Présentation", component: PresentationCard },
   };
 
   const CurrentFormat = formats[selectedFormat].component;
@@ -220,5 +222,176 @@ const BookmarkCard = ({ enigma, index, qrUrl }) => (
     <div className="bookmark-hole">○</div>
   </div>
 );
+
+// ========== FORMAT A4 PAYSAGE COMPLET ==========
+const A4LandscapeCard = ({ enigma, index, qrUrl }) => (
+  <div className="qr-card a4-landscape">
+    <div className="a4-header">
+      <h2 className="a4-title">
+        Mission #{index} - {enigma.title} {enigma.flag}
+      </h2>
+      <div className="a4-captain">
+        ⚓ Capitaine Alison - Aventure Maritime ⚓
+      </div>
+    </div>
+
+    <div className="a4-content">
+      <div className="a4-left-section">
+        <div className="a4-photo-section">
+          <h3>📸 Photo de Destination</h3>
+          <div className="a4-photo">
+            <img src={enigma.image} alt={enigma.title} />
+          </div>
+        </div>
+
+        <div className="a4-photo-instructions">
+          <h3>📷 Instructions Photo</h3>
+          <div className="a4-photo-prompt">
+            <p>{enigma.photoPrompt}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="a4-center-section">
+        <div className="a4-question-section">
+          <h3>❓ Votre Mission</h3>
+          <div className="a4-question">
+            <p>{enigma.question}</p>
+          </div>
+        </div>
+
+        <div className="a4-qcm-section">
+          <h3>🎯 Choix de Réponses</h3>
+          <div className="a4-answers">
+            {enigma.answers.map((answer, idx) => (
+              <div key={idx} className="a4-answer-option">
+                <span className="answer-letter">
+                  {String.fromCharCode(65 + idx)}
+                </span>
+                <span className="answer-text">{answer}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="a4-right-section">
+        <div className="a4-qr-section">
+          <h3>📱 Scanner QR</h3>
+          <div className="a4-qr-container">
+            <QRCodeSVG value={qrUrl} size={150} level="M" />
+          </div>
+        </div>
+
+        <div className="a4-code-section">
+          <h3>⌨️ Code Manuel</h3>
+          <div className="a4-manual-code">
+            <span className="code-value">{enigma.qrCode}</span>
+          </div>
+          <p className="code-instruction">
+            Tapez ce code si vous ne pouvez pas scanner
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// Page de Présentation du Jeu
+const PresentationCard = () => {
+  const gameUrl = "https://la-navigatrice.vercel.app/";
+  
+  return (
+    <div className="qr-card presentation">
+      {/* En-tête */}
+      <div className="presentation-header">
+        <h1 className="presentation-title">🌍 La Navigatrice 🌍</h1>
+        <h2 className="presentation-subtitle">Jeu d'Aventure et de Découverte</h2>
+        <div className="celebration-badge">🎉 Prêt pour l'Aventure ! 🎉</div>
+      </div>
+
+      {/* Contenu principal */}
+      <div className="presentation-content">
+        {/* Colonne gauche */}
+        <div className="presentation-left">
+          {/* Description du jeu */}
+          <div className="game-description">
+            <h2>🎯 À Propos du Jeu</h2>
+            <p>
+              Embarquez pour un voyage extraordinaire autour du monde ! 
+              La Navigatrice est un jeu d'aventure interactif qui vous 
+              emmène à la découverte de destinations fascinantes.
+            </p>
+            <div className="game-features">
+              <h3>✨ Caractéristiques :</h3>
+              <ul>
+                <li>🗺️ Exploration de destinations uniques</li>
+                <li>🧩 Énigmes captivantes à résoudre</li>
+                <li>📸 Défis photo créatifs</li>
+                <li>🏆 Système de points et classements</li>
+                <li>🎮 Mini-jeux amusants</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Comment jouer */}
+          <div className="how-to-play">
+            <h3>🎮 Comment Jouer</h3>
+            <ol>
+              <li>Scannez le QR code, ou rendez-vous sur la page</li>
+              <li>Utilisez la carte qui se trouve devant l'entrée pour trouver les destinations</li>
+              <li>Mémorisez les destinations ou revenez pour voir celles qui vous manquent</li>
+              <li>Résolvez les énigmes</li>
+              <li>Chaque énigme réussie ou non propose un défi photo (La meilleure photo de la soirée sera élue)</li>
+              <li>À la fin de l'aventure, partagez vos photos dans le groupe WhatsApp avec le bouton prévu à cet effet</li>
+            </ol>
+          </div>
+        </div>
+
+        {/* Colonne droite */}
+        <div className="presentation-right">
+          {/* QR Code d'accès */}
+          <div className="qr-access">
+            <h2>🚀 Accès au Jeu</h2>
+            <div className="qr-container-presentation">
+              <QRCodeSVG 
+                value={gameUrl} 
+                size={150}
+                level="M"
+                includeMargin={true}
+              />
+            </div>
+            <div className="access-url">
+              <p className="url-label">Ou visitez directement :</p>
+              <p className="game-url">{gameUrl}</p>
+            </div>
+          </div>
+
+          {/* Message du Capitaine */}
+          <div className="captain-message">
+            <h3>💬 Message du Capitaine Alison</h3>
+            <div className="message-bubble">
+              <p>
+                "Ahoy, aventuriers ! Préparez-vous à embarquer pour un 
+                voyage inoubliable autour du monde. Chaque destination 
+                cache ses secrets... À vous de les découvrir !"
+              </p>
+              <div className="captain-signature">⚓ Capitaine Alison</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Pied de page */}
+      <div className="presentation-footer">
+        <div className="footer-waves">🌊 ⛵ 🌊</div>
+        <p>Bon voyage et que l'aventure commence !</p>
+        <div className="footer-date">
+          Créé avec ❤️ • {new Date().getFullYear()}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default QRVariations;

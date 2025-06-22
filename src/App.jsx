@@ -285,17 +285,24 @@ function App() {
 
       let searchValue = scannedData.trim();
 
-      // Recherche simple d'abord
+      // Recherche par qrCode d'abord, puis par id en fallback
       let enigma = currentEnigmas.find(
-        (e) => e.id.toLowerCase() === searchValue.toLowerCase()
+        (e) => e.qrCode.toLowerCase() === searchValue.toLowerCase()
       );
 
+      // Fallback: recherche par id si pas trouvé par qrCode
+      // if (!enigma) {
+      //   enigma = currentEnigmas.find(
+      //     (e) => e.id.toLowerCase() === searchValue.toLowerCase()
+      //   );
+      // }
+
       if (!enigma) {
-        alert(
-          `❌ Énigme non trouvée pour "${searchValue}"\n\nDisponibles: ${currentEnigmas
-            .map((e) => e.id)
-            .join(", ")}`
-        );
+        // Afficher les codes QR et IDs disponibles pour aider au debug
+        const availableCodes = currentEnigmas
+          .map((e) => `${e.qrCode} (${e.id})`)
+          .join("\n");
+        alert(`❌ Énigme non trouvée pour "${searchValue}"`);
         return;
       }
 
@@ -603,7 +610,7 @@ function App() {
         onShowSharedGallery={() => setShowSharedGallery(true)}
         totalEnigmas={ENIGMAS.length}
       />
-      {/* {<QRVariations></QRVariations>} */}
+      {<QRVariations></QRVariations>}
 
       {/* Carte du monde interactive */}
       <WorldMap
