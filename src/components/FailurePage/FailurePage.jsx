@@ -4,9 +4,79 @@ import { calculateDetailedStats } from "../../utils/scoring";
 import { ENIGMAS } from "../../data/enigmas";
 import Camera from "../Camera/Camera";
 import PhotoNotification from "../PhotoNotification/PhotoNotification";
+import AchievementSystem from "../AchievementSystem/AchievementSystem";
 import { savePhoto, getStoredPhotos } from "../../utils/photoStorage";
 import { useIsMobile } from "../../hooks/useIsMobile";
 import "../../styles/failure.css";
+
+// Import des trophées pour le partage
+const ACHIEVEMENTS = [
+  {
+    id: "first_discovery",
+    title: "Premier Explorateur",
+    description: "Découvrir votre première destination",
+    icon: "🗺️",
+    condition: (player) => player.completed?.length >= 1,
+    rarity: "common",
+  },
+  {
+    id: "photo_enthusiast",
+    title: "Photographe Aventurier",
+    description: "Prendre 3 photos souvenirs",
+    icon: "📸",
+    condition: () => {
+      const photos = JSON.parse(localStorage.getItem("gamePhotos") || "[]");
+      return photos.length >= 3;
+    },
+    rarity: "rare",
+  },
+  {
+    id: "perfect_navigator",
+    title: "Navigateur Parfait",
+    description: "Résoudre 3 énigmes sans erreur",
+    icon: "🧭",
+    condition: (player) => {
+      const perfectSolves = player.completed?.filter((enigmaId) => {
+        const attempts = player.enigmaAttempts?.[enigmaId] || 0;
+        return attempts === 1;
+      });
+      return perfectSolves?.length >= 3;
+    },
+    rarity: "epic",
+  },
+  {
+    id: "speed_demon",
+    title: "Éclair des Mers",
+    description: "Résoudre une énigme en moins de 30 secondes",
+    icon: "⚡",
+    condition: () => {
+      return false; // À implémenter avec un système de timing
+    },
+    rarity: "legendary",
+  },
+  {
+    id: "completionist",
+    title: "Maître Explorateur",
+    description: "Terminer toutes les destinations",
+    icon: "🏆",
+    condition: (player) => player.completed?.length >= 7,
+    rarity: "legendary",
+  },
+  {
+    id: "flawless_captain",
+    title: "Capitaine Impeccable",
+    description: "Terminer toutes les énigmes sans aucune erreur",
+    icon: "👑",
+    condition: (player) => {
+      const perfectSolves = player.completed?.filter((enigmaId) => {
+        const attempts = player.enigmaAttempts?.[enigmaId] || 0;
+        return attempts === 1;
+      });
+      return perfectSolves?.length >= 5;
+    },
+    rarity: "mythic",
+  },
+];
 
 const FailurePage = ({
   player,
@@ -18,6 +88,7 @@ const FailurePage = ({
   const [showCamera, setShowCamera] = useState(false);
   const [showPhotoNotification, setShowPhotoNotification] = useState(false);
   const [lastPhotoData, setLastPhotoData] = useState(null);
+  const [showAchievements, setShowAchievements] = useState(false);
   const isMobile = useIsMobile();
   const cameraRef = useRef(null);
   const stats = calculateDetailedStats(player);
@@ -26,6 +97,11 @@ const FailurePage = ({
   // Récupérer toutes les photos du joueur
   const allPhotos = getStoredPhotos();
   const playerPhotos = allPhotos;
+
+  // Fonction pour récupérer les trophées débloqués
+  const getUnlockedTrophies = () => {
+    return ACHIEVEMENTS.filter(achievement => achievement.condition(player));
+  };
 
   const handleTakePhoto = () => {
     setShowCamera(true);
@@ -105,12 +181,24 @@ const FailurePage = ({
   const shareOnWhatsApp = async () => {
     const allPhotos = getStoredPhotos();
     const playerPhotos = allPhotos;
+    const unlockedTrophies = getUnlockedTrophies();
+
+    // Générer la section des trophées
+    let trophiesText = "";
+    if (unlockedTrophies.length > 0) {
+      trophiesText = `🏆 Trophées débloqués (${unlockedTrophies.length}):\n`;
+      unlockedTrophies.forEach(trophy => {
+        trophiesText += `${trophy.icon} ${trophy.title}\n`;
+      });
+      trophiesText += "\n";
+    }
 
     const shareText =
       `🌊 Aventure Maritime - Voyage Inachevé\n\n` +
       `⚓ Navigateur: ${player?.name || "Anonyme"}\n` +
       `🎯 Énigmes résolues: ${player?.completed?.length || 0}\n` +
-      `📸 Photos prises: ${playerPhotos.length}\n\n` +
+      `📸 Photos prises: ${playerPhotos.length}\n` +
+      (trophiesText ? `\n${trophiesText}` : "\n") +
       `Même si le voyage n'est pas terminé, l'aventure continue ! 🚢\n\n` +
       `#LaNavigatrice #AventureMaritine`;
 
@@ -367,6 +455,12 @@ const FailurePage = ({
           <button className="btn btn-primary btn-large" onClick={onRestart}>
             ⛵ Recommencer la Navigation
           </button>
+          <button 
+            className="btn btn-secondary" 
+            onClick={() => setShowAchievements(true)}
+          >
+            🏆 Voir mes Trophées
+          </button>
         </div>
 
         {showCamera && (
@@ -401,6 +495,14 @@ const FailurePage = ({
           </div>
         </div>
       </div>
+      
+      {/* Système de trophées */}
+      {showAchievements && (
+        <AchievementSystem 
+          player={player} 
+          onClose={() => setShowAchievements(false)} 
+        />
+      )}
     </div>
   );
 };

@@ -176,11 +176,17 @@
   .qr-generator {
     background: none !important;
     padding: 0 !important;
+    margin-top: 0 !important;
   }
 
   .qr-cards-grid {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 1rem !important;
+    margin-top: 2rem !important;
+  }
+
+  .qr-card:first-child {
+    margin-top: 3rem !important;
   }
 
   .qr-card {
@@ -199,6 +205,17 @@
   body {
     -webkit-print-color-adjust: exact !important;
     color-adjust: exact !important;
+  }
+
+  /* Masquer tous les éléments de navigation lors de l'impression */
+  header, nav, .header {
+    display: none !important;
+  }
+
+  /* S'assurer que le contenu principal commence en haut de page */
+  main, .main-content {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
   }
 }
 

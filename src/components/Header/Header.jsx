@@ -7,7 +7,11 @@ const Header = ({
   onShowLeaderboard,
   onShowAchievements,
   onShowSharedGallery,
+  onShowPrintablePresentation,
+  onShowMandatoryQuiz,
+  showQuizButton = false,
   totalEnigmas,
+  onResetStorage,
 }) => {
   if (!player) return null;
 
@@ -24,28 +28,7 @@ const Header = ({
         )
       : 100;
 
-  // Créer les fragments visuels
-  const fragments = Array.from({ length: totalEnigmas }, (_, i) => {
-    if (i < completed) {
-      return (
-        <div key={i} className="fragment completed" title="Destination visitée">
-          ✓
-        </div>
-      );
-    } else if (i < totalProcessed) {
-      return (
-        <div key={i} className="fragment failed" title="Destination manquée">
-          ✗
-        </div>
-      );
-    } else {
-      return (
-        <div key={i} className="fragment missing" title="À découvrir">
-          ○
-        </div>
-      );
-    }
-  });
+
 
   return (
     <header className="game-header">
@@ -55,13 +38,19 @@ const Header = ({
           <div className="compass-decoration">🧭</div>
           <div className="player-details">
             <h1 className="player-name">{player.name}</h1>
-            <div className="player-stats">
-              <span className="stat completed">{completed} ✓</span>
-              <span className="stat failed">{failed} ✗</span>
-              <span className="stat pending">
-                {totalEnigmas - totalProcessed} ○
-              </span>
-              <span className="stat success-rate">{successRate}% 🎯</span>
+            <div className="simple-stats">
+              <div className="stat-group success">
+                <span className="stat-number">{completed}</span>
+                <span className="stat-label">Réussies</span>
+              </div>
+              <div className="stat-group failed">
+                <span className="stat-number">{failed}</span>
+                <span className="stat-label">Échouées</span>
+              </div>
+              <div className="stat-group remaining">
+                <span className="stat-number">{totalEnigmas - totalProcessed}</span>
+                <span className="stat-label">Restantes</span>
+              </div>
             </div>
           </div>
         </div>
@@ -73,12 +62,20 @@ const Header = ({
           <button className="achievements-btn" onClick={onShowAchievements}>
             🏆 Exploits
           </button>
+          {showQuizButton && (
+            <button className="quiz-btn mandatory" onClick={onShowMandatoryQuiz}>
+              🏴‍☠️ Quiz Final
+            </button>
+          )}
+          <button className="reset-btn" onClick={onResetStorage}>
+            🗑️ Reset
+          </button>
         </div>
 
-        {/* Barre de progression */}
-        <div className="progress-bar">
-          <div className="progress-label">
-            Progression
+        {/* Barre de progression simplifiée */}
+        <div className="simple-progress">
+          <div className="progress-info">
+            <span className="progress-text">Progression du voyage</span>
             <span className="progress-percentage">{progressPercentage}%</span>
           </div>
           <div className="progress-track">
@@ -87,7 +84,6 @@ const Header = ({
               style={{ width: `${progressPercentage}%` }}
             />
           </div>
-          <div className="fragments">{fragments}</div>
         </div>
       </div>
     </header>

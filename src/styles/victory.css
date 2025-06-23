@@ -702,6 +702,77 @@
   box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
 }
 
+/* Gallery button */
+.victory-btn.gallery {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border-color: #5a67d8;
+}
+
+.victory-btn.gallery:hover {
+  background: linear-gradient(135deg, #7c3aed, #667eea);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+/* Quiz button */
+.victory-btn.quiz {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  border-color: #92400e;
+  position: relative;
+}
+
+.victory-btn.quiz:hover {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+  transform: translateY(-3px) scale(1.02);
+}
+
+.victory-btn.quiz::after {
+  content: "🏴‍☠️";
+  position: absolute;
+  right: -10px;
+  top: -10px;
+  font-size: 1.5rem;
+  animation: flagWave 2s ease-in-out infinite;
+}
+
+@keyframes flagWave {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+}
+
+.victory-btn.achievements {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #92400e;
+  border-color: #d97706;
+  font-weight: 700;
+  position: relative;
+  overflow: hidden;
+}
+
+.victory-btn.achievements:hover {
+  background: linear-gradient(135deg, #ffed4e, #ffd700);
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
+  transform: translateY(-3px) scale(1.02);
+  color: #7c2d12;
+}
+
+.victory-btn.achievements::before {
+  content: "✨";
+  position: absolute;
+  left: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0.5; transform: translateY(-50%) scale(0.8); }
+  50% { opacity: 1; transform: translateY(-50%) scale(1.2); }
+}
+
 /* ===== RESPONSIVE DESIGN - MOBILE FIRST ===== */
 
 /* Mobiles (320px - 480px) */

@@ -35,7 +35,7 @@ const QRGenerator = () => {
             key={enigma.id}
             enigma={enigma}
             index={index + 1}
-            qrUrl={generateQRUrl(enigma.id)}
+            qrUrl={generateQRUrl(enigma)}
           />
         ))}
       </div>

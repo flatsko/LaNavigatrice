@@ -1990,16 +1990,16 @@ color: var(--ocean-deep);
 
 /* ===== PRINT STYLES ===== */
 @media print {
-* {
-  background: white !important;
-  color: black !important;
-  box-shadow: none !important;
-}
+  * {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
 
-.qr-scanner-overlay,
-.enigma-overlay,
-.leaderboard-overlay,
-.network-status {
-  display: none !important;
-}
+  .qr-scanner-overlay,
+  .enigma-overlay,
+  .leaderboard-overlay,
+  .network-status {
+    display: none !important;
+  }
 }

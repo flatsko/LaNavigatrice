@@ -300,13 +300,15 @@ const A4LandscapeCard = ({ enigma, index, qrUrl }) => (
 // Page de Présentation du Jeu
 const PresentationCard = () => {
   const gameUrl = "https://la-navigatrice.vercel.app/";
-  
+
   return (
     <div className="qr-card presentation">
       {/* En-tête */}
       <div className="presentation-header">
         <h1 className="presentation-title">🌍 La Navigatrice 🌍</h1>
-        <h2 className="presentation-subtitle">Jeu d'Aventure et de Découverte</h2>
+        <h2 className="presentation-subtitle">
+          Jeu d'Aventure et de Découverte
+        </h2>
         <div className="celebration-badge">🎉 Prêt pour l'Aventure ! 🎉</div>
       </div>
 
@@ -317,19 +319,14 @@ const PresentationCard = () => {
           {/* Description du jeu */}
           <div className="game-description">
             <h2>🎯 À Propos du Jeu</h2>
-            <p>
-              Embarquez pour un voyage extraordinaire autour du monde ! 
-              La Navigatrice est un jeu d'aventure interactif qui vous 
-              emmène à la découverte de destinations fascinantes.
-            </p>
+            <p>Embarquez pour un voyage extraordinaire autour du monde !</p>
             <div className="game-features">
               <h3>✨ Caractéristiques :</h3>
               <ul>
-                <li>🗺️ Exploration de destinations uniques</li>
-                <li>🧩 Énigmes captivantes à résoudre</li>
-                <li>📸 Défis photo créatifs</li>
-                <li>🏆 Système de points et classements</li>
-                <li>🎮 Mini-jeux amusants</li>
+                <li>🦶 Sur les traces d'Alison </li>
+                <li>🧩 Réponses à trouver</li>
+                <li>📸 Défis photo </li>
+                <li>🎮 Mini-jeux </li>
               </ul>
             </div>
           </div>
@@ -339,11 +336,27 @@ const PresentationCard = () => {
             <h3>🎮 Comment Jouer</h3>
             <ol>
               <li>Scannez le QR code, ou rendez-vous sur la page</li>
-              <li>Utilisez la carte qui se trouve devant l'entrée pour trouver les destinations</li>
-              <li>Mémorisez les destinations ou revenez pour voir celles qui vous manquent</li>
+              <li>
+                Utilisez la carte qui se trouve devant l'entrée pour trouver les
+                destinations
+              </li>
+              <li>
+                Mémorisez les destinations ou revenez pour voir celles qui vous
+                manquent
+              </li>
               <li>Résolvez les énigmes</li>
-              <li>Chaque énigme réussie ou non propose un défi photo (La meilleure photo de la soirée sera élue)</li>
-              <li>À la fin de l'aventure, partagez vos photos dans le groupe WhatsApp avec le bouton prévu à cet effet</li>
+              <li>
+                Chaque énigme réussie ou non propose un défi photo (La meilleure
+                photo de la soirée sera élue)
+              </li>
+              <li>Résolvez les énigmes</li>
+              <li>
+                Le temps sera pris en compte pour départager la meilleure équipe
+              </li>
+              <li>
+                À la fin de l'aventure, partagez vos photos dans le groupe
+                WhatsApp avec le bouton prévu à cet effet
+              </li>
             </ol>
           </div>
         </div>
@@ -354,8 +367,8 @@ const PresentationCard = () => {
           <div className="qr-access">
             <h2>🚀 Accès au Jeu</h2>
             <div className="qr-container-presentation">
-              <QRCodeSVG 
-                value={gameUrl} 
+              <QRCodeSVG
+                value={gameUrl}
                 size={150}
                 level="M"
                 includeMargin={true}
@@ -369,14 +382,14 @@ const PresentationCard = () => {
 
           {/* Message du Capitaine */}
           <div className="captain-message">
-            <h3>💬 Message du Capitaine Alison</h3>
+            <h3>💬 Message du Sous-Capitaine Arnaud</h3>
             <div className="message-bubble">
               <p>
-                "Ahoy, aventuriers ! Préparez-vous à embarquer pour un 
-                voyage inoubliable autour du monde. Chaque destination 
-                cache ses secrets... À vous de les découvrir !"
+                "Ahoy, aventuriers ! Préparez-vous à embarquer pour un voyage
+                sur les traces d'Alison. Retracez son parcours et découvrez les
+                merveilles du monde... À vous de jouer !"
               </p>
-              <div className="captain-signature">⚓ Capitaine Alison</div>
+              <div className="captain-signature">⚓ Sous-Capitaine Arnaud</div>
             </div>
           </div>
         </div>

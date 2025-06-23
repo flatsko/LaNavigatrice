@@ -145,6 +145,18 @@
   color: var(--ocean-deep);
 }
 
+.achievement-legendary .achievement-title,
+.achievement-legendary .achievement-description {
+  color: #2d1810;
+  font-weight: 700;
+}
+
+.achievement-mythic .achievement-title,
+.achievement-mythic .achievement-description {
+  color: #1a1a1a;
+  font-weight: 700;
+}
+
 .achievement-description {
   margin: 0 0 0.5rem 0;
   color: var(--ocean-medium);
@@ -181,6 +193,12 @@
   color: #ffc107;
 }
 
+.achievement-rarity.mythic {
+  background: linear-gradient(45deg, rgba(255, 0, 150, 0.2), rgba(138, 43, 226, 0.2));
+  color: #ff0096;
+  border: 1px solid rgba(255, 0, 150, 0.3);
+}
+
 .achievement-common {
   border-color: #6c757d;
 }
@@ -197,9 +215,31 @@
   border-color: #ffc107;
   background: linear-gradient(
     135deg,
-    rgba(255, 193, 7, 0.1),
-    rgba(255, 215, 0, 0.1)
+    rgba(255, 193, 7, 0.3),
+    rgba(255, 215, 0, 0.4)
   );
+  color: #1a1a1a;
+}
+
+.achievement-mythic {
+  border-color: #ff0096;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9),
+    rgba(248, 250, 252, 0.95)
+  );
+  box-shadow: 0 0 20px rgba(255, 0, 150, 0.3);
+  animation: mythicGlow 2s ease-in-out infinite alternate;
+  color: #1a1a1a;
+}
+
+@keyframes mythicGlow {
+  0% {
+    box-shadow: 0 0 20px rgba(255, 0, 150, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 30px rgba(255, 0, 150, 0.5), 0 0 40px rgba(138, 43, 226, 0.3);
+  }
 }
 
 .new-badge {

@@ -25,6 +25,9 @@ function App() {
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [currentEnigma, setCurrentEnigma] = useState(null);
   const [leaderboardData, setLeaderboardData] = useState([]);
+  const [showMandatoryQuiz, setShowMandatoryQuiz] = useState(false);
+  const [quizCompleted, setQuizCompleted] = useState(false);
+  const [quizScore, setQuizScore] = useState(null);
 
   // Charger les données du joueur au démarrage
   useEffect(() => {
@@ -209,6 +212,23 @@ function App() {
     // Note: On ne supprime pas les données du localStorage pour garder l'historique
   };
 
+  // Reset du localStorage
+  const resetStorage = () => {
+    if (window.confirm("⚠️ Êtes-vous sûr de vouloir effacer toutes les données ? Cette action est irréversible.")) {
+      localStorage.clear();
+      setCurrentPlayer(null);
+      setGameState("welcome");
+      setShowQRScanner(false);
+      setShowEnigma(false);
+      setShowLeaderboard(false);
+      setShowMandatoryQuiz(false);
+      setQuizCompleted(false);
+      setQuizScore(null);
+      setLeaderboardData([]);
+      alert("✅ Toutes les données ont été effacées.");
+    }
+  };
+
   // Gestion des erreurs globales
   useEffect(() => {
     const handleError = (event) => {
@@ -271,6 +291,8 @@ function App() {
           player={currentPlayer}
           onRestart={restartGame}
           onViewLeaderboard={() => setShowLeaderboard(true)}
+          quizScore={quizScore}
+          quizCompleted={quizCompleted}
         />
 
         {showLeaderboard && (
@@ -292,6 +314,7 @@ function App() {
         player={currentPlayer}
         onScanQR={() => setShowQRScanner(true)}
         onShowLeaderboard={() => setShowLeaderboard(true)}
+        onResetStorage={resetStorage}
         totalEnigmas={ENIGMAS.length}
       />
 

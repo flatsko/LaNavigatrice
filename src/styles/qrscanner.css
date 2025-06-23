@@ -104,12 +104,16 @@
   font-size: 1.3rem !important;
   color: white !important;
   font-weight: bold;
-  z-index: 99999 !important; /* Force au-dessus de tout */
+  z-index: 999999 !important; /* Force au-dessus de tout, même de la caméra */
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5) !important;
   /* Force visibility on mobile */
   visibility: visible !important;
   opacity: 1 !important;
   pointer-events: auto !important;
+  /* Force rendering above video elements */
+  transform: translateZ(0) !important;
+  will-change: transform !important;
+  isolation: isolate !important;
 }
 
 .qr-close-btn:hover {
@@ -540,8 +544,7 @@
 }
 
 .camera-controls-bottom .switch-camera-btn,
-.camera-controls-bottom .focus-btn,
-.camera-controls-bottom .test-scan-btn {
+.camera-controls-bottom .focus-btn {
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.3);
@@ -558,11 +561,62 @@
 }
 
 .camera-controls-bottom .switch-camera-btn:hover,
-.camera-controls-bottom .focus-btn:hover,
-.camera-controls-bottom .test-scan-btn:hover {
+.camera-controls-bottom .focus-btn:hover {
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.5);
   transform: translateY(-2px);
+}
+
+/* Style spécial pour le bouton Scanner QR Code */
+ .test-scan-btn {
+  background: linear-gradient(135deg, #FF6B35 0%, #F7931E 50%, #FF4500 100%);
+  backdrop-filter: blur(10px);
+  border: 3px solid #FF8C42;
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg) var(--spacing-xl);
+  font-size: 1.1rem;
+  font-weight: var(--font-weight-bold);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  box-shadow: 0 6px 25px rgba(255, 107, 53, 0.4), 0 0 20px rgba(255, 107, 53, 0.2);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  min-height: 56px;
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.camera-controls-bottom .test-scan-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s ease;
+}
+
+.camera-controls-bottom .test-scan-btn:hover::before {
+  left: 100%;
+}
+
+.camera-controls-bottom .test-scan-btn:hover {
+  background: linear-gradient(135deg, #FF8C42 0%, #FFB347 50%, #FF6347 100%);
+  border-color: #FFA500;
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 8px 30px rgba(255, 107, 53, 0.5), 0 0 25px rgba(255, 107, 53, 0.3);
+}
+
+.camera-controls-bottom .test-scan-btn:active {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
 }
 
 /* ===== SCANNER INSTRUCTIONS - EN BAS ===== */
@@ -610,7 +664,7 @@
 /* ===== SCANNER ACTIONS - BOUTONS EN BAS ===== */
 .scanner-actions {
   background: rgba(0, 0, 0, 0.9);
-  padding: var(--spacing-lg);
+  padding: var(--spacing-md);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   gap: var(--spacing-md);
@@ -618,25 +672,102 @@
   flex-shrink: 0;
 }
 
-.manual-input-btn {
-  background: linear-gradient(135deg, #ff6b6b 0%, #e74c3c 100%);
+/* ===== CONTRÔLES CAMÉRA EN BAS ===== */
+.camera-controls-bottom {
+  background: rgba(0, 0, 0, 0.95);
+  padding: var(--spacing-lg);
+  border-top: 2px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Conteneur pour les contrôles de caméra */
+.camera-controls-bottom .camera-controls {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: var(--spacing-sm);
+}
+
+/* Conteneur pour les boutons principaux */
+.camera-controls-bottom .main-buttons {
+  display: flex;
+  gap: var(--spacing-lg);
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+}
+
+/* Styles pour les boutons de contrôle de caméra */
+.switch-camera-btn,
+.focus-btn {
+  background: rgba(255, 255, 255, 0.1);
   color: white;
-  border: none;
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-md) var(--spacing-xl);
-  font-size: 0.9rem;
-  font-weight: var(--font-weight-semibold);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: 0.75rem;
   cursor: pointer;
-  transition: var(--transition-fast);
+  transition: all 0.2s ease;
+}
+
+.switch-camera-btn:hover,
+.focus-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.manual-input-btn {
+  background: rgba(108, 117, 125, 0.8);
+  color: #f8f9fa;
+  border: 1px solid rgba(108, 117, 125, 0.5);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: 0.85rem;
+  font-weight: var(--font-weight-normal);
+  cursor: pointer;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
-  min-height: 44px;
+  gap: var(--spacing-xs);
+  min-height: 40px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  opacity: 0.8;
+}
+
+.manual-input-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.4s ease;
+}
+
+.manual-input-btn:hover::before {
+  left: 100%;
 }
 
 .manual-input-btn:hover {
-  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-  transform: translateY(-2px);
+  background: rgba(134, 142, 150, 0.9);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+  border-color: rgba(134, 142, 150, 0.7);
+  opacity: 1;
+}
+
+.manual-input-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* ===== CANVAS CACHÉ ===== */
@@ -824,9 +955,12 @@ canvas {
     font-size: 1.15rem !important;
     /* Force visibility on tablets */
     position: fixed !important;
-    z-index: 99999 !important;
+    z-index: 999999 !important;
     background: rgba(0, 0, 0, 0.9) !important;
     border: 2px solid rgba(255, 255, 255, 0.7) !important;
+    transform: translateZ(0) !important;
+    will-change: transform !important;
+    isolation: isolate !important;
   }
 }
 
@@ -866,9 +1000,12 @@ canvas {
     min-height: 44px !important;
     /* Force mobile visibility */
     position: fixed !important;
-    z-index: 99999 !important;
+    z-index: 999999 !important;
     background: rgba(0, 0, 0, 0.95) !important;
     border: 3px solid rgba(255, 255, 255, 0.8) !important;
+    transform: translateZ(0) !important;
+    will-change: transform !important;
+    isolation: isolate !important;
   }
   .scanner-content {
     max-height: calc(95vh - 100px);
@@ -1098,9 +1235,12 @@ canvas {
     right: 10px !important;
     /* Force visibility on very small screens */
     position: fixed !important;
-    z-index: 99999 !important;
+    z-index: 999999 !important;
     background: rgba(0, 0, 0, 0.95) !important;
     border: 3px solid rgba(255, 255, 255, 0.9) !important;
+    transform: translateZ(0) !important;
+    will-change: transform !important;
+    isolation: isolate !important;
   }
 }
 

@@ -48,8 +48,88 @@
   gap: 1.5rem;
   padding: 1.5rem 2rem;
   max-width: 1400px;
-  margin: 0 auto;
-  align-items: start;
+}
+
+/* Nouveaux styles pour les statistiques simplifiées */
+.simple-stats {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.stat-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  min-width: 60px;
+}
+
+.stat-group.success {
+  background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+  border: 2px solid #28a745;
+}
+
+.stat-group.failed {
+  background: linear-gradient(135deg, #ffeaea 0%, #f8d7da 100%);
+  border: 2px solid #dc3545;
+}
+
+.stat-group.remaining {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  border: 2px solid #2196f3;
+}
+
+.stat-number {
+  font-size: 1.5rem;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.stat-group.success .stat-number {
+  color: #28a745;
+}
+
+.stat-group.failed .stat-number {
+  color: #dc3545;
+}
+
+.stat-group.remaining .stat-number {
+  color: #2196f3;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 0.25rem;
+  color: #666;
+}
+
+/* Styles pour la progression simplifiée */
+.simple-progress {
+  grid-area: progress;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.progress-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.progress-percentage {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: var(--header-primary, #2196f3);
 }
 
 /* ===== PLAYER INFO SECTION ===== */
@@ -353,6 +433,85 @@
   white-space: nowrap;
 }
 
+.quiz-btn.mandatory {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  color: white;
+  border: 2px solid #991b1b;
+  animation: pulseQuiz 2s ease-in-out infinite;
+  position: relative;
+  overflow: hidden;
+}
+
+.quiz-btn.mandatory:hover {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+}
+
+@keyframes pulseQuiz {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(220, 38, 38, 0);
+  }
+}
+
+/* Bouton Reset */
+.reset-btn {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  padding: 1rem 1.5rem;
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3),
+    0 2px 8px rgba(239, 68, 68, 0.2);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  white-space: nowrap;
+}
+
+.reset-btn:hover {
+  background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+}
+
+.reset-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+/* Bouton Présentation */
+.print-btn {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  padding: 1rem 1.5rem;
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3),
+    0 2px 8px rgba(139, 92, 246, 0.2);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  white-space: nowrap;
+}
+
 /* Bouton Galerie */
 .gallery-btn {
   background: linear-gradient(135deg, #ff6b6b, #ee5a24);
@@ -438,7 +597,8 @@
 /* Effets communs pour tous les boutons */
 .scan-btn::before,
 .achievements-btn::before,
-.leaderboard-btn::before {
+.leaderboard-btn::before,
+.print-btn::before {
   content: "";
   position: absolute;
   top: 0;
@@ -456,7 +616,8 @@
 
 .scan-btn:hover::before,
 .achievements-btn:hover::before,
-.leaderboard-btn:hover::before {
+.leaderboard-btn:hover::before,
+.print-btn:hover::before {
   left: 100%;
 }
 
@@ -482,10 +643,18 @@
     0 4px 15px rgba(29, 161, 242, 0.3);
 }
 
+.print-btn:hover {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4),
+    0 4px 15px rgba(139, 92, 246, 0.3);
+}
+
 /* Effets active */
 .scan-btn:active,
 .achievements-btn:active,
-.leaderboard-btn:active {
+.leaderboard-btn:active,
+.print-btn:active {
   transform: translateY(-1px);
 }
 
@@ -504,6 +673,11 @@
     0 2px 8px rgba(29, 161, 242, 0.2);
 }
 
+.print-btn:active {
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3),
+    0 2px 8px rgba(139, 92, 246, 0.2);
+}
+
 /* Effets focus */
 .scan-btn:focus-visible {
   outline: 3px solid rgba(34, 197, 94, 0.5);
@@ -517,6 +691,11 @@
 
 .leaderboard-btn:focus-visible {
   outline: 3px solid rgba(29, 161, 242, 0.5);
+  outline-offset: 2px;
+}
+
+.print-btn:focus-visible {
+  outline: 3px solid rgba(139, 92, 246, 0.5);
   outline-offset: 2px;
 }
 

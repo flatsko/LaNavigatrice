@@ -4,6 +4,7 @@ import { calculateSuccessRate, isGameValid, GAME_RULES } from "./utils/scoring";
 import QRGenerator from "./components/QRGenerator/QRGenerator";
 import QRVariations from "./components/QRGenerator/QRVariations";
 import SharedPhotoGallery from "./components/SharedPhotoGallery/SharedPhotoGallery";
+import PrintableGamePresentation from "./components/PrintableGamePresentation/PrintableGamePresentation";
 // Composants
 import WelcomePage from "./components/WelcomePage/WelcomePage";
 import Header from "./components/Header/Header";
@@ -14,9 +15,11 @@ import Leaderboard from "./components/Leaderboard/Leaderboard";
 import VictoryPage from "./components/VictoryPage/VictoryPage";
 import FailurePage from "./components/FailurePage/FailurePage"; // CORRECTION: Ajouter FailurePage
 import AchievementSystem from "./components/AchievementSystem/AchievementSystem";
+import { AchievementNotificationProvider } from "./components/AchievementSystem";
 import ParticleEffect from "./components/ParticleEffect/ParticleEffect";
 import TipsSystem from "./components/TipsSystem/TipsSystem";
 import SoundManager from "./components/SoundManager/SoundManager";
+import FlagQuiz from "./components/FlagQuiz/FlagQuiz";
 
 // Styles - globals.css est importé via index.css
 
@@ -37,6 +40,11 @@ function App() {
   const [currentEnigma, setCurrentEnigma] = useState(null);
   const [leaderboardData, setLeaderboardData] = useState([]);
 
+  // État pour le quiz obligatoire
+  const [showMandatoryQuiz, setShowMandatoryQuiz] = useState(false);
+  const [quizCompleted, setQuizCompleted] = useState(false);
+  const [quizScore, setQuizScore] = useState(0);
+
   // Nouveaux états pour le système anti-triche
   const [showFailureModal, setShowFailureModal] = useState(false);
   const [failureReason, setFailureReason] = useState("");
@@ -46,6 +54,8 @@ function App() {
   const [showParticles, setShowParticles] = useState(false);
   const [particleType, setParticleType] = useState("success");
   const [showSharedGallery, setShowSharedGallery] = useState(false);
+  const [showPrintablePresentation, setShowPrintablePresentation] =
+    useState(false);
 
   // États pour le système de thèmes
   const [currentTheme, setCurrentTheme] = useState(getCurrentTheme());
@@ -103,6 +113,54 @@ function App() {
     };
 
     setAllPhotos((prev) => [photoWithPlayer, ...prev]);
+  };
+
+  // Fonction pour gérer la completion du quiz obligatoire
+  const handleQuizCompletion = (score, totalQuestions) => {
+    const percentage = (score / totalQuestions) * 100;
+    const passed = percentage >= 80;
+
+    console.log(
+      `Quiz terminé: ${score}/${totalQuestions} (${percentage.toFixed(1)}%)`
+    );
+
+    // Sauvegarder le résultat du quiz
+    const quizData = {
+      score,
+      totalQuestions,
+      percentage,
+      passed,
+      timestamp: new Date().toISOString(),
+      playerName: currentPlayer?.name,
+    };
+
+    localStorage.setItem(
+      `quiz_${currentPlayer?.name}`,
+      JSON.stringify(quizData)
+    );
+
+    setQuizScore(percentage);
+    setShowMandatoryQuiz(false);
+
+    if (passed) {
+      console.log("✅ Quiz réussi! Accès à la victoire");
+      setQuizCompleted(true);
+      setGameState("victory");
+    } else {
+      console.log("❌ Quiz échoué, score insuffisant");
+      // Rester en mode jeu, le joueur peut réessayer
+      alert(
+        `Quiz échoué! Vous avez obtenu ${percentage.toFixed(
+          1
+        )}% mais il faut au minimum 80% pour valider l'aventure. Vous pouvez réessayer.`
+      );
+    }
+  };
+
+  // Fonction pour fermer le quiz sans le compléter
+  const handleQuizClose = () => {
+    setShowMandatoryQuiz(false);
+    // Le joueur reste en mode jeu et peut relancer le quiz plus tard
   };
   // Fonction pour redémarrer le jeu
   const restartGame = () => {
@@ -211,8 +269,28 @@ function App() {
         console.log("Validation:", validation);
 
         if (validation.isValid) {
-          console.log("🎉 Conditions de victoire remplies");
-          setGameState("victory");
+          console.log(
+            "🎉 Conditions de base remplies, lancement du quiz obligatoire"
+          );
+          // Vérifier si le quiz a déjà été complété avec succès
+          const quizData = localStorage.getItem(`quiz_${migratedPlayer.name}`);
+          if (quizData) {
+            const parsedQuizData = JSON.parse(quizData);
+            if (parsedQuizData.passed) {
+              console.log("✅ Quiz déjà réussi, accès à la victoire");
+              setQuizCompleted(true);
+              setQuizScore(parsedQuizData.score);
+              setGameState("victory");
+            } else {
+              console.log("🔄 Quiz à refaire (score insuffisant)");
+              setShowMandatoryQuiz(true);
+              setGameState("playing");
+            }
+          } else {
+            console.log("📝 Premier passage du quiz obligatoire");
+            setShowMandatoryQuiz(true);
+            setGameState("playing");
+          }
         } else {
           console.log("❌ Conditions de victoire non remplies");
           setFailureReason(validation.reason);
@@ -272,6 +350,27 @@ function App() {
     updateLeaderboard();
   };
 
+  // Reset du localStorage
+  const resetStorage = () => {
+    if (
+      window.confirm(
+        "⚠️ Êtes-vous sûr de vouloir effacer toutes les données ? Cette action est irréversible."
+      )
+    ) {
+      localStorage.clear();
+      setCurrentPlayer(null);
+      setGameState("welcome");
+      setShowQRScanner(false);
+      setShowEnigma(false);
+      setShowLeaderboard(false);
+      setShowMandatoryQuiz(false);
+      setQuizCompleted(false);
+      setQuizScore(null);
+      setLeaderboardData([]);
+      alert("✅ Toutes les données ont été effacées.");
+    }
+  };
+
   // Scanner QR Code
   // Scanner QR Code
   const handleQRScan = (scannedData) => {
@@ -291,11 +390,11 @@ function App() {
       );
 
       // Fallback: recherche par id si pas trouvé par qrCode
-      // if (!enigma) {
-      //   enigma = currentEnigmas.find(
-      //     (e) => e.id.toLowerCase() === searchValue.toLowerCase()
-      //   );
-      // }
+      if (!enigma) {
+        enigma = currentEnigmas.find(
+          (e) => e.id.toLowerCase() === searchValue.toLowerCase()
+        );
+      }
 
       if (!enigma) {
         // Afficher les codes QR et IDs disponibles pour aider au debug
@@ -568,6 +667,8 @@ function App() {
           player={currentPlayer}
           onRestart={restartGame}
           onViewLeaderboard={() => setShowLeaderboard(true)}
+          quizScore={quizScore}
+          quizCompleted={quizCompleted}
         />
 
         {showLeaderboard && (
@@ -586,6 +687,12 @@ function App() {
 
     const validation = isGameValid(currentPlayer);
     if (validation.isValid) {
+      // Vérifier si le quiz obligatoire doit être fait
+      if (!quizCompleted) {
+        console.log("Quiz obligatoire requis avant la victoire");
+        setShowMandatoryQuiz(true);
+        return;
+      }
       setGameState("victory");
     } else {
       setFailureReason(validation.reason);
@@ -600,7 +707,8 @@ function App() {
   };
   // État de jeu principal
   return (
-    <div className="app">
+    <AchievementNotificationProvider player={currentPlayer}>
+      <div className="app">
       {/* Header avec informations du joueur */}
       <Header
         player={currentPlayer}
@@ -608,9 +716,23 @@ function App() {
         onShowLeaderboard={() => setShowLeaderboard(true)}
         onShowAchievements={() => setShowAchievements(true)}
         onShowSharedGallery={() => setShowSharedGallery(true)}
+        onShowPrintablePresentation={() => {
+          console.log("Fonction onShowPrintablePresentation appelée!");
+          setShowPrintablePresentation(true);
+          console.log("showPrintablePresentation défini à true");
+        }}
+        onShowMandatoryQuiz={() => setShowMandatoryQuiz(true)}
+        onResetStorage={resetStorage}
+        showQuizButton={
+          currentPlayer &&
+          currentPlayer.completed?.length +
+            (currentPlayer.failed?.length || 0) ===
+            currentEnigmas.length &&
+          !quizCompleted
+        }
         totalEnigmas={ENIGMAS.length}
       />
-      {<QRVariations></QRVariations>}
+      {/* {<QRVariations></QRVariations>} */}
 
       {/* Carte du monde interactive */}
       <WorldMap
@@ -672,6 +794,31 @@ function App() {
         />
       )}
 
+      {/* Page d'impression de présentation */}
+      {showPrintablePresentation && (
+        <PrintableGamePresentation
+          onClose={() => {
+            console.log("Fermeture de PrintableGamePresentation");
+            setShowPrintablePresentation(false);
+          }}
+        />
+      )}
+
+      {/* Quiz obligatoire */}
+      {showMandatoryQuiz && (
+        <FlagQuiz
+          enigmas={currentEnigmas}
+          onComplete={handleQuizCompletion}
+          onClose={handleQuizClose}
+          isMandatory={true}
+          requiredScore={80}
+        />
+      )}
+      {console.log(
+        "showPrintablePresentation état:",
+        showPrintablePresentation
+      )}
+
       {/* Effets de particules */}
       {showParticles && (
         <ParticleEffect
@@ -681,12 +828,11 @@ function App() {
         />
       )}
 
-      {/* Système de conseils */}
-      <TipsSystem
+      {/* <TipsSystem
         player={currentPlayer}
         gameState={gameState}
         onClose={() => {}}
-      />
+      /> */}
 
       {/* Gestionnaire de sons */}
       <SoundManager
@@ -698,7 +844,8 @@ function App() {
 
       {/* Indicateur de connexion (optionnel) */}
       <NetworkStatus />
-    </div>
+      </div>
+    </AchievementNotificationProvider>
   );
 }
 

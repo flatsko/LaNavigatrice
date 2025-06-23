@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import "./AchievementSystem.css";
+import AchievementNotification from './AchievementNotification';
 
 const ACHIEVEMENTS = [
   {
@@ -54,11 +55,32 @@ const ACHIEVEMENTS = [
     condition: (player) => player.completed?.length >= 5,
     rarity: "legendary",
   },
+  {
+    id: "flawless_captain",
+    title: "Capitaine Impeccable",
+    description: "Terminer toutes les missions sans aucune erreur",
+    icon: "👑",
+    condition: (player) => {
+      const totalEnigmas = player.completed?.length || 0;
+      if (totalEnigmas === 0) return false;
+      
+      // Vérifier que toutes les énigmes ont été résolues en 1 tentative
+      const allPerfect = player.completed?.every((enigmaId) => {
+        const attempts = player.enigmaAttempts?.[enigmaId] || 0;
+        return attempts === 1;
+      });
+      
+      return allPerfect && totalEnigmas >= 5; // Au moins 5 énigmes complétées parfaitement
+    },
+    rarity: "mythic",
+  },
 ];
 
 const AchievementSystem = ({ player, onClose }) => {
   const [unlockedAchievements, setUnlockedAchievements] = useState([]);
   const [newAchievements, setNewAchievements] = useState([]);
+  const [currentNotification, setCurrentNotification] = useState(null);
+  const [notificationQueue, setNotificationQueue] = useState([]);
 
   useEffect(() => {
     const savedAchievements = JSON.parse(
@@ -82,10 +104,26 @@ const AchievementSystem = ({ player, onClose }) => {
         "playerAchievements",
         JSON.stringify(updatedAchievements)
       );
+      
+      // Ajouter les nouveaux achievements à la queue de notifications
+      setNotificationQueue(prev => [...prev, ...newlyUnlocked]);
     }
 
     setUnlockedAchievements(currentUnlocked);
   }, [player]);
+
+  // Gérer la queue des notifications
+  useEffect(() => {
+    if (notificationQueue.length > 0 && !currentNotification) {
+      const nextNotification = notificationQueue[0];
+      setCurrentNotification(nextNotification);
+      setNotificationQueue(prev => prev.slice(1));
+    }
+  }, [notificationQueue, currentNotification]);
+
+  const handleNotificationClose = () => {
+    setCurrentNotification(null);
+  };
 
   const getRarityClass = (rarity) => {
     return `achievement-${rarity}`;
@@ -98,7 +136,14 @@ const AchievementSystem = ({ player, onClose }) => {
   };
 
   return (
-    <div className="achievement-overlay">
+    <>
+      {/* Notification popup pour les nouveaux achievements */}
+      <AchievementNotification 
+        achievement={currentNotification}
+        onClose={handleNotificationClose}
+      />
+      
+      <div className="achievement-overlay">
       <div className="achievement-modal">
         <div className="achievement-header">
           <h3>🏆 Exploits du Capitaine</h3>
@@ -165,6 +210,7 @@ const AchievementSystem = ({ player, onClose }) => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

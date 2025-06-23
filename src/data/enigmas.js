@@ -115,7 +115,7 @@ export const ENIGMAS = [
       "Les chutes d'Iguazu sont situées sur la frontière entre l'Argentine et le Brésil. Un moment passé incroyable. Leur nom provient de l'espèce d'araignée Iguana, qui se trouve dans la région.",
     hasPhoto: true,
     photoPrompt:
-      "Prenez une photo spectaculaire en imitant les chutes d'eau - sautez ou levez les bras vers le ciel près du lac !",
+      "Prenez une photo spectaculaire, vous vous souvenez des cours d'acrogym ? ",
   },
   {
     id: "tanzania",
@@ -132,7 +132,7 @@ export const ENIGMAS = [
     funFact: "",
     hasPhoto: true,
     photoPrompt:
-      "Formez une chaîne d'éléphants avec votre équipe - marchez en file indienne en tenant la 'queue' du précédent !",
+      "Formez une chaîne d'éléphants avec votre équipe en file indienne ",
   },
 ];
 

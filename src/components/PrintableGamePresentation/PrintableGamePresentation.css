@@ -1,0 +1,271 @@
+/* Styles pour la page d'impression de présentation */
+.printable-presentation {
+  font-family: 'Arial', sans-serif;
+  color: #333;
+}
+
+/* Contrôles d'impression - cachés à l'impression */
+.print-controls {
+  margin: 20px 0;
+  text-align: center;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+}
+
+.print-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+}
+
+.print-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.close-button {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+  transition: all 0.3s ease;
+}
+
+.close-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+}
+
+/* Page de présentation */
+.presentation-page {
+  width: 297mm;
+  min-height: 210mm;
+  margin: 0 auto;
+  padding: 20mm;
+  background: white;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+/* En-tête */
+.presentation-header {
+  text-align: center;
+  margin-bottom: 30px;
+  border-bottom: 3px solid #667eea;
+  padding-bottom: 20px;
+}
+
+.presentation-header h1 {
+  font-size: 48px;
+  margin: 0;
+  color: #667eea;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.presentation-header h2 {
+  font-size: 24px;
+  margin: 10px 0 0 0;
+  color: #764ba2;
+  font-weight: 300;
+}
+
+/* Contenu principal */
+.presentation-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 30px;
+}
+
+.presentation-left,
+.presentation-right {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* Sections */
+.game-description,
+.how-to-play,
+.qr-access,
+.captain-message {
+  background: #f8f9ff;
+  padding: 25px;
+  border-radius: 12px;
+  border-left: 5px solid #667eea;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.game-description h3,
+.how-to-play h3,
+.qr-access h3,
+.captain-message h3 {
+  margin: 0 0 15px 0;
+  color: #667eea;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.game-description p,
+.captain-message p {
+  margin: 0 0 15px 0;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.game-description p:last-child,
+.captain-message p:last-child {
+  margin-bottom: 0;
+}
+
+/* Liste des instructions */
+.how-to-play ol {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.how-to-play li {
+  margin-bottom: 8px;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+/* Section QR Code */
+.qr-container {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.qr-image {
+  border: 3px solid #667eea;
+  border-radius: 12px;
+  padding: 10px;
+  background: white;
+  display: block;
+}
+
+.qr-instruction {
+  font-weight: bold;
+  color: #667eea;
+  margin: 15px 0 10px 0;
+  text-align: center;
+  font-size: 14px;
+}
+
+.game-url {
+  font-family: 'Courier New', monospace;
+  background: #e8ecff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  text-align: center;
+  color: #555;
+  border: 1px solid #d0d7ff;
+}
+
+/* Message du capitaine */
+.message-content {
+  font-style: italic;
+  background: linear-gradient(135deg, #f0f2ff 0%, #e8ecff 100%);
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #d0d7ff;
+}
+
+.signature {
+  text-align: right;
+  font-weight: bold;
+  color: #764ba2;
+  margin-top: 15px;
+}
+
+/* Pied de page */
+.presentation-footer {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+/* Styles d'impression */
+@media print {
+  .print-controls {
+    display: none;
+  }
+  
+  .presentation-page {
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 15mm;
+    box-shadow: none;
+    border-radius: 0;
+  }
+  
+  .presentation-header h1 {
+    font-size: 42px;
+  }
+  
+  .presentation-header h2 {
+    font-size: 22px;
+  }
+  
+  .presentation-content {
+    gap: 30px;
+  }
+  
+  .game-description,
+  .how-to-play,
+  .qr-access,
+  .captain-message {
+    padding: 20px;
+    break-inside: avoid;
+  }
+  
+  .qr-image {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .presentation-footer {
+    font-size: 16px;
+  }
+}
+
+/* Configuration de la page pour l'impression */
+@page {
+  size: A4 landscape;
+  margin: 0;
+}
+
+/* Responsive pour l'aperçu écran */
+@media screen and (max-width: 1200px) {
+  .presentation-page {
+    width: 95%;
+    padding: 15mm;
+  }
+  
+  .presentation-content {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
