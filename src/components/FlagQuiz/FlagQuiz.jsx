@@ -296,7 +296,10 @@ const FlagQuiz = ({
     <div className="flag-quiz-overlay">
       <div className="flag-quiz-container">
         <div className="quiz-header">
-          <h2>🏴‍☠️ Quiz des Drapeaux</h2>
+          <h2>
+            🏴‍☠️ Avant de célebrer votre victroire, voyons si vous êtes dignes de
+            faire parti de l'équipage
+          </h2>
           <div className="quiz-progress">
             <span className="question-counter">
               Question {currentQuestionIndex + 1} / {questions.length}

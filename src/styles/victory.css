@@ -692,14 +692,23 @@
 
 /* WhatsApp button */
 .victory-btn.whatsapp {
-  background: linear-gradient(135deg, #25d366, #128c7e);
+  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
   color: white;
-  border-color: #075e54;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  width: 100%;
+  max-width: 300px;
 }
 
 .victory-btn.whatsapp:hover {
-  background: linear-gradient(135deg, #2ae371, #25d366);
-  box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+  background: linear-gradient(135deg, #128c7e 0%, #075e54 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
 }
 
 /* Gallery button */

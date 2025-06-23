@@ -5,6 +5,7 @@ import { ENIGMAS } from "../../data/enigmas";
 import Camera from "../Camera/Camera";
 import PhotoNotification from "../PhotoNotification/PhotoNotification";
 import AchievementSystem from "../AchievementSystem/AchievementSystem";
+import ScoreDisplay from "../ScoreDisplay/ScoreDisplay";
 import { savePhoto, getStoredPhotos } from "../../utils/photoStorage";
 import { useIsMobile } from "../../hooks/useIsMobile";
 import "../../styles/failure.css";
@@ -84,6 +85,7 @@ const FailurePage = ({
   onRestart,
   onViewStats,
   onPhotoShared,
+  minigameResults = [],
 }) => {
   const [showCamera, setShowCamera] = useState(false);
   const [showPhotoNotification, setShowPhotoNotification] = useState(false);
@@ -197,6 +199,7 @@ const FailurePage = ({
       `🌊 Aventure Maritime - Voyage Inachevé\n\n` +
       `⚓ Navigateur: ${player?.name || "Anonyme"}\n` +
       `🎯 Énigmes résolues: ${player?.completed?.length || 0}\n` +
+      `💰 Points obtenus: ${player?.score || 0}\n` +
       `📸 Photos prises: ${playerPhotos.length}\n` +
       (trophiesText ? `\n${trophiesText}` : "\n") +
       `Même si le voyage n'est pas terminé, l'aventure continue ! 🚢\n\n` +
@@ -321,6 +324,13 @@ const FailurePage = ({
             </div>
           </div>
         </div>
+        
+        {/* Affichage du système de points */}
+         <ScoreDisplay 
+           player={player} 
+           minigameResults={minigameResults} 
+           isVictory={false} 
+         />
 
         {/* Détail des destinations */}
         <div className="destinations-breakdown">

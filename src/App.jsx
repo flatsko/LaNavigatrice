@@ -20,6 +20,10 @@ import ParticleEffect from "./components/ParticleEffect/ParticleEffect";
 import TipsSystem from "./components/TipsSystem/TipsSystem";
 import SoundManager from "./components/SoundManager/SoundManager";
 import FlagQuiz from "./components/FlagQuiz/FlagQuiz";
+import MorseGameCard from "./components/MiniGames/MorseGameCard";
+import TentacleGameCard from "./components/MiniGames/TentacleGameCard";
+import SharingGameCard from "./components/MiniGames/SharingGameCard";
+import MiniGameAlert from "./components/MiniGames/MiniGameAlert";
 
 // Styles - globals.css est importé via index.css
 
@@ -63,6 +67,16 @@ function App() {
 
   // État pour les photos partagées
   const [allPhotos, setAllPhotos] = useState([]);
+  
+  // États pour les mini-jeux
+  const [showMorseGame, setShowMorseGame] = useState(false);
+  const [showTentacleGame, setShowTentacleGame] = useState(false);
+  const [showSharingGame, setShowSharingGame] = useState(false);
+  const [showMiniGameAlert, setShowMiniGameAlert] = useState(false);
+  const [pendingMiniGame, setPendingMiniGame] = useState(null);
+  const [minigameResults, setMinigameResults] = useState([]);
+  const [pendingVictory, setPendingVictory] = useState(false);
+  const [triggeredMinigames, setTriggeredMinigames] = useState([]);
 
   // Charger toutes les photos partagées
   useEffect(() => {
@@ -113,6 +127,60 @@ function App() {
     };
 
     setAllPhotos((prev) => [photoWithPlayer, ...prev]);
+    
+    // Déclencher les mini-jeux après la prise de photo
+    triggerMinigameAfterPhoto();
+  };
+  
+  // Fonction pour déclencher les mini-jeux après la prise de photo
+  const triggerMinigameAfterPhoto = () => {
+    // Vérifier si on peut déclencher un mini-jeu
+    const availableMinigames = ['morse', 'tentacle', 'sharing'];
+    const untriggeredMinigames = availableMinigames.filter(game => !triggeredMinigames.includes(game));
+    
+    if (untriggeredMinigames.length === 0) {
+      console.log('🎮 Tous les mini-jeux ont déjà été déclenchés');
+      return;
+    }
+    
+    // Calculer les énigmes restantes et complétées
+    const completedEnigmas = (currentPlayer?.completed || []).length;
+    const totalEnigmas = currentEnigmas.length;
+    const remainingEnigmas = totalEnigmas - completedEnigmas;
+    
+    // Nouvelle logique : garantir qu'au moins un mini-jeu soit déclenché tous les 2-3 énigmes
+    const minigamesTriggered = triggeredMinigames.length;
+    const expectedMinigames = Math.floor((completedEnigmas + 1) / 2.5); // Un mini-jeu tous les 2-3 énigmes
+    
+    let shouldTriggerMinigame = false;
+    
+    // Forcer le déclenchement si on est en retard sur le planning
+    if (minigamesTriggered < expectedMinigames) {
+      shouldTriggerMinigame = true;
+      console.log(`🎮 Déclenchement forcé: ${minigamesTriggered} mini-jeux pour ${completedEnigmas + 1} énigmes`);
+    }
+    // Garantir qu'au moins un mini-jeu soit déclenché avant la fin
+    else if (remainingEnigmas <= 2 && minigamesTriggered === 0) {
+      shouldTriggerMinigame = true;
+      console.log('🎮 Déclenchement de sécurité: aucun mini-jeu encore déclenché');
+    }
+    // Probabilité normale pour les autres cas
+    else {
+      const triggerChance = remainingEnigmas <= 3 ? 0.7 : 0.4;
+      shouldTriggerMinigame = Math.random() < triggerChance;
+    }
+    
+    if (shouldTriggerMinigame && !showMorseGame && !showTentacleGame && !showSharingGame) {
+      const randomMinigame = untriggeredMinigames[Math.floor(Math.random() * untriggeredMinigames.length)];
+      console.log(`🎮 Déclenchement du mini-jeu après photo: ${randomMinigame} (${remainingEnigmas} énigmes restantes)`);
+      
+      // Marquer le mini-jeu comme déclenché
+      setTriggeredMinigames(prev => [...prev, randomMinigame]);
+      
+      // Déclencher l'animation d'alerte avant le mini-jeu
+      setPendingMiniGame(randomMinigame);
+      setShowMiniGameAlert(true);
+    }
   };
 
   // Fonction pour gérer la completion du quiz obligatoire
@@ -172,6 +240,13 @@ function App() {
     setShowAchievements(false);
     setShowParticles(false);
     setGameState("welcome");
+    // Réinitialiser les mini-jeux
+    setTriggeredMinigames([]);
+    setMinigameResults([]);
+    setShowMorseGame(false);
+    setShowTentacleGame(false);
+    setShowSharingGame(false);
+    setPendingVictory(false);
     // Note: On ne supprime pas les données du localStorage pour garder l'historique
   };
 
@@ -186,6 +261,15 @@ function App() {
     setGameState("welcome");
     updateLeaderboard();
     setFailureReason("");
+    // Réinitialiser les mini-jeux
+    setTriggeredMinigames([]);
+    setMinigameResults([]);
+    setShowMorseGame(false);
+    setShowTentacleGame(false);
+    setShowSharingGame(false);
+    setShowMiniGameAlert(false);
+    setPendingMiniGame(null);
+    setPendingVictory(false);
   };
 
   // Fonction de debug pour voir les données
@@ -569,6 +653,12 @@ function App() {
       // Cas normal (pas la dernière énigme résolue ou échec)
       const validation = isGameValid(updatedPlayer);
       if (validation.isValid) {
+        // Vérifier si le quiz obligatoire doit être fait
+        if (!quizCompleted) {
+          console.log("Quiz obligatoire requis avant la victoire");
+          setShowMandatoryQuiz(true);
+          return isCorrect;
+        }
         setGameState("victory");
       } else {
         setFailureReason(validation.reason);
@@ -576,12 +666,103 @@ function App() {
       }
     }
 
+    // Les mini-jeux sont maintenant déclenchés après la prise de photo
+    // via la fonction triggerMinigameAfterPhoto()
+
     // Sauvegarder et mettre à jour
     setCurrentPlayer(updatedPlayer);
     savePlayerData(updatedPlayer);
     updateLeaderboard();
 
     return isCorrect;
+  };
+
+  // Fonction pour gérer la fin de l'animation d'alerte
+  const handleMiniGameAlertComplete = () => {
+    setShowMiniGameAlert(false);
+    
+    // Déclencher le mini-jeu approprié après l'animation
+    if (pendingMiniGame === 'morse') {
+      setShowMorseGame(true);
+    } else if (pendingMiniGame === 'tentacle') {
+      setShowTentacleGame(true);
+    } else if (pendingMiniGame === 'sharing') {
+      setShowSharingGame(true);
+    }
+    
+    setPendingMiniGame(null);
+  };
+
+  // Fonctions de gestion du mini-jeu Morse
+  const handleMorseGameComplete = (result) => {
+    // Ajouter le résultat du mini-jeu
+    const newResult = {
+      type: 'morse',
+      success: result.success,
+      score: result.score,
+      timeBonus: result.timeBonus,
+      skipped: result.skipped || false
+    };
+    
+    setMinigameResults(prev => [...prev, newResult]);
+    setShowMorseGame(false);
+    
+    // Passer à la victoire après le mini-jeu seulement si c'est la fin du jeu
+    if (pendingVictory) {
+      setPendingVictory(false);
+      setGameState("victory");
+    }
+    // Sinon, continuer le jeu normalement
+  };
+
+  // Fonctions de gestion du mini-jeu des tentacules
+  const handleTentacleGameComplete = (score) => {
+    // Ajouter le résultat du mini-jeu
+    const newResult = {
+      type: 'tentacle',
+      success: score > 0,
+      score: score,
+      skipped: score === 0
+    };
+    
+    setMinigameResults(prev => [...prev, newResult]);
+    setShowTentacleGame(false);
+    
+    // Passer à la victoire après le mini-jeu seulement si c'est la fin du jeu
+    if (pendingVictory) {
+      setPendingVictory(false);
+      setGameState("victory");
+    }
+    // Sinon, continuer le jeu normalement
+  };
+
+  const handleTentacleGameClose = () => {
+    setShowTentacleGame(false);
+  };
+
+  // Fonctions de gestion du mini-jeu de partage
+  const handleSharingGameComplete = (score) => {
+    // Ajouter le résultat du mini-jeu
+    const newResult = {
+      type: 'sharing',
+      success: score > 0,
+      score: score,
+      skipped: score === 0
+    };
+    
+    setMinigameResults(prev => [...prev, newResult]);
+    setShowSharingGame(false);
+    
+    // Passer à la victoire après le mini-jeu seulement si c'est la fin du jeu
+    if (pendingVictory) {
+      setPendingVictory(false);
+      setGameState("victory");
+    }
+    // Sinon, continuer le jeu normalement
+  };
+
+  const handleSharingGameClose = () => {
+    setShowSharingGame(false);
   };
 
   // Gestion des erreurs globales
@@ -648,6 +829,7 @@ function App() {
           onRestart={restartGame}
           onViewStats={() => setShowLeaderboard(true)}
           onPhotoShared={addPhotoToSharedGallery}
+          minigameResults={minigameResults}
         />
 
         {showLeaderboard && (
@@ -669,6 +851,7 @@ function App() {
           onViewLeaderboard={() => setShowLeaderboard(true)}
           quizScore={quizScore}
           quizCompleted={quizCompleted}
+          minigameResults={minigameResults}
         />
 
         {showLeaderboard && (
@@ -817,6 +1000,37 @@ function App() {
       {console.log(
         "showPrintablePresentation état:",
         showPrintablePresentation
+      )}
+
+      {/* Animation d'alerte pour les mini-jeux */}
+      {showMiniGameAlert && (
+        <MiniGameAlert
+          onComplete={handleMiniGameAlertComplete}
+          gameType={pendingMiniGame}
+        />
+      )}
+
+      {/* Mini-jeu Morse */}
+      {showMorseGame && (
+        <MorseGameCard
+          onComplete={handleMorseGameComplete}
+        />
+      )}
+
+      {/* Mini-jeu des tentacules */}
+      {showTentacleGame && (
+        <TentacleGameCard
+          onComplete={handleTentacleGameComplete}
+          onClose={handleTentacleGameClose}
+        />
+      )}
+
+      {/* Mini-jeu de partage */}
+      {showSharingGame && (
+        <SharingGameCard
+          onComplete={handleSharingGameComplete}
+          onClose={handleSharingGameClose}
+        />
       )}
 
       {/* Effets de particules */}

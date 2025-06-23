@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { getRankDetails, getRankAdvice } from "../../utils/ranking";
 import { getStoredPhotos } from "../../utils/photoStorage"; // AJOUT
+import { calculateTotalScore } from "../../utils/pointsSystem"; // AJOUT
 import FlagQuiz from "../FlagQuiz/FlagQuiz";
 import AchievementSystem from "../AchievementSystem/AchievementSystem";
+import ScoreDisplay from "../ScoreDisplay/ScoreDisplay";
 import { ENIGMAS } from "../../data/enigmas";
 import "../../styles/victory.css";
 
@@ -75,7 +77,14 @@ const ACHIEVEMENTS = [
   },
 ];
 
-const VictoryPage = ({ player, onRestart, allPlayers = [], quizScore = null, quizCompleted = false }) => {
+const VictoryPage = ({
+  player,
+  onRestart,
+  allPlayers = [],
+  quizScore = null,
+  quizCompleted = false,
+  minigameResults = [],
+}) => {
   const [showFlagQuiz, setShowFlagQuiz] = useState(false);
   const [showAchievements, setShowAchievements] = useState(false);
   const rankDetails = getRankDetails(player, allPlayers);
@@ -87,7 +96,7 @@ const VictoryPage = ({ player, onRestart, allPlayers = [], quizScore = null, qui
 
   // Fonction pour récupérer les trophées débloqués
   const getUnlockedTrophies = () => {
-    return ACHIEVEMENTS.filter(achievement => achievement.condition(player));
+    return ACHIEVEMENTS.filter((achievement) => achievement.condition(player));
   };
 
   // Fonction pour calculer le temps total
@@ -134,12 +143,15 @@ const VictoryPage = ({ player, onRestart, allPlayers = [], quizScore = null, qui
     const rankDetails = getRankDetails(player, allPlayers);
     const totalTime = calculateTotalTime();
     const unlockedTrophies = getUnlockedTrophies();
+    // Calculer le score total incluant les mini-jeux
+    const scoreData = calculateTotalScore(player, minigameResults);
+    const totalScore = scoreData.total || 0;
 
     // Générer la section des trophées
     let trophiesText = "";
     if (unlockedTrophies.length > 0) {
       trophiesText = `\n🏆 Trophées débloqués (${unlockedTrophies.length}):\n`;
-      unlockedTrophies.forEach(trophy => {
+      unlockedTrophies.forEach((trophy) => {
         trophiesText += `${trophy.icon} ${trophy.title}\n`;
       });
     }
@@ -150,6 +162,7 @@ const VictoryPage = ({ player, onRestart, allPlayers = [], quizScore = null, qui
 ${rankDetails.icon} Rang: ${rankDetails.name}
 ⏱️ Temps: ${totalTime}
 🗺️ Cartes: ${player?.completed?.length || 0}/7
+💰 Points finaux: ${totalScore}
 ${
   rankDetails.position > 0
     ? `🏅 Position: ${rankDetails.position}°/${rankDetails.totalPlayers}\n`
@@ -326,7 +339,7 @@ ${
               </span>
               <span className="stat-label">{rankDetails.description}</span>
             </div>
-            
+
             {quizCompleted && quizScore !== null && (
               <div className="stat-item quiz-item">
                 <span className="stat-icon">🏴‍☠️</span>
@@ -346,6 +359,16 @@ ${
             </div>
           )}
         </div>
+              <button
+            className="victory-btn achievements"
+            onClick={() => setShowAchievements(true)}
+          >
+            🏆 Mes Trophées
+          </button>
+
+        {/* Affichage du système de points */}
+        <ScoreDisplay player={player} minigameResults={minigameResults} isVictory={true} />
+
         {/* Instructions intégrées directement dans la page */}
         <div className="instructions-section">
           <h3>📱 Comment partager vos photos dans le groupe</h3>
@@ -470,28 +493,9 @@ ${
             ⛵ Nouveau Voyage
           </button>
 
-          <button
-            className="victory-btn gallery"
-            onClick={() => {
-              console.log("Ouvrir galerie avec", playerPhotos.length, "photos");
-            }}
-          >
-            📸 Album Photos ({playerPhotos.length})
-          </button>
+         
 
-          <button
-            className="victory-btn quiz"
-            onClick={() => setShowFlagQuiz(true)}
-          >
-            🏴‍☠️ Quiz des Drapeaux
-          </button>
-          
-          <button
-            className="victory-btn achievements"
-            onClick={() => setShowAchievements(true)}
-          >
-            🏆 Mes Trophées
-          </button>
+    
         </div>
 
         <div className="captain-signature">
@@ -507,17 +511,15 @@ ${
           </div>
         </div>
       </div>
-      
+
       {/* Quiz des drapeaux */}
-      {showFlagQuiz && (
-        <FlagQuiz onClose={() => setShowFlagQuiz(false)} />
-      )}
-      
+      {showFlagQuiz && <FlagQuiz onClose={() => setShowFlagQuiz(false)} />}
+
       {/* Système de trophées */}
       {showAchievements && (
-        <AchievementSystem 
-          player={player} 
-          onClose={() => setShowAchievements(false)} 
+        <AchievementSystem
+          player={player}
+          onClose={() => setShowAchievements(false)}
         />
       )}
     </div>

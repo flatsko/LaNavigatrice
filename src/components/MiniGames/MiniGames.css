@@ -271,6 +271,229 @@
   display: inline-block;
 }
 
+/* Morse Game Styles */
+.morse-game {
+  max-width: 700px;
+}
+
+.morse-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.morse-display {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1.5rem;
+  border-radius: var(--border-radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.morse-display h3 {
+  margin: 0 0 1rem 0;
+  color: var(--color-text-primary);
+  font-size: 1.2rem;
+}
+
+.morse-code {
+  font-family: 'Courier New', monospace;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--color-accent);
+  background: rgba(0, 0, 0, 0.3);
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  margin: 1rem 0;
+  letter-spacing: 0.2em;
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+.play-morse-btn {
+  background: var(--gradient-ocean);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.play-morse-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+}
+
+.morse-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.morse-input label {
+  font-weight: bold;
+  color: var(--color-text-primary);
+  font-size: 1.1rem;
+}
+
+.morse-input input {
+  padding: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--border-radius);
+  font-size: 1.1rem;
+  background: rgba(255, 255, 255, 0.9);
+  transition: border-color 0.3s ease;
+}
+
+.morse-input input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.morse-help {
+  text-align: center;
+}
+
+.hint-btn {
+  background: var(--gradient-sunset);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.hint-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+}
+
+.morse-alphabet {
+  margin-top: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1.5rem;
+  border-radius: var(--border-radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.morse-alphabet h4 {
+  margin: 0 0 1rem 0;
+  color: var(--color-text-primary);
+}
+
+.alphabet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.morse-letter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.5rem;
+  border-radius: var(--border-radius);
+  font-family: 'Courier New', monospace;
+}
+
+.morse-letter .letter {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: var(--color-text-primary);
+}
+
+.morse-letter .code {
+  font-size: 0.9rem;
+  color: var(--color-accent);
+  margin-top: 0.2rem;
+}
+
+.game-success {
+  text-align: center;
+  background: rgba(46, 204, 113, 0.2);
+  padding: 1.5rem;
+  border-radius: var(--border-radius-lg);
+  border: 2px solid #2ecc71;
+  margin-top: 1rem;
+}
+
+.game-success h3 {
+  margin: 0 0 1rem 0;
+  color: #2ecc71;
+  font-size: 1.5rem;
+}
+
+.game-success p {
+  margin: 0.5rem 0;
+  color: var(--color-text-primary);
+  font-size: 1.1rem;
+}
+
+.skip-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.skip-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.skip-btn.warning {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+  color: white;
+  border: 2px solid #ff4757;
+  padding: 0.75rem 1.5rem;
+  font-weight: bold;
+  font-size: 1rem;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+  animation: pulse-warning 2s infinite;
+}
+
+.skip-btn.warning:hover {
+  background: linear-gradient(135deg, #ff5252, #d63031);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+@keyframes pulse-warning {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.skip-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.skip-warning {
+  color: #ff6b6b;
+  font-size: 0.85rem;
+  text-align: center;
+  margin: 0;
+  padding: 0.5rem;
+  background: rgba(255, 107, 107, 0.1);
+  border-radius: var(--border-radius);
+  border: 1px solid rgba(255, 107, 107, 0.3);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .compass-face {
@@ -294,6 +517,86 @@
 
   .mini-game-content {
     padding: 1rem;
+  }
+
+  .morse-code {
+    font-size: 1.4rem;
+    padding: 0.75rem;
+  }
+
+  .alphabet-grid {
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    gap: 0.3rem;
+  }
+
+  .morse-letter {
+    padding: 0.3rem;
+  }
+
+  .morse-letter .letter {
+    font-size: 1rem;
+  }
+
+  .morse-letter .code {
+    font-size: 0.8rem;
+  }
+}
+
+/* Responsive Design pour SharingGameCard */
+@media (max-width: 768px) {
+  .sharing-game-card {
+    width: 95%;
+    margin: 1rem auto;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .enigma-overlay {
+    align-items: flex-start;
+    padding-top: 5vh;
+  }
+  
+  .sharing-game-content {
+    padding: 0.8rem;
+  }
+  
+  .sharing-timer {
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+  }
+  
+  .sharing-challenge {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .challenge-quote h3 {
+    font-size: 1rem;
+  }
+  
+  .mission-instructions {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .instructions-box ol {
+    padding-left: 1rem;
+  }
+  
+  .photo-validation {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .photo-tips {
+    padding: 0.8rem;
+  }
+  
+  .photo-tips ul {
+    padding-left: 1rem;
   }
 }
 
@@ -342,5 +645,629 @@
   }
   60% {
     transform: translateY(-5px);
+  }
+}
+
+/* MorseGameCard Styles */
+.morse-game-card {
+  max-width: 700px;
+  width: 95%;
+}
+
+.morse-game-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.morse-timer {
+  background: var(--gradient-ocean);
+  padding: 1rem;
+  border-radius: var(--border-radius-lg);
+  color: white;
+  text-align: center;
+}
+
+.timer-display {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.timer-bar {
+  background: rgba(255, 255, 255, 0.2);
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.timer-fill {
+  background: linear-gradient(90deg, #4CAF50, #FFC107, #F44336);
+  height: 100%;
+  transition: width 1s linear;
+  border-radius: 4px;
+}
+
+.morse-code-display {
+  background: var(--color-background-light);
+  padding: 1.5rem;
+  border-radius: var(--border-radius-lg);
+  border: 2px solid var(--color-primary);
+  text-align: center;
+}
+
+.morse-code-display h3 {
+  margin: 0 0 1rem 0;
+  color: var(--color-primary);
+  font-size: 1.3rem;
+}
+
+.morse-code {
+  font-family: 'Courier New', monospace;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--color-text);
+  letter-spacing: 0.2rem;
+  line-height: 1.4;
+  word-break: break-all;
+}
+
+.morse-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.morse-input label {
+  font-weight: 600;
+  color: var(--color-text);
+  font-size: 1.1rem;
+}
+
+.morse-input input {
+  padding: 1rem;
+  border: 2px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.morse-input input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.1);
+}
+
+.morse-help {
+  background: var(--color-background-light);
+  padding: 1rem;
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--color-border);
+}
+
+.hint-btn {
+  background: var(--gradient-sunset);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: var(--border-radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.hint-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+}
+
+.morse-alphabet {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.morse-alphabet h4 {
+  margin: 0 0 1rem 0;
+  color: var(--color-primary);
+  text-align: center;
+}
+
+.alphabet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.morse-letter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem;
+  background: white;
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-border);
+  font-family: 'Courier New', monospace;
+}
+
+.morse-letter .letter {
+  font-weight: bold;
+  color: var(--color-primary);
+  font-size: 1.1rem;
+}
+
+.morse-letter .code {
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  margin-top: 0.2rem;
+}
+
+.feedback {
+  padding: 1rem;
+  border-radius: var(--border-radius-md);
+  font-weight: 600;
+  text-align: center;
+  animation: slideIn 0.3s ease-out;
+}
+
+.feedback.success {
+  background: rgba(76, 175, 80, 0.1);
+  color: #2E7D32;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.feedback.error {
+  background: rgba(244, 67, 54, 0.1);
+  color: #C62828;
+  border: 1px solid rgba(244, 67, 54, 0.3);
+}
+
+.feedback.warning {
+  background: rgba(255, 193, 7, 0.1);
+  color: #F57C00;
+  border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.game-success {
+  background: var(--gradient-success);
+  color: white;
+  padding: 1.5rem;
+  border-radius: var(--border-radius-lg);
+  text-align: center;
+  animation: successPulse 2s infinite;
+}
+
+.game-success h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+}
+
+.game-success p {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.points-earned {
+  font-size: 1.8rem !important;
+  font-weight: bold;
+  color: #FFD700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  animation: pointsGlow 2s ease-in-out infinite;
+  margin: 1rem 0 !important;
+}
+
+@keyframes pointsGlow {
+  0%, 100% {
+    transform: scale(1);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    transform: scale(1.05);
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 2px 2px 4px rgba(0, 0, 0, 0.3);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Sharing Game Styles */
+.sharing-game-card {
+  background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+  border: 2px solid #e53e3e;
+  box-shadow: 0 10px 30px rgba(229, 62, 62, 0.3);
+}
+
+.sharing-game-content {
+  padding: 1rem;
+  color: #2d3748;
+}
+
+.sharing-timer {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(229, 62, 62, 0.2);
+}
+
+.sharing-timer .timer-display {
+  text-align: center;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #2d3748;
+  font-weight: 600;
+}
+
+.sharing-challenge {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 2px solid rgba(229, 62, 62, 0.2);
+}
+
+.challenge-quote {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #fbb6ce, #f687b3);
+  border-radius: var(--border-radius);
+  border: 1px solid #e53e3e;
+}
+
+.challenge-quote h3 {
+  color: #2d3748;
+  font-style: italic;
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.mission-description,
+.validation-info {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: rgba(229, 62, 62, 0.1);
+  border-radius: var(--border-radius);
+  border-left: 4px solid #e53e3e;
+}
+
+.mission-description h4,
+.validation-info h4 {
+  color: #e53e3e;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.mission-text,
+.validation-text {
+  margin: 0;
+  font-weight: 500;
+  color: #2d3748;
+}
+
+.mission-instructions {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 2px solid rgba(72, 187, 120, 0.3);
+}
+
+.instructions-box h4 {
+  color: #38a169;
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+}
+
+.instructions-box ol {
+  margin: 0 0 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.instructions-box li {
+  margin-bottom: 0.5rem;
+  color: #2d3748;
+  font-weight: 500;
+}
+
+.encouragement {
+  background: linear-gradient(135deg, #68d391, #48bb78);
+  color: white;
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  margin: 1rem 0 0 0;
+  text-align: center;
+  font-weight: 600;
+}
+
+.photo-validation {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 2px solid rgba(66, 153, 225, 0.3);
+}
+
+.photo-instructions h4 {
+  color: #3182ce;
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+}
+
+.photo-instructions p {
+  margin: 0 0 1rem 0;
+  color: #2d3748;
+  font-weight: 500;
+}
+
+.photo-tips {
+  background: rgba(66, 153, 225, 0.1);
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  border-left: 4px solid #3182ce;
+}
+
+.photo-tips p {
+  margin: 0 0 0.5rem 0;
+  color: #3182ce;
+  font-weight: 600;
+}
+
+.photo-tips ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.photo-tips li {
+  margin-bottom: 0.3rem;
+  color: #2d3748;
+}
+
+.photo-btn {
+  background: linear-gradient(135deg, #4299e1, #3182ce);
+  border: 2px solid #3182ce;
+}
+
+.photo-btn:hover {
+  background: linear-gradient(135deg, #3182ce, #2c5282);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(49, 130, 206, 0.4);
+}
+
+/* Tentacle Game Styles */
+.tentacle-game-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: 2px solid #4a5568;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.tentacle-game-content {
+  padding: 1rem;
+  color: white;
+}
+
+.tentacle-timer {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(10px);
+}
+
+.tentacle-timer .timer-display {
+  text-align: center;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #e2e8f0;
+}
+
+.tentacle-timer .timer-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.tentacle-timer .timer-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #48bb78, #38a169);
+  transition: width 1s ease;
+}
+
+.tentacle-challenge {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.tentacle-challenge h3 {
+  color: #f7fafc;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.visual-display {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: var(--border-radius);
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+}
+
+.sea-creatures {
+  font-size: 2.5rem;
+  line-height: 1.2;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.math-explanation {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  color: #e2e8f0;
+}
+
+.tentacle-input {
+  margin: 1.5rem 0;
+}
+
+.tentacle-input label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #f7fafc;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.tentacle-input input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--border-radius);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1rem;
+  text-align: center;
+  backdrop-filter: blur(10px);
+}
+
+.tentacle-input input:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.3);
+}
+
+.tentacle-input input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.tentacle-help {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.tentacle-help .hint-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.tentacle-help .hint-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.tentacle-help .hint-content {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--border-radius);
+  text-align: left;
+  backdrop-filter: blur(10px);
+}
+
+.tentacle-help .hint-content h4 {
+  color: #f7fafc;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.tentacle-help .hint-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tentacle-help .hint-content li {
+  padding: 0.25rem 0;
+  color: #e2e8f0;
+  font-size: 0.9rem;
+}
+
+/* Responsive Design pour TentacleGameCard */
+@media (max-width: 768px) {
+  .tentacle-challenge {
+    padding: 1rem;
+  }
+  
+  .sea-creatures {
+    font-size: 2rem;
+  }
+  
+  .tentacle-challenge h3 {
+    font-size: 1.1rem;
+  }
+}
+
+/* Responsive Design pour MorseGameCard */
+@media (max-width: 768px) {
+  .morse-game-card {
+    width: 98%;
+    margin: 0.5rem;
+  }
+  
+  .morse-code {
+    font-size: 1.4rem;
+    letter-spacing: 0.1rem;
+  }
+  
+  .alphabet-grid {
+    grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+    gap: 0.3rem;
+  }
+  
+  .morse-letter {
+    padding: 0.3rem;
+  }
+  
+  .morse-letter .letter {
+    font-size: 1rem;
+  }
+  
+  .morse-letter .code {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .morse-code {
+    font-size: 1.2rem;
+  }
+  
+  .timer-display {
+    font-size: 1rem;
+  }
+  
+  .alphabet-grid {
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
   }
 }

@@ -37,8 +37,7 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: var(--spacing-md);
-  margin-top: 10vh;
+  padding: 0; /* Pas de padding pour que la carte prenne tout l'espace */
   animation: overlayFadeIn 0.4s ease-out;
 }
 
@@ -48,23 +47,37 @@
   border-radius: var(--border-radius-xl);
   box-shadow: var(--shadow-strong);
   width: 100%;
-  max-width: 700px;
-  max-height: 95vh;
-  overflow-y: auto;
+  max-width: 500px; /* Max-width pour desktop */
+  height: 100vh; /* Prend toute la hauteur de la vue */
+  /* max-height: 800px; */ /* Max-height pour desktop */
+  display: flex;
+  flex-direction: column;
   animation: cardSlideUp 0.5s ease-out;
   position: relative;
   border: 2px solid var(--card-primary, rgba(29, 161, 242, 0.1));
   z-index: 1001;
+  margin: 0;
+  overflow: hidden; /* Empêche le contenu de déborder */
+}
+
+@media (max-width: 600px) {
+  .enigma-card {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+    border: none;
+  }
 }
 
 /* ===== ENIGMA HEADER ===== */
 .enigma-header {
   position: relative;
-  background: var(--card-gradient-ocean, linear-gradient(
-    135deg,
-    var(--ocean-blue) 0%,
-    var(--ocean-deep) 100%
-  ));
+  background: var(
+    --card-gradient-ocean,
+    linear-gradient(135deg, var(--ocean-blue) 0%, var(--ocean-deep) 100%)
+  );
   color: white;
   padding: var(--spacing-xl);
   border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
@@ -196,23 +209,42 @@
 
 /* ===== ENIGMA CONTENT ===== */
 .enigma-content {
-  padding: var(--spacing-xl);
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
 }
 
 /* ===== ENIGMA IMAGE ===== */
 .enigma-image-container {
-  margin-bottom: var(--spacing-xl);
+  width: 100%;
+  margin: 0 auto var(--spacing-md);
   border-radius: var(--border-radius-lg);
   overflow: hidden;
-  box-shadow: var(--shadow-medium);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
   position: relative;
 }
 
 .enigma-image {
   width: 100%;
-  height: 250px;
+  height: 35vh; /* Hauteur basée sur la vue */
+  max-height: 400px; /* Limite pour desktop */
   object-fit: cover;
-  transition: all 0.5s ease;
+  transition: var(--transition-smooth);
+}
+
+@media (max-width: 600px) {
+  .enigma-image-container {
+    max-height: 40vh; /* Limite la hauteur de l'image */
+    margin-bottom: 0;
+    border-radius: 0;
+  }
+
+  .enigma-image {
+    height: 100%; /* L'image remplit le conteneur */
+    border-radius: 0;
+  }
 }
 
 .enigma-image:hover {
@@ -220,7 +252,7 @@
 }
 
 .enigma-image.success-image {
-  border: 3px solid #4CAF50;
+  border: 3px solid #4caf50;
   box-shadow: 0 4px 20px rgba(76, 175, 80, 0.4), 0 0 30px rgba(76, 175, 80, 0.2);
   transform: scale(1.05);
   animation: successGlow 2s ease-in-out infinite alternate;
@@ -228,10 +260,12 @@
 
 @keyframes successGlow {
   from {
-    box-shadow: 0 4px 20px rgba(76, 175, 80, 0.4), 0 0 30px rgba(76, 175, 80, 0.2);
+    box-shadow: 0 4px 20px rgba(76, 175, 80, 0.4),
+      0 0 30px rgba(76, 175, 80, 0.2);
   }
   to {
-    box-shadow: 0 4px 25px rgba(76, 175, 80, 0.6), 0 0 40px rgba(76, 175, 80, 0.3);
+    box-shadow: 0 4px 25px rgba(76, 175, 80, 0.6),
+      0 0 40px rgba(76, 175, 80, 0.3);
   }
 }
 
@@ -295,36 +329,38 @@
 
 /* ===== ENIGMA ANSWERS ===== */
 .enigma-answers {
-  margin-bottom: var(--spacing-xl);
+  /* Ce conteneur peut être simplifié ou supprimé si non essentiel */
 }
 
 .enigma-answers h4 {
-  margin: 0 0 var(--spacing-lg) 0;
-  font-size: 1.2rem;
-  font-weight: var(--font-weight-semibold);
-  color: var(--ocean-deep);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+  font-size: 1.1rem;
+  font-weight: 600;
   text-align: center;
 }
 
 .answer-options {
-  display: grid;
-  gap: var(--spacing-md);
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  /* Pas de max-height, le parent scrollable gère la hauteur */
 }
 
 .answer-option {
-  background: rgba(248, 250, 252, 0.8);
-  border: 2px solid rgba(226, 232, 240, 0.5);
+  background: var(--pearl);
+  border: 2px solid var(--pearl);
   border-radius: var(--border-radius-lg);
-  padding: var(--spacing-lg);
-  font-size: 1rem;
-  font-weight: var(--font-weight-medium);
-  color: var(--gray-dark);
+  padding: 16px;
+  text-align: center;
   cursor: pointer;
-  transition: var(--transition-fast);
-  text-align: left;
+  transition: var(--transition-smooth);
+  font-size: 1.1rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--ocean-deep);
   position: relative;
   overflow: hidden;
+  -webkit-tap-highlight-color: transparent; /* Supprime le flash bleu sur mobile */
 }
 
 .answer-option::before {
@@ -487,8 +523,13 @@
 }
 
 @keyframes sparkle {
-  0%, 100% { opacity: 0.7; }
-  50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 .celebration-icon {
@@ -514,32 +555,33 @@
 
 /* ===== ENIGMA ACTIONS ===== */
 .enigma-actions {
-  padding: var(--spacing-xl);
-  background: rgba(248, 250, 252, 0.5);
-  border-top: 2px solid rgba(226, 232, 240, 0.3);
-  border-radius: 0 0 var(--border-radius-xl) var(--border-radius-xl);
-  text-align: center;
+  padding: var(--spacing-lg);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--gray-light);
+  margin-top: auto; /* Pousse les actions vers le bas */
+  flex-shrink: 0;
 }
 
 .submit-btn {
-  background: var(--card-gradient-ocean, linear-gradient(
+  width: 100%;
+  padding: 20px 24px;
+  background: linear-gradient(
     135deg,
-    var(--ocean-blue) 0%,
-    var(--ocean-deep) 100%
-  ));
+    var(--primary-color),
+    var(--secondary-color)
+  );
   color: white;
   border: none;
-  border-radius: var(--border-radius-lg);
-  padding: var(--spacing-lg) var(--spacing-xl);
-  font-size: 1.1rem;
-  font-weight: var(--font-weight-semibold);
+  border-radius: 15px;
+  font-size: 1.2rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: var(--transition-fast);
-  box-shadow: 0 4px 16px rgba(29, 161, 242, 0.3);
-  position: relative;
-  overflow: hidden;
-  min-width: 200px;
-  margin-bottom: var(--spacing-md);
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(29, 161, 242, 0.2);
+  margin-top: auto; /* Pour le coller en bas */
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent; /* Supprime le flash bleu sur mobile */
 }
 
 .submit-btn::before {
@@ -704,8 +746,10 @@
 /* Tablettes */
 @media (max-width: 768px) {
   .enigma-card {
-    max-width: 95vw;
-    margin: var(--spacing-sm);
+    max-width: 98vw;
+    margin: 5px;
+    padding: 5px;
+    align-items: stretch;
   }
 
   .enigma-header {
@@ -733,11 +777,17 @@
   }
 
   .enigma-content {
-    padding: var(--spacing-lg);
+    padding: var(--spacing-sm);
+    padding-bottom: var(--spacing-sm);
   }
 
   .enigma-image {
-    height: 200px;
+    min-height: 200px;
+    max-height: 300px;
+  }
+
+  .enigma-image-container {
+    margin-bottom: var(--spacing-sm);
   }
 
   .enigma-question {
@@ -754,21 +804,25 @@
 
   .answer-options {
     gap: var(--spacing-sm);
+    max-height: 200px;
+    margin-bottom: 2rem;
   }
 
   .answer-option {
-    padding: var(--spacing-md);
-    font-size: 0.95rem;
+    padding: 14px 16px;
+    font-size: 1rem;
+    min-height: 50px;
   }
 
   .enigma-actions {
-    padding: var(--spacing-lg);
+    padding: var(--spacing-sm);
   }
 
   .submit-btn {
     width: 100%;
-    padding: var(--spacing-md) var(--spacing-lg);
-    font-size: 1rem;
+    padding: 16px 20px;
+    font-size: 1.1rem;
+    min-height: 56px;
   }
 }
 
