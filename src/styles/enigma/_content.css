@@ -1,0 +1,204 @@
+/* ===== CONTENU ===== */
+.enigma-content {
+  padding: var(--enigma-spacing-xl);
+  overflow-y: auto;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--enigma-spacing-xl);
+}
+
+.enigma-image-container {
+  width: 100%;
+  border-radius: var(--enigma-border-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--enigma-shadow-lg);
+  position: relative;
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(155, 89, 182, 0.1));
+  border: 2px solid rgba(52, 152, 219, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--enigma-transition-medium);
+}
+
+.enigma-image-container:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--enigma-shadow-xl);
+  border-color: rgba(52, 152, 219, 0.4);
+}
+
+.enigma-image-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: var(--enigma-transition-medium);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.enigma-image-container:hover::before {
+  opacity: 1;
+  animation: shimmer 1.5s ease-in-out;
+}
+
+.enigma-image {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: var(--enigma-transition-medium);
+  border-radius: var(--enigma-border-radius-md);
+  position: relative;
+  z-index: 0;
+}
+
+.enigma-image:hover {
+  transform: scale(1.02);
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) rotate(45deg);
+  }
+}
+
+.enigma-image.success-image {
+  animation: success-image-animation 1s ease-in-out forwards;
+}
+
+/* Effet de focus pour l'accessibilité */
+.enigma-image-container:focus-within {
+  outline: 3px solid var(--enigma-ocean-blue);
+  outline-offset: 2px;
+}
+
+/* Effet de chargement pour les images */
+.enigma-image-container.loading {
+  background: linear-gradient(
+    90deg,
+    rgba(52, 152, 219, 0.1) 25%,
+    rgba(52, 152, 219, 0.2) 50%,
+    rgba(52, 152, 219, 0.1) 75%
+  );
+  background-size: 200% 100%;
+  animation: loading-shimmer 1.5s infinite;
+}
+
+@keyframes loading-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Amélioration de l'animation de succès */
+@keyframes success-image-animation {
+  0% {
+    transform: scale(1);
+    filter: brightness(1) saturate(1);
+  }
+  50% {
+    transform: scale(1.05);
+    filter: brightness(1.2) saturate(1.3);
+  }
+  100% {
+    transform: scale(1.02);
+    filter: brightness(1.1) saturate(1.2);
+  }
+}
+
+.enigma-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--enigma-spacing-lg);
+}
+
+.enigma-question {
+  background: rgba(0, 0, 0, 0.03);
+  padding: var(--enigma-spacing-lg);
+  border-radius: var(--enigma-border-radius-md);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.enigma-question h3 {
+  margin: 0 0 var(--enigma-spacing-md) 0;
+  font-size: 1.25rem;
+  font-weight: var(--enigma-font-weight-semibold);
+  color: var(--text-primary);
+}
+
+.enigma-question p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: var(--line-height-base);
+  color: var(--text-secondary);
+}
+
+.enigma-answers h4 {
+  margin: 0 0 var(--enigma-spacing-md) 0;
+  font-size: 1.1rem;
+  font-weight: var(--enigma-font-weight-semibold);
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.answer-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--enigma-spacing-md);
+}
+
+.answer-option {
+  background: white;
+  border: 2px solid var(--card-border, #e2e8f0);
+  border-radius: var(--enigma-border-radius-md);
+  padding: var(--enigma-spacing-md);
+  cursor: pointer;
+  transition: var(--enigma-transition-fast);
+  font-size: 1rem;
+  font-weight: var(--enigma-font-weight-medium);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.answer-option:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-color);
+}
+
+.answer-option.selected {
+  background: rgba(52, 152, 219, 0.1);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  font-weight: var(--font-weight-bold);
+  box-shadow: 0 0 15px rgba(52, 152, 219, 0.3);
+}
+
+.answer-option.selected::before {
+  content: '✔';
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  color: var(--primary-color);
+}

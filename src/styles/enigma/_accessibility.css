@@ -1,0 +1,130 @@
+/* ===== ACCESSIBILITÉ ===== */
+
+/* Mode sombre */
+@media (prefers-color-scheme: dark) {
+  body:not(.light-theme) .enigma-card {
+    background: rgba(26, 32, 44, 0.98);
+    border-color: rgba(74, 85, 104, 0.3);
+  }
+
+  body:not(.light-theme) .enigma-question {
+    background: rgba(45, 55, 72, 0.5);
+    border-color: rgba(74, 85, 104, 0.3);
+  }
+
+  body:not(.light-theme) .enigma-question h3,
+  body:not(.light-theme) .enigma-question p {
+    color: #e2e8f0;
+  }
+
+  body:not(.light-theme) .enigma-answers h4 {
+    color: #e2e8f0;
+  }
+
+  body:not(.light-theme) .answer-option {
+    background: rgba(45, 55, 72, 0.8);
+    border-color: rgba(74, 85, 104, 0.5);
+    color: #e2e8f0;
+  }
+
+  body:not(.light-theme) .answer-option:hover {
+    background: rgba(74, 85, 104, 0.8);
+    border-color: rgba(113, 128, 150, 0.7);
+  }
+
+  body:not(.light-theme) .answer-option.selected {
+    background: rgba(29, 161, 242, 0.2);
+    border-color: var(--enigma-ocean-blue);
+    color: #e2e8f0;
+  }
+
+  body:not(.light-theme) .attempts-exhausted {
+    background: rgba(127, 29, 29, 0.3);
+    border-color: rgba(239, 68, 68, 0.5);
+  }
+
+  body:not(.light-theme) .attempts-exhausted h3 {
+    color: #fca5a5;
+  }
+
+  body:not(.light-theme) .attempts-exhausted p {
+    color: #cbd5e0;
+  }
+
+  body:not(.light-theme) .success-celebration {
+    background: rgba(45, 55, 72, 0.5);
+    border-color: rgba(255, 215, 0, 0.5);
+  }
+
+  body:not(.light-theme) .success-celebration h3 {
+    color: #fbbf24;
+  }
+
+  body:not(.light-theme) .success-celebration p {
+    color: #cbd5e0;
+  }
+
+  body:not(.light-theme) .enigma-actions {
+    background: rgba(45, 55, 72, 0.5);
+    border-top-color: rgba(74, 85, 104, 0.3);
+  }
+
+  body:not(.light-theme) .warning-text {
+    color: #fbbf24;
+  }
+}
+
+/* Contraste élevé */
+@media (prefers-contrast: high) {
+  .enigma-card {
+    border-width: 3px;
+    border-color: #000;
+  }
+
+  .enigma-header {
+    border-bottom: 3px solid #000;
+  }
+
+  .enigma-close-btn {
+    border-width: 3px;
+    border-color: #000;
+  }
+
+  .enigma-question,
+  .enigma-answers,
+  .attempts-exhausted,
+  .success-celebration,
+  .enigma-feedback {
+    border-width: 3px;
+  }
+
+  .answer-option {
+    border-width: 3px;
+  }
+
+  .answer-option.selected {
+    border-width: 4px;
+  }
+
+  .submit-btn {
+    border: 3px solid #000;
+  }
+}
+
+/* Réduction des animations */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ===== FOCUS MANAGEMENT ===== */
+.enigma-close-btn:focus-visible,
+.answer-option:focus-visible,
+.submit-btn:focus-visible {
+  outline: 3px solid var(--ocean-blue);
+  outline-offset: 2px;
+}

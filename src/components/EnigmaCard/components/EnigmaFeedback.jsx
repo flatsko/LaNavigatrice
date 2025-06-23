@@ -5,8 +5,14 @@ const EnigmaFeedback = ({ feedback }) => {
   return (
     <div className={`enigma-feedback ${feedback.type}`}>
       {feedback.message.split('\n').map((line, index) => (
-        <div key={index}>{line}</div>
+        <p key={index}>{line}</p>
       ))}
+      {feedback.funFact && (
+        <div className="fun-fact">
+          <h3>Le saviez-vous ?</h3>
+          <p>{feedback.funFact}</p>
+        </div>
+      )}
     </div>
   );
 };

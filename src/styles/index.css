@@ -5,4 +5,5 @@
 @import "./victory.css";
 @import "./failure.css";
 @import "./qrscanner.css";
+@import "./enigmaCard.css";
 @import "tailwindcss";

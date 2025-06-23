@@ -1,0 +1,66 @@
+/* ===== EN-TÊTE ===== */
+.enigma-header {
+  padding: var(--enigma-spacing-lg) var(--enigma-spacing-xl);
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--enigma-ocean-blue) 100%);
+  color: var(--text-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  z-index: var(--z-index-header);
+}
+
+.enigma-close-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--enigma-transition-fast);
+}
+
+.enigma-close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(90deg) scale(1.1);
+}
+
+.enigma-title {
+  font-family: var(--font-family-serif);
+  font-size: 1.8rem;
+  font-weight: var(--enigma-font-weight-bold);
+  margin: 0;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.enigma-location {
+  font-size: 1rem;
+  font-weight: var(--enigma-font-weight-medium);
+  opacity: 0.9;
+  margin-top: var(--enigma-spacing-xs);
+}
+
+.enigma-progress {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--enigma-spacing-sm);
+}
+
+.attempt-counter,
+.success-rate {
+  background: rgba(0, 0, 0, 0.2);
+  padding: var(--enigma-spacing-xs) var(--enigma-spacing-sm);
+  border-radius: var(--enigma-border-radius-md);
+  font-size: 0.875rem;
+  font-weight: var(--enigma-font-weight-semibold);
+  display: flex;
+  align-items: center;
+  gap: var(--enigma-spacing-xs);
+}

@@ -1,0 +1,101 @@
+/* ===== FEEDBACK ===== */
+.attempts-exhausted {
+  padding: var(--enigma-spacing-xl);
+  text-align: center;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: var(--enigma-border-radius-md);
+  border: 2px solid rgba(239, 68, 68, 0.2);
+  animation: exhaustedPulse 1.5s infinite;
+}
+
+.exhausted-icon {
+  font-size: 3.5rem;
+  color: var(--enigma-error);
+  margin-bottom: var(--enigma-spacing-md);
+  animation: exhaustedShake 0.5s;
+}
+
+.attempts-exhausted h3 {
+  margin: 0 0 var(--enigma-spacing-sm) 0;
+  font-size: 1.5rem;
+  font-weight: var(--enigma-font-weight-bold);
+  color: var(--enigma-error);
+}
+
+.attempts-exhausted p {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text-secondary);
+}
+
+.enigma-feedback {
+  padding: var(--enigma-spacing-lg);
+  margin: 0 var(--enigma-spacing-xl) var(--enigma-spacing-xl);
+  border-radius: var(--enigma-border-radius-md);
+  font-size: 1rem;
+  font-weight: var(--enigma-font-weight-medium);
+  animation: feedbackSlideIn 0.5s ease-out forwards;
+  text-align: center;
+}
+
+.enigma-feedback.success {
+  background-color: rgba(34, 197, 94, 0.1);
+  border: 2px solid rgba(34, 197, 94, 0.2);
+  color: #166534;
+  position: relative;
+  z-index: 10;
+}
+
+.enigma-feedback.error {
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 2px solid rgba(239, 68, 68, 0.2);
+  color: #991b1b;
+  animation: errorShake 0.6s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+.fun-fact {
+  margin-top: var(--enigma-spacing-lg);
+  padding: var(--enigma-spacing-md);
+  background: rgba(255, 215, 0, 0.1);
+  border-left: 4px solid var(--enigma-gold-accent);
+  border-radius: var(--enigma-border-radius-sm);
+}
+
+.fun-fact h3 {
+  margin: 0 0 var(--enigma-spacing-sm) 0;
+  font-size: 1.1rem;
+  font-weight: var(--enigma-font-weight-semibold);
+  color: var(--enigma-gold-accent);
+}
+
+.success-celebration {
+  padding: var(--enigma-spacing-xl);
+  text-align: center;
+  background: rgba(255, 215, 0, 0.05);
+  border-radius: var(--enigma-border-radius-md);
+  border: 2px solid rgba(255, 215, 0, 0.2);
+  animation: celebrationPulse 2s infinite ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.celebration-icon {
+  font-size: 4rem;
+  color: var(--gold-accent);
+  margin-bottom: var(--spacing-md);
+  animation: celebrationBounce 1s ease-in-out infinite;
+}
+
+.success-celebration h3 {
+  margin: 0 0 var(--spacing-sm) 0;
+  font-size: 1.75rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--gold-accent);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.success-celebration p {
+  margin: 0;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+}

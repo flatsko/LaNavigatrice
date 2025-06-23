@@ -1,0 +1,209 @@
+/* Photo Section Styles */
+
+/* Mobile Photo Section */
+.photo-section {
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(155, 89, 182, 0.05));
+  border: 2px solid rgba(52, 152, 219, 0.2);
+  border-radius: var(--enigma-border-radius-lg);
+  padding: var(--enigma-spacing-xl);
+  margin-top: var(--enigma-spacing-lg);
+  text-align: center;
+  transition: var(--enigma-transition-medium);
+}
+
+.photo-section.failure {
+  background: linear-gradient(135deg, rgba(231, 76, 60, 0.05), rgba(230, 126, 34, 0.05));
+  border-color: rgba(231, 76, 60, 0.2);
+}
+
+.photo-prompt h4 {
+  margin: 0 0 var(--enigma-spacing-md) 0;
+  font-size: 1.4rem;
+  font-weight: var(--enigma-font-weight-bold);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--enigma-spacing-sm);
+}
+
+.photo-prompt p {
+  margin: 0 0 var(--enigma-spacing-lg) 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.photo-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--enigma-spacing-md);
+  align-items: center;
+}
+
+.photo-btn {
+  padding: var(--enigma-spacing-md) var(--enigma-spacing-xl);
+  border: none;
+  border-radius: var(--enigma-border-radius-md);
+  font-size: 1rem;
+  font-weight: var(--enigma-font-weight-semibold);
+  cursor: pointer;
+  transition: var(--enigma-transition-fast);
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--enigma-spacing-xs);
+}
+
+.photo-btn.primary {
+  background: linear-gradient(135deg, var(--enigma-ocean-blue), #2980b9);
+  color: white;
+  box-shadow: var(--enigma-shadow-md);
+}
+
+.photo-btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--enigma-shadow-lg);
+  background: linear-gradient(135deg, #2980b9, #1f5f8b);
+}
+
+.photo-btn.secondary {
+  background: rgba(108, 117, 125, 0.1);
+  color: var(--text-secondary);
+  border: 2px solid rgba(108, 117, 125, 0.2);
+}
+
+.photo-btn.secondary:hover {
+  background: rgba(108, 117, 125, 0.2);
+  transform: translateY(-1px);
+}
+
+.photo-taken {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--enigma-spacing-sm);
+  animation: photo-success 0.6s ease-out;
+}
+
+.photo-success {
+  font-size: 1.2rem;
+  font-weight: var(--enigma-font-weight-bold);
+  color: var(--enigma-success);
+  display: flex;
+  align-items: center;
+  gap: var(--enigma-spacing-xs);
+}
+
+.photo-taken p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* Desktop Photo Section */
+.desktop-photo-section {
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.03), rgba(155, 89, 182, 0.03));
+  border: 2px dashed rgba(52, 152, 219, 0.3);
+  border-radius: var(--enigma-border-radius-lg);
+  padding: var(--enigma-spacing-xl);
+  margin-top: var(--enigma-spacing-lg);
+  text-align: center;
+  transition: var(--enigma-transition-medium);
+}
+
+.desktop-photo-section.failure {
+  background: linear-gradient(135deg, rgba(231, 76, 60, 0.03), rgba(230, 126, 34, 0.03));
+  border-color: rgba(231, 76, 60, 0.3);
+}
+
+.desktop-photo-prompt h4 {
+  margin: 0 0 var(--enigma-spacing-md) 0;
+  font-size: 1.3rem;
+  font-weight: var(--enigma-font-weight-bold);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--enigma-spacing-sm);
+}
+
+.desktop-photo-prompt p {
+  margin: 0 0 var(--enigma-spacing-md) 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.desktop-photo-hint {
+  background: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: var(--enigma-border-radius-sm);
+  padding: var(--enigma-spacing-md);
+  margin: var(--enigma-spacing-lg) 0;
+  font-size: 0.9rem;
+  color: var(--enigma-warning);
+  font-weight: var(--enigma-font-weight-medium);
+}
+
+.desktop-continue {
+  margin-top: var(--enigma-spacing-lg);
+}
+
+/* Animations */
+@keyframes photo-success {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+  }
+  50% {
+    transform: scale(1.05) translateY(-5px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .photo-section,
+  .desktop-photo-section {
+    margin-left: calc(var(--enigma-spacing-lg) * -1);
+    margin-right: calc(var(--enigma-spacing-lg) * -1);
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  .photo-prompt h4,
+  .desktop-photo-prompt h4 {
+    font-size: 1.2rem;
+  }
+
+  .photo-btn {
+    min-width: 180px;
+    padding: var(--enigma-spacing-sm) var(--enigma-spacing-lg);
+  }
+
+  .photo-actions {
+    gap: var(--enigma-spacing-sm);
+  }
+}
+
+@media (max-width: 320px) {
+  .photo-btn {
+    min-width: 160px;
+    font-size: 0.9rem;
+  }
+
+  .photo-prompt h4,
+  .desktop-photo-prompt h4 {
+    font-size: 1.1rem;
+  }
+}

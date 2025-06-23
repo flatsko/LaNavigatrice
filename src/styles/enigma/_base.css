@@ -1,0 +1,107 @@
+/* ===== VARIABLES CSS ===== */
+:root {
+  /* Couleurs de base */
+  --primary-color: #3498db; /* Bleu doux */
+  --secondary-color: #2ecc71; /* Vert émeraude */
+  --background-light: #f8f9fa;
+  --background-dark: #1a202c;
+  --text-light: #f8f9fa;
+  --text-dark: #1a202c;
+
+  /* Couleurs sémantiques */
+  --enigma-success: #22c55e; /* Vert succès */
+  --enigma-error: #ef4444; /* Rouge erreur */
+  --enigma-warning: #f59e0b; /* Ambre avertissement */
+  --enigma-info: #3b82f6; /* Bleu information */
+
+  /* Couleurs de la marque */
+  --enigma-ocean-blue: #0077b6;
+  --enigma-sea-green: #00bfa5;
+  --enigma-sand-yellow: #f4a261;
+  --enigma-coral-pink: #e76f51;
+  --enigma-deep-blue: #264653;
+
+  /* Accents */
+  --enigma-gold-accent: #ffd700;
+
+  /* Typographie */
+  --font-family-sans: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-family-serif: 'Merriweather', serif;
+  --font-size-base: 16px;
+  --line-height-base: 1.6;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --enigma-font-weight-medium: 500;
+  --enigma-font-weight-semibold: 600;
+  --enigma-font-weight-bold: 700;
+
+  /* Espacements */
+  --enigma-spacing-xs: 0.25rem; /* 4px */
+  --enigma-spacing-sm: 0.5rem; /* 8px */
+  --enigma-spacing-md: 1rem; /* 16px */
+  --enigma-spacing-lg: 1.5rem; /* 24px */
+  --enigma-spacing-xl: 2rem; /* 32px */
+  --enigma-spacing-xxl: 3rem; /* 48px */
+
+  /* Bordures */
+  --enigma-border-radius-sm: 0.25rem;
+  --enigma-border-radius-md: 0.5rem;
+  --enigma-border-radius-lg: 1rem;
+  --enigma-border-width-sm: 1px;
+  --enigma-border-width-md: 2px;
+
+  /* Ombres */
+  --enigma-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --enigma-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --enigma-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --enigma-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* Transitions */
+  --enigma-transition-fast: all 0.2s ease-in-out;
+  --enigma-transition-medium: all 0.3s ease-in-out;
+  --enigma-transition-slow: all 0.5s ease-in-out;
+
+  /* Z-index */
+  --z-index-overlay: 1000;
+  --z-index-card: 1001;
+  --z-index-header: 1002;
+  --z-index-tooltip: 1010;
+}
+
+/* Thème clair (par défaut) */
+body.light-theme {
+  --card-bg: white;
+  --card-border: #e2e8f0;
+  --text-primary: #1a202c;
+  --text-secondary: #4a5568;
+  --text-muted: #718096;
+  --button-bg: var(--enigma-ocean-blue);
+  --button-text: white;
+}
+
+/* Thème sombre */
+body.dark-theme {
+  --card-bg: #1a202c;
+  --card-border: #2d3748;
+  --text-primary: #f7fafc;
+  --text-secondary: #a0aec0;
+  --text-muted: #718096;
+  --button-bg: var(--enigma-sea-green);
+  --button-text: #1a202c;
+}
+
+/* Thème 'La Navigatrice' */
+body.theme-navigatrice {
+  --primary-color: var(--enigma-ocean-blue);
+  --secondary-color: var(--enigma-sea-green);
+  --card-bg: linear-gradient(135deg, #f0f8ff, #e6f7ff);
+  --card-border: rgba(0, 119, 182, 0.3);
+  --text-primary: var(--enigma-deep-blue);
+  --text-secondary: #264653;
+  --text-muted: #2a9d8f;
+  --button-bg: linear-gradient(135deg, var(--enigma-coral-pink), var(--enigma-sand-yellow));
+  --button-text: white;
+  --success: var(--enigma-sea-green);
+  --error: #e63946;
+  --warning: #fca311;
+}

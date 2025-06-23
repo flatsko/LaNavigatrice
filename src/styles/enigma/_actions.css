@@ -1,0 +1,65 @@
+/* ===== ACTIONS ===== */
+.enigma-actions {
+  padding: var(--enigma-spacing-lg) var(--enigma-spacing-xl);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--enigma-spacing-md);
+}
+
+.submit-btn {
+  background: var(--button-bg, var(--enigma-ocean-blue));
+  color: var(--button-text, white);
+  border: none;
+  border-radius: var(--enigma-border-radius-md);
+  padding: var(--enigma-spacing-md) var(--enigma-spacing-xxl);
+  font-size: 1.1rem;
+  font-weight: var(--enigma-font-weight-bold);
+  cursor: pointer;
+  transition: var(--enigma-transition-fast);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--enigma-shadow-md);
+}
+
+.submit-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--enigma-shadow-lg);
+}
+
+.submit-btn:active {
+  transform: translateY(-1px);
+  box-shadow: var(--enigma-shadow-sm);
+}
+
+.submit-btn:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.submit-btn.loading::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 3px solid rgba(255, 255, 255, 0.5);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.action-warning {
+  text-align: center;
+  padding: var(--enigma-spacing-md);
+}
+
+.warning-text {
+  color: var(--enigma-warning);
+  font-weight: var(--enigma-font-weight-semibold);
+  animation: warningPulse 1.5s infinite;
+}
