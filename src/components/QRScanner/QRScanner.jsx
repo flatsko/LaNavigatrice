@@ -115,7 +115,7 @@ const QRScanner = ({ onScan, onClose }) => {
       if (cameraFacing === "environment" && track.applyConstraints) {
         try {
           const constraints = {};
-
+          
           // Focus - priorité à la mise au point continue
           if (capabilities.focusMode) {
             if (capabilities.focusMode.includes("continuous")) {
@@ -124,16 +124,16 @@ const QRScanner = ({ onScan, onClose }) => {
               constraints.focusMode = "single-shot";
             }
           }
-
+          
           // Distance de focus optimale pour QR codes (environ 20-30cm)
           if (capabilities.focusDistance) {
             constraints.focusDistance = {
               ideal: 0.25, // 25cm
               min: 0.1,
-              max: 1.0,
+              max: 1.0
             };
           }
-
+          
           // Exposition
           if (capabilities.exposureMode?.includes("manual")) {
             constraints.exposureMode = "manual";
@@ -141,50 +141,51 @@ const QRScanner = ({ onScan, onClose }) => {
               constraints.exposureTime = {
                 ideal: 0.01, // 10ms
                 min: 0.005,
-                max: 0.02,
+                max: 0.02
               };
             }
           } else if (capabilities.exposureMode?.includes("continuous")) {
             constraints.exposureMode = "continuous";
           }
-
+          
           // Balance des blancs
           if (capabilities.whiteBalanceMode?.includes("continuous")) {
             constraints.whiteBalanceMode = "continuous";
           }
-
+          
           // ISO pour réduire le bruit
           if (capabilities.iso) {
             constraints.iso = {
               ideal: 200,
               min: 100,
-              max: 800,
+              max: 800
             };
           }
-
+          
           // Zoom léger pour améliorer la netteté
           if (capabilities.zoom) {
             constraints.zoom = {
               ideal: Math.min(1.2, capabilities.zoom.max),
               min: 1.0,
-              max: Math.min(2.0, capabilities.zoom.max),
+              max: Math.min(2.0, capabilities.zoom.max)
             };
           }
-
+          
           // Netteté
           if (capabilities.sharpness) {
             constraints.sharpness = {
               ideal: 0.8,
               min: 0.5,
-              max: 1.0,
+              max: 1.0
             };
           }
-
+          
           await track.applyConstraints(constraints);
           console.log("✅ Paramètres optimisés appliqués:", constraints);
-
+          
           // Attendre un peu pour que les paramètres se stabilisent
-          await new Promise((resolve) => setTimeout(resolve, 500));
+          await new Promise(resolve => setTimeout(resolve, 500));
+          
         } catch (constraintError) {
           console.log(
             "⚠️ Impossible d'appliquer les contraintes optimisées:",
@@ -385,41 +386,40 @@ const QRScanner = ({ onScan, onClose }) => {
 
         // Dessiner l'image de base
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
+        
         // Amélioration de l'image pour la caméra arrière
         if (cameraFacing === "environment") {
           // Appliquer des filtres après le dessin pour la caméra arrière
           const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
           const data = imageData.data;
-
+          
           // Amélioration du contraste et de la luminosité pixel par pixel
           for (let i = 0; i < data.length; i += 4) {
             // Convertir en niveaux de gris pour améliorer la détection
-            const gray =
-              0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
-
+            const gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+            
             // Appliquer un seuil adaptatif
             const threshold = gray > 128 ? 255 : 0;
-
-            data[i] = threshold; // Rouge
+            
+            data[i] = threshold;     // Rouge
             data[i + 1] = threshold; // Vert
             data[i + 2] = threshold; // Bleu
             // Alpha reste inchangé
           }
-
+          
           ctx.putImageData(imageData, 0, 0);
         }
 
         // Obtenir les données d'image après traitement
         let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-
+        
         // Essayer plusieurs approches de détection
         const scanMethods = [
           { inversionAttempts: "attemptBoth" },
           { inversionAttempts: "dontInvert" },
           { inversionAttempts: "onlyInvert" },
         ];
-
+        
         // Essayer la détection avec l'image traitée
         for (const method of scanMethods) {
           const code = jsQR(
@@ -428,7 +428,7 @@ const QRScanner = ({ onScan, onClose }) => {
             imageData.height,
             method
           );
-
+          
           if (code && code.data && code.data.trim()) {
             const qrText = code.data.trim();
             const now = Date.now();
@@ -440,32 +440,21 @@ const QRScanner = ({ onScan, onClose }) => {
             }
           }
         }
-
+        
         // Pour la caméra arrière, essayer aussi avec une résolution réduite
         if (cameraFacing === "environment") {
           // Créer une version réduite pour améliorer la détection
-          const smallCanvas = document.createElement("canvas");
-          const smallCtx = smallCanvas.getContext("2d");
+          const smallCanvas = document.createElement('canvas');
+          const smallCtx = smallCanvas.getContext('2d');
           const scale = 0.7; // Augmenter légèrement la taille
           smallCanvas.width = canvas.width * scale;
           smallCanvas.height = canvas.height * scale;
-
+          
           // Redessiner l'image originale (sans traitement) à une taille réduite
-          smallCtx.drawImage(
-            video,
-            0,
-            0,
-            smallCanvas.width,
-            smallCanvas.height
-          );
-
-          const smallImageData = smallCtx.getImageData(
-            0,
-            0,
-            smallCanvas.width,
-            smallCanvas.height
-          );
-
+          smallCtx.drawImage(video, 0, 0, smallCanvas.width, smallCanvas.height);
+          
+          const smallImageData = smallCtx.getImageData(0, 0, smallCanvas.width, smallCanvas.height);
+          
           // Essayer avec l'image réduite
           for (const method of scanMethods) {
             const code = jsQR(
@@ -474,18 +463,13 @@ const QRScanner = ({ onScan, onClose }) => {
               smallImageData.height,
               method
             );
-
+            
             if (code && code.data && code.data.trim()) {
               const qrText = code.data.trim();
               const now = Date.now();
 
               if (qrText !== detectedQR || now - lastScanTime > 2000) {
-                console.log(
-                  "🎯 QR détecté (image réduite) avec",
-                  cameraFacing,
-                  ":",
-                  qrText
-                );
+                console.log("🎯 QR détecté (image réduite) avec", cameraFacing, ":", qrText);
                 handleQRDetection(qrText, now, canvas);
                 return;
               }
@@ -502,20 +486,15 @@ const QRScanner = ({ onScan, onClose }) => {
           );
 
           if (code && code.data && code.data.trim()) {
-            const qrText = code.data.trim();
-            const now = Date.now();
+              const qrText = code.data.trim();
+              const now = Date.now();
 
-            if (qrText !== detectedQR || now - lastScanTime > 2000) {
-              console.log(
-                "🎯 QR détecté (image normale) avec",
-                cameraFacing,
-                ":",
-                qrText
-              );
-              handleQRDetection(qrText, now, canvas);
-              return; // Sortir de la boucle des méthodes
+              if (qrText !== detectedQR || now - lastScanTime > 2000) {
+                console.log("🎯 QR détecté (image normale) avec", cameraFacing, ":", qrText);
+                handleQRDetection(qrText, now, canvas);
+                return; // Sortir de la boucle des méthodes
+              }
             }
-          }
         }
 
         // Nettoyer l'affichage si aucun QR
@@ -598,9 +577,7 @@ const QRScanner = ({ onScan, onClose }) => {
 
     // Vérifier que la vidéo a des dimensions valides
     if (!video.videoWidth || !video.videoHeight || video.readyState < 3) {
-      alert(
-        "❌ Vidéo non prête. Vérifiez que la caméra fonctionne correctement."
-      );
+      alert("❌ Vidéo non prête. Vérifiez que la caméra fonctionne correctement.");
       return;
     }
 
@@ -740,6 +717,8 @@ const QRScanner = ({ onScan, onClose }) => {
                 </button>
               </div>
             )}
+
+
           </div>
 
           <div className="scanner-instructions">
@@ -755,9 +734,25 @@ const QRScanner = ({ onScan, onClose }) => {
                   ? "Caméra prête - Scan automatique en cours"
                   : "Initialisation..."}
               </p>
+
+              {cameraFacing === "environment" && (
+                <div className="rear-camera-tips">
+                  <p style={{fontSize: '0.9em', color: '#666', marginTop: '10px'}}>
+                    💡 <strong>Conseils caméra arrière :</strong><br/>
+                    • Assurez-vous d'avoir un bon éclairage<br/>
+                    • Tenez le téléphone stable (30-50cm du QR)<br/>
+                    • Attendez la mise au point automatique<br/>
+                    • Utilisez le bouton "Test scan" si nécessaire
+                  </p>
+                </div>
+              )}
             </div>
 
             <div className="scanner-actions">
+              <button className="manual-input-btn" onClick={handleManualInput}>
+                📝 Saisie manuelle
+              </button>
+
               {!cameraReady && (
                 <button className="force-start-btn" onClick={forceStart}>
                   🚀 Forcer démarrage
@@ -765,43 +760,26 @@ const QRScanner = ({ onScan, onClose }) => {
               )}
             </div>
 
-            {/* Contrôles de caméra et boutons principaux repositionnés en bas */}
-            <div className="camera-controls-bottom">
-              {/* Contrôles de caméra */}
-              {cameraReady && (
-                <div className="camera-controls">
-                  <button className="switch-camera-btn" onClick={switchCamera}>
-                    🔄 Changer caméra (
-                    {cameraFacing === "environment"
-                      ? "→ Frontale"
-                      : "→ Arrière"}
-                    )
-                  </button>
+            {/* Contrôles de caméra repositionnés hors du cadre */}
+            {cameraReady && (
+              <div className="camera-controls-bottom">
+                <button className="switch-camera-btn" onClick={switchCamera}>
+                  🔄 Changer caméra (
+                  {cameraFacing === "environment" ? "→ Frontale" : "→ Arrière"})
+                </button>
 
-                  {cameraFacing === "environment" && (
+                {cameraFacing === "environment" && (
+                  <>
                     <button className="focus-btn" onClick={forceFocus}>
                       🎯 Forcer mise au point
                     </button>
-                  )}
-                </div>
-              )}
-
-              {/* Boutons principaux */}
-              <div className="main-buttons">
-                {cameraReady && cameraFacing === "environment" && (
-                  <button className="test-scan-btn" onClick={testScan}>
-                    📱 Scanner QR Code
-                  </button>
+                    <button className="test-scan-btn" onClick={testScan}>
+                      🧪 Test scan manuel
+                    </button>
+                  </>
                 )}
-
-                <button
-                  className="manual-input-btn"
-                  onClick={handleManualInput}
-                >
-                  📝 Saisie manuelle
-                </button>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
