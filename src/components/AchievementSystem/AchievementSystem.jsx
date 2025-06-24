@@ -1,56 +1,53 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import "./AchievementSystem.css";
-import AchievementNotification from './AchievementNotification';
 import { ACHIEVEMENTS } from '../../data/achievements';
 
 const AchievementSystem = ({ player, onClose }) => {
   const [unlockedAchievements, setUnlockedAchievements] = useState([]);
-  const [newAchievements, setNewAchievements] = useState([]);
-  const [currentNotification, setCurrentNotification] = useState(null);
-  const [notificationQueue, setNotificationQueue] = useState([]);
 
-  useEffect(() => {
+  const updateUnlockedAchievements = () => {
     const savedAchievements = JSON.parse(
       localStorage.getItem("playerAchievements") || "[]"
     );
+    
+    // Récupérer uniquement les achievements déjà débloqués depuis le localStorage
     const currentUnlocked = ACHIEVEMENTS.filter((achievement) =>
-      achievement.condition(player)
+      savedAchievements.includes(achievement.id)
     );
-
-    const newlyUnlocked = currentUnlocked.filter(
-      (achievement) => !savedAchievements.includes(achievement.id)
-    );
-
-    if (newlyUnlocked.length > 0) {
-      setNewAchievements(newlyUnlocked);
-      const updatedAchievements = [
-        ...savedAchievements,
-        ...newlyUnlocked.map((a) => a.id),
-      ];
-      localStorage.setItem(
-        "playerAchievements",
-        JSON.stringify(updatedAchievements)
-      );
-      
-      // Ajouter les nouveaux achievements à la queue de notifications
-      setNotificationQueue(prev => [...prev, ...newlyUnlocked]);
-    }
 
     setUnlockedAchievements(currentUnlocked);
+  };
+
+  useEffect(() => {
+    updateUnlockedAchievements();
   }, [player]);
 
-  // Gérer la queue des notifications
+  // Écouter les changements du localStorage pour mettre à jour l'affichage
   useEffect(() => {
-    if (notificationQueue.length > 0 && !currentNotification) {
-      const nextNotification = notificationQueue[0];
-      setCurrentNotification(nextNotification);
-      setNotificationQueue(prev => prev.slice(1));
-    }
-  }, [notificationQueue, currentNotification]);
+    const handleStorageChange = (e) => {
+      if (e.key === 'playerAchievements') {
+        updateUnlockedAchievements();
+      }
+    };
 
-  const handleNotificationClose = () => {
-    setCurrentNotification(null);
-  };
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Également écouter les changements internes (même onglet)
+    const originalSetItem = localStorage.setItem;
+    localStorage.setItem = function(key, value) {
+      originalSetItem.apply(this, arguments);
+      if (key === 'playerAchievements') {
+        updateUnlockedAchievements();
+      }
+    };
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      localStorage.setItem = originalSetItem;
+    };
+  }, []);
+
+
 
   const getRarityClass = (rarity) => {
     return `achievement-${rarity}`;
@@ -63,14 +60,7 @@ const AchievementSystem = ({ player, onClose }) => {
   };
 
   return (
-    <>
-      {/* Notification popup pour les nouveaux achievements */}
-      <AchievementNotification 
-        achievement={currentNotification}
-        onClose={handleNotificationClose}
-      />
-      
-      <div className="achievement-overlay">
+    <div className="achievement-overlay">
       <div className="achievement-modal">
         <div className="achievement-header">
           <h3>🏆 Exploits du Capitaine</h3>
@@ -98,18 +88,14 @@ const AchievementSystem = ({ player, onClose }) => {
               const isUnlocked = unlockedAchievements.some(
                 (a) => a.id === achievement.id
               );
-              const isNew = newAchievements.some(
-                (a) => a.id === achievement.id
-              );
+              const isNew = false; // Les nouveaux achievements sont gérés par useAchievementNotifications
 
               return (
                 <div
                   key={achievement.id}
                   className={`achievement-card ${getRarityClass(
                     achievement.rarity
-                  )} ${isUnlocked ? "unlocked" : "locked"} ${
-                    isNew ? "new-achievement" : ""
-                  }`}
+                  )} ${isUnlocked ? "unlocked" : "locked"}`}
                 >
                   <div className="achievement-icon">
                     {isUnlocked ? achievement.icon : "🔒"}
@@ -129,7 +115,7 @@ const AchievementSystem = ({ player, onClose }) => {
                       {achievement.rarity.toUpperCase()}
                     </span>
                   </div>
-                  {isNew && <div className="new-badge">NOUVEAU!</div>}
+
                 </div>
               );
             })}
@@ -137,7 +123,6 @@ const AchievementSystem = ({ player, onClose }) => {
         </div>
       </div>
     </div>
-    </>
   );
 };
 

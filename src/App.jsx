@@ -605,6 +605,9 @@ function App() {
 
       console.log("✅ Énigme résolue:", enigmaId);
 
+      // Vérifier les achievements immédiatement après résolution
+      checkAchievements(updatedPlayer, minigameResults);
+
       // Déclencher les effets de succès
       setParticleType("success");
       setShowParticles(true);
