@@ -1,61 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import "./AchievementSystem.css";
 import AchievementNotification from './AchievementNotification';
-
-const ACHIEVEMENTS = [
-  {
-    id: "first_discovery",
-    title: "Premier Explorateur",
-    description: "Découvrir votre première destination",
-    icon: "🗺️",
-    condition: (player) => player.completed?.length >= 1,
-    rarity: "common",
-  },
-  {
-    id: "photo_enthusiast",
-    title: "Photographe Aventurier",
-    description: "Prendre 3 photos souvenirs",
-    icon: "📸",
-    condition: () => {
-      const photos = JSON.parse(localStorage.getItem("gamePhotos") || "[]");
-      return photos.length >= 3;
-    },
-    rarity: "rare",
-  },
-  {
-    id: "perfect_navigator",
-    title: "Navigateur Parfait",
-    description: "Résoudre 3 énigmes sans erreur",
-    icon: "🧭",
-    condition: (player) => {
-      const perfectSolves = player.completed?.filter((enigmaId) => {
-        const attempts = player.enigmaAttempts?.[enigmaId] || 0;
-        return attempts === 1;
-      });
-      return perfectSolves?.length >= 3;
-    },
-    rarity: "epic",
-  },
-  {
-    id: "speed_demon",
-    title: "Éclair des Mers",
-    description: "Résoudre une énigme en moins de 30 secondes",
-    icon: "⚡",
-    condition: () => {
-      // Cette condition nécessiterait un tracking du temps
-      return false; // À implémenter avec un système de timing
-    },
-    rarity: "legendary",
-  },
-  {
-    id: "treasure_hunter",
-    title: "Chasseur de Trésor Légendaire",
-    description: "Compléter toutes les destinations",
-    icon: "🏆",
-    condition: (player) => player.completed?.length >= 5,
-    rarity: "legendary",
-  },
-];
+import { ACHIEVEMENTS } from '../../data/achievements';
 
 const AchievementSystem = ({ player, onClose }) => {
   const [unlockedAchievements, setUnlockedAchievements] = useState([]);

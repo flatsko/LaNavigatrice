@@ -39,7 +39,14 @@ const SharingGameCard = ({ onComplete, onClose }) => {
     });
     setIsComplete(true);
     setTimeout(() => {
-      onComplete(0);
+      onComplete({
+        gameType: 'sharing',
+        success: false,
+        score: 0,
+        timeBonus: 0,
+        skipped: true,
+        message: "Gage passé"
+      });
     }, 4000);
   };
 
@@ -205,7 +212,14 @@ const SharingGameCard = ({ onComplete, onClose }) => {
     
     setIsComplete(true);
     setTimeout(() => {
-      onComplete(totalScore);
+      onComplete({
+        gameType: 'sharing',
+        success: true,
+        score: totalScore,
+        timeBonus: timeBonus,
+        skipped: false,
+        message: "Gage accompli avec succès !"
+      });
     }, 4000);
   };
 
@@ -217,7 +231,14 @@ const SharingGameCard = ({ onComplete, onClose }) => {
     });
     setIsComplete(true);
     setTimeout(() => {
-      onComplete(0);
+      onComplete({
+        gameType: 'sharing',
+        success: false,
+        score: 0,
+        timeBonus: 0,
+        skipped: false,
+        message: "Temps écoulé"
+      });
     }, 4000);
   };
 

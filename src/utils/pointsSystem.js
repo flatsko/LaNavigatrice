@@ -1,5 +1,7 @@
 // Système de points pour La Navigatrice
 
+import { ACHIEVEMENTS } from '../data/achievements.js';
+
 // Configuration des points
 const POINTS_CONFIG = {
   // Points pour les énigmes
@@ -69,22 +71,8 @@ export const calculateMinigamePoints = (minigameResults = []) => {
   const details = [];
 
   minigameResults.forEach((result) => {
-    let gamePoints = 0;
-
-    if (result.success) {
-      gamePoints = POINTS_CONFIG.MINIGAME_COMPLETED;
-
-      // Ajouter le bonus de performance
-      if (result.score) {
-        const bonusRatio = Math.min(result.score / 1000, 1); // Normaliser sur 1000
-        gamePoints += Math.floor(POINTS_CONFIG.MINIGAME_BONUS_MAX * bonusRatio);
-      }
-
-      // Bonus de temps
-      if (result.timeBonus) {
-        gamePoints += Math.floor(result.timeBonus / 10);
-      }
-    }
+    // Utiliser directement le score calculé dans le mini-jeu
+    const gamePoints = result.score || 0;
 
     totalPoints += gamePoints;
     details.push({
@@ -92,6 +80,8 @@ export const calculateMinigamePoints = (minigameResults = []) => {
       success: result.success,
       points: gamePoints,
       skipped: result.skipped || false,
+      originalScore: result.score,
+      timeBonus: result.timeBonus || 0,
     });
   });
 
@@ -99,21 +89,13 @@ export const calculateMinigamePoints = (minigameResults = []) => {
 };
 
 // Fonction pour calculer les points des trophées
-export const calculateTrophyPoints = (player) => {
+export const calculateTrophyPoints = (player, minigameResults = []) => {
   // Récupérer les trophées débloqués depuis localStorage
   const savedAchievements = JSON.parse(
     localStorage.getItem("playerAchievements") || "[]"
   );
 
-  // Définition des trophées avec leurs raretés
-  const ACHIEVEMENTS = [
-    { id: "first_discovery", rarity: "common" },
-    { id: "photo_enthusiast", rarity: "rare" },
-    { id: "perfect_navigator", rarity: "epic" },
-    { id: "speed_demon", rarity: "legendary" },
-    { id: "completionist", rarity: "legendary" },
-    { id: "flawless_captain", rarity: "mythic" },
-  ];
+
 
   let totalPoints = 0;
   const details = [];
@@ -185,7 +167,7 @@ export const calculateTimeBonus = (player) => {
 export const calculateTotalScore = (player, minigameResults = []) => {
   const enigmaPoints = calculateEnigmaPoints(player);
   const minigamePoints = calculateMinigamePoints(minigameResults);
-  const trophyPoints = calculateTrophyPoints(player);
+  const trophyPoints = calculateTrophyPoints(player, minigameResults);
   const timeBonus = calculateTimeBonus(player);
 
   const totalScore =

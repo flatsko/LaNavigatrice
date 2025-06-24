@@ -14,8 +14,9 @@ import EnigmaCard from "./components/EnigmaCard/EnigmaCard";
 import Leaderboard from "./components/Leaderboard/Leaderboard";
 import VictoryPage from "./components/VictoryPage/VictoryPage";
 import FailurePage from "./components/FailurePage/FailurePage"; // CORRECTION: Ajouter FailurePage
+
 import AchievementSystem from "./components/AchievementSystem/AchievementSystem";
-import { AchievementNotificationProvider } from "./components/AchievementSystem";
+import { AchievementNotificationProvider, useAchievementNotifications } from "./components/AchievementSystem";
 import ParticleEffect from "./components/ParticleEffect/ParticleEffect";
 import TipsSystem from "./components/TipsSystem/TipsSystem";
 import SoundManager from "./components/SoundManager/SoundManager";
@@ -32,6 +33,7 @@ import { getCurrentTheme, applyThemeVariables, THEMES } from "./data/themes";
 // Utils
 
 function App() {
+  const { checkAchievements } = useAchievementNotifications();
   // États principaux
   const [gameState, setGameState] = useState("welcome");
   const [currentPlayer, setCurrentPlayer] = useState(null);
@@ -222,6 +224,8 @@ function App() {
       console.log("✅ Quiz réussi! Accès à la victoire");
       setQuizCompleted(true);
       setGameState("victory");
+       // Vérifier les achievements à la victoire
+       checkAchievements(currentPlayer, minigameResults);
     } else {
       console.log("❌ Quiz échoué, score insuffisant");
       // Rester en mode jeu, le joueur peut réessayer
@@ -370,6 +374,8 @@ function App() {
               setQuizCompleted(true);
               setQuizScore(parsedQuizData.score);
               setGameState("victory");
+        // Vérifier les achievements à la victoire
+        checkAchievements(migratedPlayer, minigameResults);
             } else {
               console.log("🔄 Quiz à refaire (score insuffisant)");
               setShowMandatoryQuiz(true);
@@ -456,6 +462,7 @@ function App() {
       setQuizCompleted(false);
       setQuizScore(null);
       setLeaderboardData([]);
+
       alert("✅ Toutes les données ont été effacées.");
     }
   };
@@ -649,6 +656,8 @@ function App() {
         const validation = isGameValid(updatedPlayer);
         if (validation.isValid) {
           setGameState("victory");
+          // Vérifier les achievements à la victoire
+          checkAchievements(updatedPlayer, minigameResults);
         } else {
           setFailureReason(validation.reason);
           setGameState("failure");
@@ -679,6 +688,11 @@ function App() {
     savePlayerData(updatedPlayer);
     updateLeaderboard();
 
+    // Vérifier les nouveaux achievements
+    if (updatedPlayer) {
+      checkAchievements(updatedPlayer, minigameResults);
+    }
+
     return isCorrect;
   };
 
@@ -702,7 +716,22 @@ function App() {
       message: result.message || "",
     };
 
-    setMinigameResults((prev) => [...prev, newResult]);
+    // Éviter les doublons en vérifiant si ce type de mini-jeu n'a pas déjà été ajouté
+    setMinigameResults((prev) => {
+      const existingIndex = prev.findIndex(r => r.type === newResult.type);
+      if (existingIndex >= 0) {
+        // Remplacer le résultat existant
+        const updated = [...prev];
+        updated[existingIndex] = newResult;
+        console.log(`🎮 Mise à jour du résultat pour ${newResult.type}:`, newResult);
+        return updated;
+      } else {
+        // Ajouter le nouveau résultat
+        console.log(`🎮 Ajout du résultat pour ${newResult.type}:`, newResult);
+        return [...prev, newResult];
+      }
+    });
+    
     setShowMiniGame(false);
     setCurrentMiniGameType(null);
 
@@ -710,6 +739,8 @@ function App() {
     if (pendingVictory) {
       setPendingVictory(false);
       setGameState("victory");
+      // Vérifier les achievements à la victoire
+      checkAchievements(currentPlayer, minigameResults);
     }
     // Sinon, continuer le jeu normalement
   };
@@ -781,7 +812,7 @@ function App() {
         <FailurePage
           player={currentPlayer}
           reason={failureReason}
-          onRestart={restartGame}
+          onRestart={clearAllData}
           onViewStats={() => setShowLeaderboard(true)}
           onPhotoShared={addPhotoToSharedGallery}
           minigameResults={minigameResults}
@@ -802,7 +833,7 @@ function App() {
       <div className="app">
         <VictoryPage
           player={currentPlayer}
-          onRestart={restartGame}
+          onRestart={clearAllData}
           onViewLeaderboard={() => setShowLeaderboard(true)}
           quizScore={quizScore}
           quizCompleted={quizCompleted}
@@ -845,7 +876,7 @@ function App() {
   };
   // État de jeu principal
   return (
-    <AchievementNotificationProvider player={currentPlayer}>
+    <AchievementNotificationProvider player={currentPlayer} minigameResults={minigameResults}>
       <div className="app">
         {/* Header avec informations du joueur */}
         <Header

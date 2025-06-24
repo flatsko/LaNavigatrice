@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import MiniGameOverlay from "./MiniGameOverlay";
 import "./MiniGames.css";
 import "../../styles/enigmaCard.css";
@@ -47,11 +47,13 @@ const TentacleGameCard = ({ onComplete, onClose }) => {
 
     const userAnswer = userInput.trim();
     const isCorrect = userAnswer === challenge.answer;
+    
+    // Calcul du bonus de temps et score de base (définis ici pour être accessibles partout)
+    const baseScore = 800; // Score plus élevé pour la difficulté accrue
+    const timeBonus = isCorrect ? Math.floor(timeLeft * 2) : 0;
 
     if (isCorrect) {
       // Calcul du score avec bonus de temps
-      const baseScore = 800; // Score plus élevé pour la difficulté accrue
-      const timeBonus = Math.floor(timeLeft * 2);
       const totalScore = baseScore + timeBonus;
       setScore(totalScore);
 
@@ -70,7 +72,14 @@ const TentacleGameCard = ({ onComplete, onClose }) => {
 
     setIsComplete(true);
     setTimeout(() => {
-      onComplete(isCorrect ? score : 0);
+      onComplete({
+        gameType: 'tentacle',
+        success: isCorrect,
+        score: isCorrect ? (baseScore + timeBonus) : 0,
+        timeBonus: timeBonus,
+        skipped: false,
+        message: isCorrect ? "Tentacule identifiée !" : "Mauvaise réponse"
+      });
     }, 4000);
   };
 
@@ -83,7 +92,14 @@ const TentacleGameCard = ({ onComplete, onClose }) => {
     });
     setIsComplete(true);
     setTimeout(() => {
-      onComplete(0);
+      onComplete({
+        gameType: 'tentacle',
+        success: false,
+        score: 0,
+        timeBonus: 0,
+        skipped: true,
+        message: "Mini-jeu passé"
+      });
     }, 4000);
   };
 

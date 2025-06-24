@@ -106,10 +106,12 @@ const MorseGameCard = ({ onComplete, onClose }) => {
 
       setTimeout(() => {
         onComplete({
+          gameType: 'morse',
           success: true,
           score: finalScore,
           timeBonus: timeBonus,
-          message: currentMessage,
+          skipped: false,
+          message: `Message décodé: ${currentMessage}`,
         });
       }, 4000);
     } else {
@@ -130,10 +132,12 @@ const MorseGameCard = ({ onComplete, onClose }) => {
 
       setTimeout(() => {
         onComplete({
+          gameType: 'morse',
           success: false,
           score: 0,
           timeBonus: 0,
           skipped: true,
+          message: "Temps écoulé",
         });
       }, 4000);
     }
@@ -143,10 +147,12 @@ const MorseGameCard = ({ onComplete, onClose }) => {
     setIsClosing(true);
     setTimeout(() => {
       onComplete({
+        gameType: 'morse',
         success: false,
         score: 0,
         timeBonus: 0,
         skipped: true,
+        message: "Mini-jeu passé",
       });
     }, 300);
   };

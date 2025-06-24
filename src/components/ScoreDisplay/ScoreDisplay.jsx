@@ -4,6 +4,7 @@ import {
   getScoreRank,
   formatScore,
 } from "../../utils/pointsSystem";
+import { ACHIEVEMENTS } from "../../data/achievements";
 import "./ScoreDisplay.css";
 
 const ScoreDisplay = ({ player, minigameResults = [], isVictory = true }) => {
@@ -66,19 +67,35 @@ const ScoreDisplay = ({ player, minigameResults = [], isVictory = true }) => {
               </span>
             </div>
             <div className="category-details">
-              {breakdown.minigames.details.map((detail, index) => (
-                <div key={index} className="detail-item">
-                  <span className="detail-text">
-                    {detail.type === "morse" ? "📡 Morse" : "🧭 Boussole"}
-                    {detail.skipped
-                      ? " (Ignoré)"
-                      : detail.success
-                      ? " (Réussi)"
-                      : " (Échoué)"}
-                  </span>
-                  <span className="detail-points">+{detail.points}</span>
-                </div>
-              ))}
+              {breakdown.minigames.details.map((detail, index) => {
+                // Fonction pour obtenir le nom et l'icône du mini-jeu
+                const getMinigameDisplay = (type) => {
+                  switch (type) {
+                    case "morse":
+                      return "📡 Morse";
+                    case "tentacle":
+                      return "🐙 Tentacule";
+                    case "sharing":
+                      return "🤝 Partage";
+                    default:
+                      return `🎮 ${type}`;
+                  }
+                };
+                
+                return (
+                  <div key={index} className="detail-item">
+                    <span className="detail-text">
+                      {getMinigameDisplay(detail.type)}
+                      {detail.skipped
+                        ? " (Ignoré)"
+                        : detail.success
+                        ? " (Réussi)"
+                        : " (Échoué)"}
+                    </span>
+                    <span className="detail-points">+{detail.points}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
@@ -94,18 +111,21 @@ const ScoreDisplay = ({ player, minigameResults = [], isVictory = true }) => {
               </span>
             </div>
             <div className="category-details">
-              {breakdown.trophies.details.map((detail, index) => (
-                <div key={index} className="detail-item">
-                  <span className="detail-text">
-                    Trophée {detail.i}
-                    <span className={`rarity-badge rarity-${detail.rarity}`}>
-                      {detail.rarity.charAt(0).toUpperCase() +
-                        detail.rarity.slice(1)}
+              {breakdown.trophies.details.map((detail, index) => {
+                const achievement = ACHIEVEMENTS.find(a => a.id === detail.id);
+                return (
+                  <div key={index} className="detail-item">
+                    <span className="detail-text">
+                      {achievement?.icon || "🏆"} {achievement?.title || detail.id}
+                      <span className={`rarity-badge rarity-${detail.rarity}`}>
+                        {detail.rarity.charAt(0).toUpperCase() +
+                          detail.rarity.slice(1)}
+                      </span>
                     </span>
-                  </span>
-                  <span className="detail-points">+{detail.points}</span>
-                </div>
-              ))}
+                    <span className="detail-points">+{detail.points}</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}

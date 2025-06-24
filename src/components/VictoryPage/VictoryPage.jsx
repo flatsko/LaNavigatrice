@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import { getRankDetails, getRankAdvice } from "../../utils/ranking";
 import { getStoredPhotos } from "../../utils/photoStorage"; // AJOUT
 import { calculateTotalScore } from "../../utils/pointsSystem"; // AJOUT
@@ -6,76 +6,8 @@ import FlagQuiz from "../FlagQuiz/FlagQuiz";
 import AchievementSystem from "../AchievementSystem/AchievementSystem";
 import ScoreDisplay from "../ScoreDisplay/ScoreDisplay";
 import { ENIGMAS } from "../../data/enigmas";
+import { ACHIEVEMENTS } from "../../data/achievements";
 import "../../styles/victory.css";
-
-// Import des trophées pour le partage
-const ACHIEVEMENTS = [
-  {
-    id: "first_discovery",
-    title: "Premier Explorateur",
-    description: "Découvrir votre première destination",
-    icon: "🗺️",
-    condition: (player) => player.completed?.length >= 1,
-    rarity: "common",
-  },
-  {
-    id: "photo_enthusiast",
-    title: "Photographe Aventurier",
-    description: "Prendre 3 photos souvenirs",
-    icon: "📸",
-    condition: () => {
-      const photos = JSON.parse(localStorage.getItem("gamePhotos") || "[]");
-      return photos.length >= 3;
-    },
-    rarity: "rare",
-  },
-  {
-    id: "perfect_navigator",
-    title: "Navigateur Parfait",
-    description: "Résoudre 3 énigmes sans erreur",
-    icon: "🧭",
-    condition: (player) => {
-      const perfectSolves = player.completed?.filter((enigmaId) => {
-        const attempts = player.enigmaAttempts?.[enigmaId] || 0;
-        return attempts === 1;
-      });
-      return perfectSolves?.length >= 3;
-    },
-    rarity: "epic",
-  },
-  {
-    id: "speed_demon",
-    title: "Éclair des Mers",
-    description: "Résoudre une énigme en moins de 30 secondes",
-    icon: "⚡",
-    condition: () => {
-      return false; // À implémenter avec un système de timing
-    },
-    rarity: "legendary",
-  },
-  {
-    id: "completionist",
-    title: "Maître Explorateur",
-    description: "Terminer toutes les destinations",
-    icon: "🏆",
-    condition: (player) => player.completed?.length >= 7,
-    rarity: "legendary",
-  },
-  {
-    id: "flawless_captain",
-    title: "Capitaine Impeccable",
-    description: "Terminer toutes les énigmes sans aucune erreur",
-    icon: "👑",
-    condition: (player) => {
-      const perfectSolves = player.completed?.filter((enigmaId) => {
-        const attempts = player.enigmaAttempts?.[enigmaId] || 0;
-        return attempts === 1;
-      });
-      return perfectSolves?.length >= 5;
-    },
-    rarity: "mythic",
-  },
-];
 
 const VictoryPage = ({
   player,
