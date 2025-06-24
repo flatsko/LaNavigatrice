@@ -20,6 +20,7 @@ import ParticleEffect from "./components/ParticleEffect/ParticleEffect";
 import TipsSystem from "./components/TipsSystem/TipsSystem";
 import SoundManager from "./components/SoundManager/SoundManager";
 import FlagQuiz from "./components/FlagQuiz/FlagQuiz";
+import MiniGameCard from "./components/MiniGames/MiniGameCard";
 
 // Styles - globals.css est importé via index.css
 
@@ -63,6 +64,14 @@ function App() {
 
   // État pour les photos partagées
   const [allPhotos, setAllPhotos] = useState([]);
+
+  // États pour les mini-jeux
+  const [showMiniGame, setShowMiniGame] = useState(false);
+  const [currentMiniGameType, setCurrentMiniGameType] = useState(null);
+  const [pendingMiniGame, setPendingMiniGame] = useState(null);
+  const [minigameResults, setMinigameResults] = useState([]);
+  const [pendingVictory, setPendingVictory] = useState(false);
+  const [triggeredMinigames, setTriggeredMinigames] = useState([]);
 
   // Charger toutes les photos partagées
   useEffect(() => {
@@ -113,6 +122,72 @@ function App() {
     };
 
     setAllPhotos((prev) => [photoWithPlayer, ...prev]);
+
+    // Déclencher les mini-jeux après la prise de photo
+    triggerMinigameAfterPhoto();
+  };
+
+  // Fonction pour déclencher les mini-jeux après la prise de photo
+  const triggerMinigameAfterPhoto = () => {
+    // Vérifier si on peut déclencher un mini-jeu
+    const availableMinigames = ["morse", "tentacle", "sharing"];
+    const untriggeredMinigames = availableMinigames.filter(
+      (game) => !triggeredMinigames.includes(game)
+    );
+
+    if (untriggeredMinigames.length === 0) {
+      console.log("🎮 Tous les mini-jeux ont déjà été déclenchés");
+      return;
+    }
+
+    // Calculer les énigmes restantes et complétées
+    const completedEnigmas = (currentPlayer?.completed || []).length;
+    const totalEnigmas = currentEnigmas.length;
+    const remainingEnigmas = totalEnigmas - completedEnigmas;
+
+    // Nouvelle logique : garantir qu'au moins un mini-jeu soit déclenché tous les 2-3 énigmes
+    const minigamesTriggered = triggeredMinigames.length;
+    const expectedMinigames = Math.floor((completedEnigmas + 1) / 2.5); // Un mini-jeu tous les 2-3 énigmes
+
+    let shouldTriggerMinigame = false;
+
+    // Forcer le déclenchement si on est en retard sur le planning
+    if (minigamesTriggered < expectedMinigames) {
+      shouldTriggerMinigame = true;
+      console.log(
+        `🎮 Déclenchement forcé: ${minigamesTriggered} mini-jeux pour ${
+          completedEnigmas + 1
+        } énigmes`
+      );
+    }
+    // Garantir qu'au moins un mini-jeu soit déclenché avant la fin
+    else if (remainingEnigmas <= 2 && minigamesTriggered === 0) {
+      shouldTriggerMinigame = true;
+      console.log(
+        "🎮 Déclenchement de sécurité: aucun mini-jeu encore déclenché"
+      );
+    }
+    // Probabilité normale pour les autres cas
+    else {
+      const triggerChance = remainingEnigmas <= 3 ? 0.7 : 0.4;
+      shouldTriggerMinigame = Math.random() < triggerChance;
+    }
+
+    if (shouldTriggerMinigame && !showMiniGame) {
+      const randomMinigame =
+        untriggeredMinigames[
+          Math.floor(Math.random() * untriggeredMinigames.length)
+        ];
+      console.log(
+        `🎮 Déclenchement du mini-jeu après photo: ${randomMinigame} (${remainingEnigmas} énigmes restantes)`
+      );
+
+      // Marquer le mini-jeu comme déclenché
+      setTriggeredMinigames((prev) => [...prev, randomMinigame]);
+
+      // Démarrer directement le mini-jeu avec le nouveau système
+      startMiniGame(randomMinigame);
+    }
   };
 
   // Fonction pour gérer la completion du quiz obligatoire
@@ -172,6 +247,12 @@ function App() {
     setShowAchievements(false);
     setShowParticles(false);
     setGameState("welcome");
+    // Réinitialiser les mini-jeux
+    setTriggeredMinigames([]);
+    setMinigameResults([]);
+    setShowMiniGame(false);
+    setCurrentMiniGameType(null);
+    setPendingVictory(false);
     // Note: On ne supprime pas les données du localStorage pour garder l'historique
   };
 
@@ -186,6 +267,13 @@ function App() {
     setGameState("welcome");
     updateLeaderboard();
     setFailureReason("");
+    // Réinitialiser les mini-jeux
+    setTriggeredMinigames([]);
+    setMinigameResults([]);
+    setShowMiniGame(false);
+    setCurrentMiniGameType(null);
+    setPendingMiniGame(null);
+    setPendingVictory(false);
   };
 
   // Fonction de debug pour voir les données
@@ -569,6 +657,12 @@ function App() {
       // Cas normal (pas la dernière énigme résolue ou échec)
       const validation = isGameValid(updatedPlayer);
       if (validation.isValid) {
+        // Vérifier si le quiz obligatoire doit être fait
+        if (!quizCompleted) {
+          console.log("Quiz obligatoire requis avant la victoire");
+          setShowMandatoryQuiz(true);
+          return isCorrect;
+        }
         setGameState("victory");
       } else {
         setFailureReason(validation.reason);
@@ -576,12 +670,53 @@ function App() {
       }
     }
 
+    // Les mini-jeux sont maintenant déclenchés après la prise de photo
+    // via la fonction triggerMinigameAfterPhoto()
+
     // Sauvegarder et mettre à jour
     setCurrentPlayer(updatedPlayer);
     savePlayerData(updatedPlayer);
     updateLeaderboard();
 
     return isCorrect;
+  };
+
+  // Fonction pour gérer la fin de l'animation d'alerte
+  // Fonction unifiée pour démarrer un mini-jeu
+  const startMiniGame = (gameType) => {
+    setCurrentMiniGameType(gameType);
+    setShowMiniGame(true);
+    setPendingMiniGame(null);
+  };
+
+  // Fonction unifiée de gestion de la completion des mini-jeux
+  const handleMiniGameComplete = (result) => {
+    // Ajouter le résultat du mini-jeu
+    const newResult = {
+      type: result.gameType,
+      success: result.success,
+      score: result.score,
+      timeBonus: result.timeBonus || 0,
+      skipped: result.skipped || false,
+      message: result.message || "",
+    };
+
+    setMinigameResults((prev) => [...prev, newResult]);
+    setShowMiniGame(false);
+    setCurrentMiniGameType(null);
+
+    // Passer à la victoire après le mini-jeu seulement si c'est la fin du jeu
+    if (pendingVictory) {
+      setPendingVictory(false);
+      setGameState("victory");
+    }
+    // Sinon, continuer le jeu normalement
+  };
+
+  // Fonction unifiée de fermeture des mini-jeux
+  const handleMiniGameClose = () => {
+    setShowMiniGame(false);
+    setCurrentMiniGameType(null);
   };
 
   // Gestion des erreurs globales
@@ -648,6 +783,7 @@ function App() {
           onRestart={restartGame}
           onViewStats={() => setShowLeaderboard(true)}
           onPhotoShared={addPhotoToSharedGallery}
+          minigameResults={minigameResults}
         />
 
         {showLeaderboard && (
@@ -669,6 +805,7 @@ function App() {
           onViewLeaderboard={() => setShowLeaderboard(true)}
           quizScore={quizScore}
           quizCompleted={quizCompleted}
+          minigameResults={minigameResults}
         />
 
         {showLeaderboard && (
@@ -709,142 +846,151 @@ function App() {
   return (
     <AchievementNotificationProvider player={currentPlayer}>
       <div className="app">
-      {/* Header avec informations du joueur */}
-      <Header
-        player={currentPlayer}
-        onScanQR={() => setShowQRScanner(true)}
-        onShowLeaderboard={() => setShowLeaderboard(true)}
-        onShowAchievements={() => setShowAchievements(true)}
-        onShowSharedGallery={() => setShowSharedGallery(true)}
-        onShowPrintablePresentation={() => {
-          console.log("Fonction onShowPrintablePresentation appelée!");
-          setShowPrintablePresentation(true);
-          console.log("showPrintablePresentation défini à true");
-        }}
-        onShowMandatoryQuiz={() => setShowMandatoryQuiz(true)}
-        onResetStorage={resetStorage}
-        showQuizButton={
-          currentPlayer &&
-          currentPlayer.completed?.length +
-            (currentPlayer.failed?.length || 0) ===
-            currentEnigmas.length &&
-          !quizCompleted
-        }
-        totalEnigmas={ENIGMAS.length}
-      />
-      {/* {<QRVariations></QRVariations>} */}
-
-      {/* Carte du monde interactive */}
-      <WorldMap
-        completedEnigmas={currentPlayer?.completed || []}
-        failedEnigmas={currentPlayer?.failed || []}
-        enigmas={currentEnigmas}
-        onLocationClick={(enigmaId) => {
-          const enigma = currentEnigmas.find((e) => e.id === enigmaId);
-          const completed = currentPlayer?.completed || [];
-          const failed = currentPlayer?.failed || [];
-        }}
-      />
-      {/* Scanner QR */}
-      {showQRScanner && (
-        <QRScanner
-          onScan={handleQRScan}
-          onClose={() => setShowQRScanner(false)}
-        />
-      )}
-      {/* Carte d'énigme */}
-      {/* Carte d'énigme */}
-      {showEnigma && currentEnigma && (
-        <EnigmaCard
-          enigma={currentEnigma}
-          player={currentPlayer} // CORRECTION: Passer le player
-          onSolve={solveEnigma}
-          onClose={() => {
-            setShowEnigma(false);
-            setCurrentEnigma(null);
-          }}
-          onTriggerVictory={triggerVictoryAfterPhoto} // NOUVEAU
-          onPhotoShared={addPhotoToSharedGallery}
-        />
-      )}
-
-      {/* Classement */}
-      {showLeaderboard && (
-        <Leaderboard
-          players={leaderboardData}
-          currentPlayer={currentPlayer}
-          onClose={() => setShowLeaderboard(false)}
-        />
-      )}
-
-      {/* Système d'achievements */}
-      {showAchievements && (
-        <AchievementSystem
+        {/* Header avec informations du joueur */}
+        <Header
           player={currentPlayer}
-          onClose={() => setShowAchievements(false)}
+          onScanQR={() => setShowQRScanner(true)}
+          onShowLeaderboard={() => setShowLeaderboard(true)}
+          onShowAchievements={() => setShowAchievements(true)}
+          onShowSharedGallery={() => setShowSharedGallery(true)}
+          onShowPrintablePresentation={() => {
+            console.log("Fonction onShowPrintablePresentation appelée!");
+            setShowPrintablePresentation(true);
+            console.log("showPrintablePresentation défini à true");
+          }}
+          onShowMandatoryQuiz={() => setShowMandatoryQuiz(true)}
+          onResetStorage={resetStorage}
+          showQuizButton={
+            currentPlayer &&
+            currentPlayer.completed?.length +
+              (currentPlayer.failed?.length || 0) ===
+              currentEnigmas.length &&
+            !quizCompleted
+          }
+          totalEnigmas={ENIGMAS.length}
         />
-      )}
+        {/* {<QRVariations></QRVariations>} */}
 
-      {/* Galerie photo partagée */}
-      {showSharedGallery && (
-        <SharedPhotoGallery
-          photos={allPhotos}
-          currentPlayer={currentPlayer}
-          onClose={() => setShowSharedGallery(false)}
-        />
-      )}
-
-      {/* Page d'impression de présentation */}
-      {showPrintablePresentation && (
-        <PrintableGamePresentation
-          onClose={() => {
-            console.log("Fermeture de PrintableGamePresentation");
-            setShowPrintablePresentation(false);
+        {/* Carte du monde interactive */}
+        <WorldMap
+          completedEnigmas={currentPlayer?.completed || []}
+          failedEnigmas={currentPlayer?.failed || []}
+          enigmas={currentEnigmas}
+          onLocationClick={(enigmaId) => {
+            const enigma = currentEnigmas.find((e) => e.id === enigmaId);
+            const completed = currentPlayer?.completed || [];
+            const failed = currentPlayer?.failed || [];
           }}
         />
-      )}
+        {/* Scanner QR */}
+        {showQRScanner && (
+          <QRScanner
+            onScan={handleQRScan}
+            onClose={() => setShowQRScanner(false)}
+          />
+        )}
+        {/* Carte d'énigme */}
+        {/* Carte d'énigme */}
+        {showEnigma && currentEnigma && (
+          <EnigmaCard
+            enigma={currentEnigma}
+            player={currentPlayer} // CORRECTION: Passer le player
+            onSolve={solveEnigma}
+            onClose={() => {
+              setShowEnigma(false);
+              setCurrentEnigma(null);
+            }}
+            onTriggerVictory={triggerVictoryAfterPhoto} // NOUVEAU
+            onPhotoShared={addPhotoToSharedGallery}
+          />
+        )}
 
-      {/* Quiz obligatoire */}
-      {showMandatoryQuiz && (
-        <FlagQuiz
-          enigmas={currentEnigmas}
-          onComplete={handleQuizCompletion}
-          onClose={handleQuizClose}
-          isMandatory={true}
-          requiredScore={80}
-        />
-      )}
-      {console.log(
-        "showPrintablePresentation état:",
-        showPrintablePresentation
-      )}
+        {/* Classement */}
+        {showLeaderboard && (
+          <Leaderboard
+            players={leaderboardData}
+            currentPlayer={currentPlayer}
+            onClose={() => setShowLeaderboard(false)}
+          />
+        )}
 
-      {/* Effets de particules */}
-      {showParticles && (
-        <ParticleEffect
-          type={particleType}
-          duration={3000}
-          onComplete={() => setShowParticles(false)}
-        />
-      )}
+        {/* Système d'achievements */}
+        {showAchievements && (
+          <AchievementSystem
+            player={currentPlayer}
+            onClose={() => setShowAchievements(false)}
+          />
+        )}
 
-      {/* Système de conseils */}
-      <TipsSystem
+        {/* Galerie photo partagée */}
+        {showSharedGallery && (
+          <SharedPhotoGallery
+            photos={allPhotos}
+            currentPlayer={currentPlayer}
+            onClose={() => setShowSharedGallery(false)}
+          />
+        )}
+
+        {/* Page d'impression de présentation */}
+        {showPrintablePresentation && (
+          <PrintableGamePresentation
+            onClose={() => {
+              console.log("Fermeture de PrintableGamePresentation");
+              setShowPrintablePresentation(false);
+            }}
+          />
+        )}
+
+        {/* Quiz obligatoire */}
+        {showMandatoryQuiz && (
+          <FlagQuiz
+            enigmas={currentEnigmas}
+            onComplete={handleQuizCompletion}
+            onClose={handleQuizClose}
+            isMandatory={true}
+            requiredScore={80}
+          />
+        )}
+        {console.log(
+          "showPrintablePresentation état:",
+          showPrintablePresentation
+        )}
+
+        {/* Mini-jeu unifié */}
+        {showMiniGame && currentMiniGameType && (
+          <MiniGameCard
+            gameType={currentMiniGameType}
+            onComplete={handleMiniGameComplete}
+            onClose={handleMiniGameClose}
+            player={currentPlayer}
+          />
+        )}
+
+        {/* Effets de particules */}
+        {showParticles && (
+          <ParticleEffect
+            type={particleType}
+            duration={3000}
+            onComplete={() => setShowParticles(false)}
+          />
+        )}
+
+        {/* <TipsSystem
         player={currentPlayer}
         gameState={gameState}
         onClose={() => {}}
-      />
+      /> */}
 
-      {/* Gestionnaire de sons */}
-      <SoundManager
-        gameState={gameState}
-        onSuccess={showParticles && particleType === "success"}
-        onError={showParticles && particleType === "error"}
-        onScan={showQRScanner}
-      />
+        {/* Gestionnaire de sons */}
+        <SoundManager
+          gameState={gameState}
+          onSuccess={showParticles && particleType === "success"}
+          onError={showParticles && particleType === "error"}
+          onScan={showQRScanner}
+        />
 
-      {/* Indicateur de connexion (optionnel) */}
-      <NetworkStatus />
+        {/* Indicateur de connexion (optionnel) */}
+        <NetworkStatus />
       </div>
     </AchievementNotificationProvider>
   );
