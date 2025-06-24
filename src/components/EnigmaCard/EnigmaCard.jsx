@@ -81,6 +81,7 @@ const EnigmaCard = ({
   player,
   onTriggerVictory,
   onPhotoShared,
+  onTriggerMinigame,
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const {
@@ -193,10 +194,14 @@ const EnigmaCard = ({
         type: "success",
       });
       if (onPhotoShared) onPhotoShared(savedPhoto);
+      
+      // Déclencher un mini-jeu aléatoirement avant la fermeture
+      const minigameTriggered = onTriggerMinigame ? onTriggerMinigame() : false;
+      
       if (player?.pendingVictory) {
-        setTimeout(() => onTriggerVictory?.(), 2000);
+        setTimeout(() => onTriggerVictory?.(), minigameTriggered ? 3000 : 2000);
       } else {
-        setTimeout(handleClose, 2000);
+        setTimeout(handleClose, minigameTriggered ? 3000 : 2000);
       }
     } else {
       setNotification({
@@ -208,10 +213,14 @@ const EnigmaCard = ({
 
   const handleContinueWithoutPhoto = () => {
     dispatch({ type: "HIDE_CAMERA" });
+    
+    // Déclencher un mini-jeu aléatoirement avant la fermeture
+    const minigameTriggered = onTriggerMinigame ? onTriggerMinigame() : false;
+    
     if (player?.pendingVictory) {
-      setTimeout(() => onTriggerVictory?.(), 500);
+      setTimeout(() => onTriggerVictory?.(), minigameTriggered ? 1000 : 500);
     } else {
-      setTimeout(handleClose, 500);
+      setTimeout(handleClose, minigameTriggered ? 1000 : 500);
     }
   };
 

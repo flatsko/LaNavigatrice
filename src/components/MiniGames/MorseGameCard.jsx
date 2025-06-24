@@ -14,33 +14,64 @@ const MorseGameCard = ({ onComplete, onClose }) => {
   const [feedback, setFeedback] = useState(null);
 
   const messages = [
-    "QUARANTE ANS D'AVENTURES",
+    "LA ROCHELLE",
     "CAPITAINE PREFEREE",
-    "AVENTURE INCROYABLE",
-    "LE TRESOR EST PRES"
+    "CATAMARAN",
+    "VIVE DUDU",
   ];
 
   const morseAlphabet = {
-    'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.',
-    'G': '--.', 'H': '....', 'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..',
-    'M': '--', 'N': '-.', 'O': '---', 'P': '.--.', 'Q': '--.-', 'R': '.-.',
-    'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
-    'Y': '-.--', 'Z': '--..', ' ': '/', '0': '-----', '1': '.----',
-    '2': '..---', '3': '...--', '4': '....-', '5': '.....', '6': '-....',
-    '7': '--...', '8': '---..', '9': '----.', "'": '.----.'
+    A: ".-",
+    B: "-...",
+    C: "-.-.",
+    D: "-..",
+    E: ".",
+    F: "..-.",
+    G: "--.",
+    H: "....",
+    I: "..",
+    J: ".---",
+    K: "-.-",
+    L: ".-..",
+    M: "--",
+    N: "-.",
+    O: "---",
+    P: ".--.",
+    Q: "--.-",
+    R: ".-.",
+    S: "...",
+    T: "-",
+    U: "..-",
+    V: "...-",
+    W: ".--",
+    X: "-..-",
+    Y: "-.--",
+    Z: "--..",
+    " ": "/",
+    0: "-----",
+    1: ".----",
+    2: "..---",
+    3: "...--",
+    4: "....-",
+    5: ".....",
+    6: "-....",
+    7: "--...",
+    8: "---..",
+    9: "----.",
+    "'": ".----.",
   };
 
   useEffect(() => {
     // Sélectionner un message aléatoire
     const randomMessage = messages[Math.floor(Math.random() * messages.length)];
     setCurrentMessage(randomMessage);
-    
+
     // Convertir en morse
     const morse = randomMessage
       .toUpperCase()
-      .split('')
-      .map(char => morseAlphabet[char] || '')
-      .join(' ');
+      .split("")
+      .map((char) => morseAlphabet[char] || "")
+      .join(" ");
     setMorseCode(morse);
   }, []);
 
@@ -61,42 +92,48 @@ const MorseGameCard = ({ onComplete, onClose }) => {
 
   const handleSubmit = () => {
     const isCorrect = userInput.trim() === currentMessage;
-    
+
     if (isCorrect) {
       const timeBonus = Math.max(0, timeLeft * 3); // Bonus plus généreux
       const finalScore = 500 + timeBonus; // Score de base plus élevé
       setScore(finalScore);
-      setFeedback({ 
-        type: 'success', 
-        message: '🎉 Fantastique ! Vous avez gagné de nombreux points bonus !',
-        score: finalScore
+      setFeedback({
+        type: "success",
+        message: "🎉 Fantastique ! Vous avez gagné de nombreux points bonus !",
+        score: finalScore,
       });
       setIsComplete(true);
-      
+
       setTimeout(() => {
         onComplete({
           success: true,
           score: finalScore,
           timeBonus: timeBonus,
-          message: currentMessage
+          message: currentMessage,
         });
       }, 4000);
     } else {
-      setFeedback({ type: 'error', message: '❌ Ce n\'est pas la bonne réponse. Réessayez !' });
+      setFeedback({
+        type: "error",
+        message: "❌ Ce n'est pas la bonne réponse. Réessayez !",
+      });
     }
   };
 
   const handleGameEnd = () => {
     if (!isComplete) {
-      setFeedback({ type: 'warning', message: '⏰ Temps écoulé ! Le mini-jeu se termine.' });
+      setFeedback({
+        type: "warning",
+        message: "⏰ Temps écoulé ! Le mini-jeu se termine.",
+      });
       setIsComplete(true);
-      
+
       setTimeout(() => {
         onComplete({
           success: false,
           score: 0,
           timeBonus: 0,
-          skipped: true
+          skipped: true,
         });
       }, 4000);
     }
@@ -109,7 +146,7 @@ const MorseGameCard = ({ onComplete, onClose }) => {
         success: false,
         score: 0,
         timeBonus: 0,
-        skipped: true
+        skipped: true,
       });
     }, 300);
   };
@@ -124,15 +161,18 @@ const MorseGameCard = ({ onComplete, onClose }) => {
   return (
     <>
       <div className="enigma-overlay" onClick={handleClose}>
-        <div 
-          className={`enigma-card morse-game-card ${isClosing ? 'closing' : ''}`} 
+        <div
+          className={`enigma-card morse-game-card ${
+            isClosing ? "closing" : ""
+          }`}
           onClick={(e) => e.stopPropagation()}
         >
           <div className="enigma-header">
             <div className="enigma-title">
               <h2>📡 Mini-Jeu : Décodage Morse</h2>
               <p className="enigma-subtitle">
-                🎯 <strong>Défi spécial :</strong> Décodez le message morse et gagnez jusqu'à <strong>2000+ points bonus</strong> ! 💰
+                🎯 <strong>Défi spécial :</strong> Décodez le message morse et
+                gagnez jusqu'à <strong>2000+ points bonus</strong> ! 💰
               </p>
             </div>
             <button className="close-btn" onClick={handleClose}>
@@ -144,11 +184,15 @@ const MorseGameCard = ({ onComplete, onClose }) => {
             <div className="morse-game-content">
               <div className="morse-timer">
                 <div className="timer-display">
-                  ⏱️ Temps restant : <strong>{Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}</strong>
+                  ⏱️ Temps restant :{" "}
+                  <strong>
+                    {Math.floor(timeLeft / 60)}:
+                    {(timeLeft % 60).toString().padStart(2, "0")}
+                  </strong>
                 </div>
                 <div className="timer-bar">
-                  <div 
-                    className="timer-fill" 
+                  <div
+                    className="timer-fill"
                     style={{ width: `${(timeLeft / 300) * 100}%` }}
                   ></div>
                 </div>
@@ -156,9 +200,7 @@ const MorseGameCard = ({ onComplete, onClose }) => {
 
               <div className="morse-code-display">
                 <h3>Code Morse à déchiffrer :</h3>
-                <div className="morse-code">
-                  {morseCode}
-                </div>
+                <div className="morse-code">{morseCode}</div>
               </div>
 
               {!isComplete && (
@@ -177,13 +219,13 @@ const MorseGameCard = ({ onComplete, onClose }) => {
               )}
 
               <div className="morse-help">
-                <button 
-                  className="hint-btn" 
+                <button
+                  className="hint-btn"
                   onClick={() => setShowHint(!showHint)}
                 >
-                  💡 {showHint ? 'Masquer' : 'Afficher'} l'aide
+                  💡 {showHint ? "Masquer" : "Afficher"} l'aide
                 </button>
-                
+
                 {showHint && (
                   <div className="morse-alphabet">
                     <h4>Alphabet Morse :</h4>
@@ -195,7 +237,9 @@ const MorseGameCard = ({ onComplete, onClose }) => {
                         </div>
                       ))}
                     </div>
-                    <p><strong>/</strong> = espace entre les mots</p>
+                    <p>
+                      <strong>/</strong> = espace entre les mots
+                    </p>
                   </div>
                 )}
               </div>
@@ -204,7 +248,9 @@ const MorseGameCard = ({ onComplete, onClose }) => {
                 <div className={`feedback ${feedback.type}`}>
                   <p>{feedback.message}</p>
                   {feedback.score > 0 && (
-                    <p className="points-earned">+{feedback.score} points gagnés !</p>
+                    <p className="points-earned">
+                      +{feedback.score} points gagnés !
+                    </p>
                   )}
                 </div>
               )}
@@ -212,13 +258,13 @@ const MorseGameCard = ({ onComplete, onClose }) => {
               {isComplete && (
                 <div className="game-success">
                   <h3>🎉 Mini-jeu terminé !</h3>
-                  <p>Message : <strong>{currentMessage}</strong></p>
+                  <p>
+                    Message : <strong>{currentMessage}</strong>
+                  </p>
                   {score > 0 && (
                     <p className="points-earned">+{score} points gagnés !</p>
                   )}
-                  {score === 0 && (
-                    <p>Aucun point gagné cette fois</p>
-                  )}
+                  {score === 0 && <p>Aucun point gagné cette fois</p>}
                 </div>
               )}
             </div>
@@ -233,7 +279,7 @@ const MorseGameCard = ({ onComplete, onClose }) => {
               >
                 🔍 Valider
               </button>
-              
+
               <div className="skip-section">
                 <button
                   className="skip-btn warning"
@@ -243,7 +289,8 @@ const MorseGameCard = ({ onComplete, onClose }) => {
                   ⏭️ Passer le mini-jeu
                 </button>
                 <p className="skip-warning">
-                  ⚠️ Attention : Passer ce mini-jeu vous fera perdre jusqu'à <strong>2000+ points bonus</strong> !
+                  ⚠️ Attention : Passer ce mini-jeu vous fera perdre jusqu'à{" "}
+                  <strong>2000+ points bonus</strong> !
                 </p>
               </div>
             </div>

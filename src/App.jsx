@@ -122,13 +122,13 @@ function App() {
     };
 
     setAllPhotos((prev) => [photoWithPlayer, ...prev]);
-
-    // Déclencher les mini-jeux après la prise de photo
-    triggerMinigameAfterPhoto();
+    
+    // Note: Les mini-jeux sont maintenant déclenchés lors de la fermeture d'EnigmaCard
+    // via la fonction triggerMinigameOnEnigmaClose()
   };
 
-  // Fonction pour déclencher les mini-jeux après la prise de photo
-  const triggerMinigameAfterPhoto = () => {
+  // Fonction pour déclencher les mini-jeux lors de la fermeture d'EnigmaCard
+  const triggerMinigameOnEnigmaClose = () => {
     // Vérifier si on peut déclencher un mini-jeu
     const availableMinigames = ["morse", "tentacle", "sharing"];
     const untriggeredMinigames = availableMinigames.filter(
@@ -137,40 +137,35 @@ function App() {
 
     if (untriggeredMinigames.length === 0) {
       console.log("🎮 Tous les mini-jeux ont déjà été déclenchés");
-      return;
+      return false;
     }
 
-    // Calculer les énigmes restantes et complétées
+    // Calculer les énigmes restantes et traitées (complétées + échouées)
     const completedEnigmas = (currentPlayer?.completed || []).length;
+    const failedEnigmas = (currentPlayer?.failed || []).length;
+    const processedEnigmas = completedEnigmas + failedEnigmas;
     const totalEnigmas = currentEnigmas.length;
-    const remainingEnigmas = totalEnigmas - completedEnigmas;
+    const remainingEnigmas = totalEnigmas - processedEnigmas;
 
-    // Nouvelle logique : garantir qu'au moins un mini-jeu soit déclenché tous les 2-3 énigmes
+    // Ne pas déclencher de mini-jeu sur la dernière énigme (réservée au quiz des drapeaux)
+    if (remainingEnigmas <= 1) {
+      console.log("🎮 Dernière énigme atteinte, pas de mini-jeu (quiz des drapeaux prévu)");
+      return false;
+    }
+
     const minigamesTriggered = triggeredMinigames.length;
-    const expectedMinigames = Math.floor((completedEnigmas + 1) / 2.5); // Un mini-jeu tous les 2-3 énigmes
-
     let shouldTriggerMinigame = false;
 
-    // Forcer le déclenchement si on est en retard sur le planning
-    if (minigamesTriggered < expectedMinigames) {
+    // Logique de déclenchement garantissant que les 3 mini-jeux soient lancés avant la fin
+    if (remainingEnigmas <= untriggeredMinigames.length + 1) {
+      // Forcer le déclenchement si on risque de manquer des mini-jeux
       shouldTriggerMinigame = true;
       console.log(
-        `🎮 Déclenchement forcé: ${minigamesTriggered} mini-jeux pour ${
-          completedEnigmas + 1
-        } énigmes`
+        `🎮 Déclenchement forcé: ${untriggeredMinigames.length} mini-jeux restants pour ${remainingEnigmas - 1} énigmes disponibles (${processedEnigmas} énigmes traitées)`
       );
-    }
-    // Garantir qu'au moins un mini-jeu soit déclenché avant la fin
-    else if (remainingEnigmas <= 2 && minigamesTriggered === 0) {
-      shouldTriggerMinigame = true;
-      console.log(
-        "🎮 Déclenchement de sécurité: aucun mini-jeu encore déclenché"
-      );
-    }
-    // Probabilité normale pour les autres cas
-    else {
-      const triggerChance = remainingEnigmas <= 3 ? 0.7 : 0.4;
-      shouldTriggerMinigame = Math.random() < triggerChance;
+    } else {
+      // Probabilité aléatoire normale (40% de chance)
+      shouldTriggerMinigame = Math.random() < 0.4;
     }
 
     if (shouldTriggerMinigame && !showMiniGame) {
@@ -179,15 +174,21 @@ function App() {
           Math.floor(Math.random() * untriggeredMinigames.length)
         ];
       console.log(
-        `🎮 Déclenchement du mini-jeu après photo: ${randomMinigame} (${remainingEnigmas} énigmes restantes)`
+        `🎮 Déclenchement du mini-jeu: ${randomMinigame} (${remainingEnigmas - 1} énigmes restantes, ${processedEnigmas} traitées)`
       );
 
       // Marquer le mini-jeu comme déclenché
       setTriggeredMinigames((prev) => [...prev, randomMinigame]);
 
-      // Démarrer directement le mini-jeu avec le nouveau système
-      startMiniGame(randomMinigame);
+      // Démarrer le mini-jeu avec un délai pour permettre la fermeture de l'énigme
+      setTimeout(() => {
+        startMiniGame(randomMinigame);
+      }, 500);
+      
+      return true;
     }
+    
+    return false;
   };
 
   // Fonction pour gérer la completion du quiz obligatoire
@@ -902,6 +903,7 @@ function App() {
             }}
             onTriggerVictory={triggerVictoryAfterPhoto} // NOUVEAU
             onPhotoShared={addPhotoToSharedGallery}
+            onTriggerMinigame={triggerMinigameOnEnigmaClose}
           />
         )}
 
