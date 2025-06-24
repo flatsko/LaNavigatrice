@@ -1,18 +1,103 @@
 import React, { useState } from "react";
 import { getRankDetails, getRankAdvice } from "../../utils/ranking";
 import { getStoredPhotos } from "../../utils/photoStorage"; // AJOUT
+import { calculateTotalScore } from "../../utils/pointsSystem"; // AJOUT
 import FlagQuiz from "../FlagQuiz/FlagQuiz";
+import AchievementSystem from "../AchievementSystem/AchievementSystem";
+import ScoreDisplay from "../ScoreDisplay/ScoreDisplay";
 import { ENIGMAS } from "../../data/enigmas";
 import "../../styles/victory.css";
 
-const VictoryPage = ({ player, onRestart, allPlayers = [], quizScore = null, quizCompleted = false }) => {
+// Import des trophées pour le partage
+const ACHIEVEMENTS = [
+  {
+    id: "first_discovery",
+    title: "Premier Explorateur",
+    description: "Découvrir votre première destination",
+    icon: "🗺️",
+    condition: (player) => player.completed?.length >= 1,
+    rarity: "common",
+  },
+  {
+    id: "photo_enthusiast",
+    title: "Photographe Aventurier",
+    description: "Prendre 3 photos souvenirs",
+    icon: "📸",
+    condition: () => {
+      const photos = JSON.parse(localStorage.getItem("gamePhotos") || "[]");
+      return photos.length >= 3;
+    },
+    rarity: "rare",
+  },
+  {
+    id: "perfect_navigator",
+    title: "Navigateur Parfait",
+    description: "Résoudre 3 énigmes sans erreur",
+    icon: "🧭",
+    condition: (player) => {
+      const perfectSolves = player.completed?.filter((enigmaId) => {
+        const attempts = player.enigmaAttempts?.[enigmaId] || 0;
+        return attempts === 1;
+      });
+      return perfectSolves?.length >= 3;
+    },
+    rarity: "epic",
+  },
+  {
+    id: "speed_demon",
+    title: "Éclair des Mers",
+    description: "Résoudre une énigme en moins de 30 secondes",
+    icon: "⚡",
+    condition: () => {
+      return false; // À implémenter avec un système de timing
+    },
+    rarity: "legendary",
+  },
+  {
+    id: "completionist",
+    title: "Maître Explorateur",
+    description: "Terminer toutes les destinations",
+    icon: "🏆",
+    condition: (player) => player.completed?.length >= 7,
+    rarity: "legendary",
+  },
+  {
+    id: "flawless_captain",
+    title: "Capitaine Impeccable",
+    description: "Terminer toutes les énigmes sans aucune erreur",
+    icon: "👑",
+    condition: (player) => {
+      const perfectSolves = player.completed?.filter((enigmaId) => {
+        const attempts = player.enigmaAttempts?.[enigmaId] || 0;
+        return attempts === 1;
+      });
+      return perfectSolves?.length >= 5;
+    },
+    rarity: "mythic",
+  },
+];
+
+const VictoryPage = ({
+  player,
+  onRestart,
+  allPlayers = [],
+  quizScore = null,
+  quizCompleted = false,
+  minigameResults = [],
+}) => {
   const [showFlagQuiz, setShowFlagQuiz] = useState(false);
+  const [showAchievements, setShowAchievements] = useState(false);
   const rankDetails = getRankDetails(player, allPlayers);
   const rankAdvice = getRankAdvice(player, allPlayers);
 
   // NOUVEAU: Récupérer les photos du joueur
   const allPhotos = getStoredPhotos();
   const playerPhotos = allPhotos;
+
+  // Fonction pour récupérer les trophées débloqués
+  const getUnlockedTrophies = () => {
+    return ACHIEVEMENTS.filter((achievement) => achievement.condition(player));
+  };
 
   // Fonction pour calculer le temps total
   const calculateTotalTime = () => {
@@ -57,6 +142,19 @@ const VictoryPage = ({ player, onRestart, allPlayers = [], quizScore = null, qui
   const generateShareText = () => {
     const rankDetails = getRankDetails(player, allPlayers);
     const totalTime = calculateTotalTime();
+    const unlockedTrophies = getUnlockedTrophies();
+    // Calculer le score total incluant les mini-jeux
+    const scoreData = calculateTotalScore(player, minigameResults);
+    const totalScore = scoreData.total || 0;
+
+    // Générer la section des trophées
+    let trophiesText = "";
+    if (unlockedTrophies.length > 0) {
+      trophiesText = `\n🏆 Trophées débloqués (${unlockedTrophies.length}):\n`;
+      unlockedTrophies.forEach((trophy) => {
+        trophiesText += `${trophy.icon} ${trophy.title}\n`;
+      });
+    }
 
     return `⚓ VOYAGE MARITIME ACCOMPLI ! ⚓
 
@@ -64,11 +162,12 @@ const VictoryPage = ({ player, onRestart, allPlayers = [], quizScore = null, qui
 ${rankDetails.icon} Rang: ${rankDetails.name}
 ⏱️ Temps: ${totalTime}
 🗺️ Cartes: ${player?.completed?.length || 0}/7
+💰 Points finaux: ${totalScore}
 ${
   rankDetails.position > 0
     ? `🏅 Position: ${rankDetails.position}°/${rankDetails.totalPlayers}\n`
     : ""
-}
+}${trophiesText}
 🎂 Joyeux anniversaire Capitaine Alison ! ⚓`;
   };
 
@@ -231,7 +330,7 @@ ${
               <span className="stat-label">Voyage terminé le</span>
             </div>
 
-            <div className="stat-item rank-item">
+            {/* <div className="stat-item rank-item">
               <span className="stat-icon" style={{ color: rankDetails.color }}>
                 {rankDetails.icon}
               </span>
@@ -239,12 +338,12 @@ ${
                 {rankDetails.name}
               </span>
               <span className="stat-label">{rankDetails.description}</span>
-            </div>
-            
+            </div> */}
+
             {quizCompleted && quizScore !== null && (
               <div className="stat-item quiz-item">
                 <span className="stat-icon">🏴‍☠️</span>
-                <span className="stat-value">{quizScore.toFixed(1)}%</span>
+                <span className="stat-value">{quizScore} / 7 </span>
                 <span className="stat-label">Quiz des Drapeaux réussi</span>
               </div>
             )}
@@ -260,6 +359,20 @@ ${
             </div>
           )}
         </div>
+        <button
+          className="victory-btn achievements"
+          onClick={() => setShowAchievements(true)}
+        >
+          🏆 Mes Trophées
+        </button>
+
+        {/* Affichage du système de points */}
+        <ScoreDisplay
+          player={player}
+          minigameResults={minigameResults}
+          isVictory={true}
+        />
+
         {/* Instructions intégrées directement dans la page */}
         <div className="instructions-section">
           <h3>📱 Comment partager vos photos dans le groupe</h3>
@@ -383,22 +496,6 @@ ${
           <button className="victory-btn secondary" onClick={onRestart}>
             ⛵ Nouveau Voyage
           </button>
-
-          <button
-            className="victory-btn gallery"
-            onClick={() => {
-              console.log("Ouvrir galerie avec", playerPhotos.length, "photos");
-            }}
-          >
-            📸 Album Photos ({playerPhotos.length})
-          </button>
-
-          <button
-            className="victory-btn quiz"
-            onClick={() => setShowFlagQuiz(true)}
-          >
-            🏴‍☠️ Quiz des Drapeaux
-          </button>
         </div>
 
         <div className="captain-signature">
@@ -414,6 +511,17 @@ ${
           </div>
         </div>
       </div>
+
+      {/* Quiz des drapeaux */}
+      {showFlagQuiz && <FlagQuiz onClose={() => setShowFlagQuiz(false)} />}
+
+      {/* Système de trophées */}
+      {showAchievements && (
+        <AchievementSystem
+          player={player}
+          onClose={() => setShowAchievements(false)}
+        />
+      )}
     </div>
   );
 };
