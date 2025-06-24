@@ -28,8 +28,6 @@ const Header = ({
         )
       : 100;
 
-
-
   return (
     <header className="game-header">
       <div className="header-content">
@@ -38,7 +36,7 @@ const Header = ({
           <div className="compass-decoration">🧭</div>
           <div className="player-details">
             <h1 className="player-name">{player.name}</h1>
-            <div className="simple-stats">
+            {/* <div className="simple-stats">
               <div className="stat-group success">
                 <span className="stat-number">{completed}</span>
                 <span className="stat-label">Réussies</span>
@@ -48,10 +46,12 @@ const Header = ({
                 <span className="stat-label">Échouées</span>
               </div>
               <div className="stat-group remaining">
-                <span className="stat-number">{totalEnigmas - totalProcessed}</span>
+                <span className="stat-number">
+                  {totalEnigmas - totalProcessed}
+                </span>
                 <span className="stat-label">Restantes</span>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -63,7 +63,10 @@ const Header = ({
             🏆 Exploits
           </button>
           {showQuizButton && (
-            <button className="quiz-btn mandatory" onClick={onShowMandatoryQuiz}>
+            <button
+              className="quiz-btn mandatory"
+              onClick={onShowMandatoryQuiz}
+            >
               🏴‍☠️ Quiz Final
             </button>
           )}

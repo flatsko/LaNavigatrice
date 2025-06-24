@@ -8,6 +8,67 @@
   animation: exhaustedPulse 1.5s infinite;
 }
 
+@keyframes feedbackSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes errorShake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
+}
+
+
+
+@keyframes successPop {
+  0% {
+    transform: scale(0) rotate(180deg);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes errorPop {
+  0% {
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes bulbGlow {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
 .exhausted-icon {
   font-size: 3.5rem;
   color: var(--enigma-error);
@@ -29,43 +90,127 @@
 }
 
 .enigma-feedback {
-  padding: var(--enigma-spacing-lg);
-  margin: 0 var(--enigma-spacing-xl) var(--enigma-spacing-xl);
-  border-radius: var(--enigma-border-radius-md);
-  font-size: 1rem;
-  font-weight: var(--enigma-font-weight-medium);
-  animation: feedbackSlideIn 0.5s ease-out forwards;
-  text-align: center;
+  padding: 1.5rem 2rem;
+  margin: 1.5rem 0;
+  border-radius: 16px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  animation: feedbackSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  text-align: left;
+  position: relative;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .enigma-feedback.success {
-  background-color: rgba(34, 197, 94, 0.1);
-  border: 2px solid rgba(34, 197, 94, 0.2);
-  color: #166534;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(16, 185, 129, 0.1) 100%);
+  border-color: rgba(34, 197, 94, 0.3);
+  color: #065f46;
   position: relative;
   z-index: 10;
 }
 
+
+
+.enigma-feedback.success::after {
+  content: '✓';
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  animation: successPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.3s both;
+}
+
 .enigma-feedback.error {
-  background-color: rgba(239, 68, 68, 0.1);
-  border: 2px solid rgba(239, 68, 68, 0.2);
-  color: #991b1b;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(220, 38, 38, 0.1) 100%);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #7f1d1d;
   animation: errorShake 0.6s cubic-bezier(.36,.07,.19,.97) both;
 }
 
+
+
+.enigma-feedback.error::after {
+  content: '⚠';
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  animation: errorPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.3s both;
+}
+
 .fun-fact {
-  margin-top: var(--enigma-spacing-lg);
-  padding: var(--enigma-spacing-md);
-  background: rgba(255, 215, 0, 0.1);
-  border-left: 4px solid var(--enigma-gold-accent);
-  border-radius: var(--enigma-border-radius-sm);
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(251, 191, 36, 0.1) 100%);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(5px);
+}
+
+.fun-fact::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, #fbbf24 0%, #f59e0b 100%);
+}
+
+.fun-fact::after {
+  content: '💡';
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  animation: bulbGlow 2s ease-in-out infinite;
 }
 
 .fun-fact h3 {
-  margin: 0 0 var(--enigma-spacing-sm) 0;
+  margin: 0 0 0.75rem 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #92400e;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.fun-fact h3::before {
+  content: '🎯';
   font-size: 1.1rem;
-  font-weight: var(--enigma-font-weight-semibold);
-  color: var(--enigma-gold-accent);
+}
+
+.fun-fact p {
+  margin: 0;
+  line-height: 1.6;
+  color: #78350f;
+  font-style: italic;
+  padding-right: 2rem;
 }
 
 .success-celebration {

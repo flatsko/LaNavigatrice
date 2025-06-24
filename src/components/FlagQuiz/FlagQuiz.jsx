@@ -17,6 +17,7 @@ const FlagQuiz = ({
   const [questions, setQuestions] = useState([]);
   const [timeLeft, setTimeLeft] = useState(30); // 30 secondes par question
   const [timerActive, setTimerActive] = useState(false);
+  const [quizStarted, setQuizStarted] = useState(false);
 
   // États pour les événements sonores
   const [soundEvents, setSoundEvents] = useState({
@@ -82,11 +83,11 @@ const FlagQuiz = ({
 
   // Démarrer le timer quand une nouvelle question commence
   useEffect(() => {
-    if (questions.length > 0 && !quizCompleted) {
+    if (questions.length > 0 && !quizCompleted && quizStarted) {
       setTimeLeft(10);
       setTimerActive(true);
     }
-  }, [currentQuestionIndex, questions.length, quizCompleted]);
+  }, [currentQuestionIndex, questions.length, quizCompleted, quizStarted]);
 
   const handleTimeUp = () => {
     setTimerActive(false);
@@ -158,12 +159,19 @@ const FlagQuiz = ({
     }
   };
 
+  const startQuiz = () => {
+    setQuizStarted(true);
+    setTimeLeft(10);
+    setTimerActive(true);
+  };
+
   const restartQuiz = () => {
     setCurrentQuestionIndex(0);
     setScore(0);
     setSelectedAnswer(null);
     setShowResult(false);
     setQuizCompleted(false);
+    setQuizStarted(false);
     setTimeLeft(30);
     setTimerActive(false);
     // Remélanger les questions
@@ -300,101 +308,118 @@ const FlagQuiz = ({
             🏴‍☠️ Avant de célebrer votre victroire, voyons si vous êtes dignes de
             faire parti de l'équipage
           </h2>
-          <div className="quiz-progress">
-            <span className="question-counter">
-              Question {currentQuestionIndex + 1} / {questions.length}
-            </span>
-            <div className="progress-bar">
-              <div
-                className="progress-fill"
-                style={{
-                  width: `${(currentQuestionIndex / questions.length) * 100}%`,
-                }}
-              />
-            </div>
-            <span className="current-score">Score: {score}</span>
-            <div className="timer-display">
-              <span
-                className={`timer ${timeLeft <= 10 ? "timer-warning" : ""}`}
-              >
-                ⏱️ {timeLeft}s
+          {quizStarted && (
+            <div className="quiz-progress">
+              <span className="question-counter">
+                Question {currentQuestionIndex + 1} / {questions.length}
               </span>
+              <div className="progress-bar">
+                <div
+                  className="progress-fill"
+                  style={{
+                    width: `${(currentQuestionIndex / questions.length) * 100}%`,
+                  }}
+                />
+              </div>
+              <span className="current-score">Score: {score}</span>
+              <div className="timer-display">
+                <span
+                  className={`timer ${timeLeft <= 10 ? "timer-warning" : ""}`}
+                >
+                  ⏱️ {timeLeft}s
+                </span>
+              </div>
             </div>
-          </div>
+          )}
           <button className="quiz-close-btn" onClick={onClose}>
             ❌
           </button>
         </div>
 
         <div className="quiz-content">
-          <div className="question-section">
-            <div className="flag-display">
-              <span className="flag-emoji">{currentQuestion.flag}</span>
-            </div>
-            <h3 className="question-text">{currentQuestion.question}</h3>
-          </div>
-
-          <div className="answers-section">
-            {currentQuestion.options.map((option, index) => {
-              let buttonClass = "answer-btn";
-
-              if (showResult && selectedAnswer) {
-                if (option === currentQuestion.correctAnswer) {
-                  buttonClass += " correct";
-                } else if (
-                  option === selectedAnswer &&
-                  option !== currentQuestion.correctAnswer
-                ) {
-                  buttonClass += " incorrect";
-                }
-              }
-
-              return (
-                <button
-                  key={index}
-                  className={buttonClass}
-                  onClick={() => handleAnswerSelect(option)}
-                  disabled={showResult}
-                >
-                  {option}
-                </button>
-              );
-            })}
-          </div>
-
-          {showResult && (
-            <div className="result-section">
-              <div
-                className={`result-message ${
-                  selectedAnswer === currentQuestion.correctAnswer
-                    ? "correct"
-                    : "incorrect"
-                }`}
-              >
-                {selectedAnswer === currentQuestion.correctAnswer ? (
-                  <>
-                    <span className="result-icon">✅</span>
-                    <span>Correct !</span>
-                  </>
-                ) : selectedAnswer ? (
-                  <>
-                    <span className="result-icon">❌</span>
-                    <span>
-                      La bonne réponse était : {currentQuestion.correctAnswer}
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <span className="result-icon">⏰</span>
-                    <span>
-                      Temps écoulé ! La bonne réponse était :{" "}
-                      {currentQuestion.correctAnswer}
-                    </span>
-                  </>
-                )}
+          {!quizStarted ? (
+            <div className="quiz-start-section">
+              <div className="start-instructions">
+                <p>🎯 Vous allez être testé sur les pays que vous avez visités lors de votre aventure.</p>
+                <p>⏱️ Vous aurez 10 secondes par question.</p>
+                <p>🏆 Montrez que vous êtes un vrai navigateur !</p>
               </div>
-              <p className="fun-fact">{currentQuestion.funFact}</p>
+              <button className="start-quiz-btn" onClick={startQuiz}>
+                🚀 Commencer le Quiz
+              </button>
             </div>
+          ) : (
+            <>
+              <div className="question-section">
+                <div className="flag-display">
+                  <span className="flag-emoji">{currentQuestion.flag}</span>
+                </div>
+                <h3 className="question-text">{currentQuestion.question}</h3>
+              </div>
+
+              <div className="answers-section">
+                {currentQuestion.options.map((option, index) => {
+                  let buttonClass = "answer-btn";
+
+                  if (showResult && selectedAnswer) {
+                    if (option === currentQuestion.correctAnswer) {
+                      buttonClass += " correct";
+                    } else if (
+                      option === selectedAnswer &&
+                      option !== currentQuestion.correctAnswer
+                    ) {
+                      buttonClass += " incorrect";
+                    }
+                  }
+
+                  return (
+                    <button
+                      key={index}
+                      className={buttonClass}
+                      onClick={() => handleAnswerSelect(option)}
+                      disabled={showResult}
+                    >
+                      {option}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {showResult && (
+                <div className="result-section">
+                  <div
+                    className={`result-message ${
+                      selectedAnswer === currentQuestion.correctAnswer
+                        ? "correct"
+                        : "incorrect"
+                    }`}
+                  >
+                    {selectedAnswer === currentQuestion.correctAnswer ? (
+                      <>
+                        <span className="result-icon">✅</span>
+                        <span>Correct !</span>
+                      </>
+                    ) : selectedAnswer ? (
+                      <>
+                        <span className="result-icon">❌</span>
+                        <span>
+                          La bonne réponse était : {currentQuestion.correctAnswer}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="result-icon">⏰</span>
+                        <span>
+                          Temps écoulé ! La bonne réponse était :{" "}
+                          {currentQuestion.correctAnswer}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                  <p className="fun-fact">{currentQuestion.funFact}</p>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

@@ -55,25 +55,6 @@ const ACHIEVEMENTS = [
     condition: (player) => player.completed?.length >= 5,
     rarity: "legendary",
   },
-  {
-    id: "flawless_captain",
-    title: "Capitaine Impeccable",
-    description: "Terminer toutes les missions sans aucune erreur",
-    icon: "👑",
-    condition: (player) => {
-      const totalEnigmas = player.completed?.length || 0;
-      if (totalEnigmas === 0) return false;
-      
-      // Vérifier que toutes les énigmes ont été résolues en 1 tentative
-      const allPerfect = player.completed?.every((enigmaId) => {
-        const attempts = player.enigmaAttempts?.[enigmaId] || 0;
-        return attempts === 1;
-      });
-      
-      return allPerfect && totalEnigmas >= 5; // Au moins 5 énigmes complétées parfaitement
-    },
-    rarity: "mythic",
-  },
 ];
 
 const AchievementSystem = ({ player, onClose }) => {

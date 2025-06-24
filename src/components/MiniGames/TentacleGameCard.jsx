@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import MiniGameOverlay from "./MiniGameOverlay";
 import "./MiniGames.css";
 import "../../styles/enigmaCard.css";
 
@@ -100,15 +101,13 @@ const TentacleGameCard = ({ onComplete, onClose }) => {
   };
 
   return (
-    <>
-      <div className="enigma-overlay" onClick={handleClose}></div>
-      <div className="enigma-container">
-        <div
-          className={`enigma-card tentacle-game-card ${
-            isClosing ? "closing" : ""
-          }`}
-          onClick={(e) => e.stopPropagation()}
-        >
+    <MiniGameOverlay onClose={handleClose} isClosing={isClosing}>
+      <div
+        className={`enigma-card tentacle-game-card ${
+          isClosing ? "closing" : ""
+        }`}
+        onClick={(e) => e.stopPropagation()}
+      >
           <div className="enigma-header">
             <button className="close-btn" onClick={handleClose}>
               ✕
@@ -231,8 +230,7 @@ const TentacleGameCard = ({ onComplete, onClose }) => {
             </div>
           )}
         </div>
-      </div>
-    </>
+    </MiniGameOverlay>
   );
 };
 

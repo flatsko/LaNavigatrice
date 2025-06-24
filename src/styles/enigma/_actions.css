@@ -2,7 +2,7 @@
 .enigma-actions {
   padding: var(--enigma-spacing-lg) var(--enigma-spacing-xl);
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
   gap: var(--enigma-spacing-md);
 }
@@ -20,6 +20,7 @@
   position: relative;
   overflow: hidden;
   box-shadow: var(--enigma-shadow-md);
+  min-width: 200px;
 }
 
 .submit-btn:hover {

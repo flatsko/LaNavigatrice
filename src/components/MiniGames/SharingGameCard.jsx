@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { savePhoto } from "../../utils/photoStorage";
+import MiniGameOverlay from "./MiniGameOverlay";
 import "./MiniGames.css";
 import "../../styles/enigmaCard.css";
 
@@ -234,13 +235,11 @@ const SharingGameCard = ({ onComplete, onClose }) => {
   };
 
   return (
-    <>
-      <div className="enigma-overlay" onClick={handleClose}></div>
-      <div className="enigma-container">
-        <div
-          className={`enigma-card sharing-game-card ${isClosing ? 'closing' : ''}`}
-          onClick={(e) => e.stopPropagation()}
-        >
+    <MiniGameOverlay onClose={handleClose} isClosing={isClosing}>
+      <div
+        className={`enigma-card sharing-game-card ${isClosing ? 'closing' : ''}`}
+        onClick={(e) => e.stopPropagation()}
+      >
           <div className="enigma-header">
             <button className="close-btn" onClick={handleClose}>
               ✕
@@ -370,8 +369,7 @@ const SharingGameCard = ({ onComplete, onClose }) => {
             </div>
           )}
         </div>
-      </div>
-    </>
+    </MiniGameOverlay>
   );
 };
 

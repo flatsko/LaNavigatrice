@@ -1,0 +1,96 @@
+/* Mini Game Overlay - Toujours au premier plan */
+.mini-game-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(15px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  z-index: 99999999; /* Toujours au-dessus de tout */
+  padding: 1rem;
+  animation: miniGameOverlayFadeIn 0.4s ease-out forwards;
+  overflow-y: auto;
+  padding-top: 2vh;
+}
+
+.mini-game-overlay.closing {
+  animation: miniGameOverlayFadeOut 0.3s ease-in forwards;
+}
+
+.mini-game-container {
+  width: 100%;
+  max-width: 700px;
+  position: relative;
+  animation: miniGameSlideIn 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+  margin-top: 0;
+}
+
+.mini-game-overlay.closing .mini-game-container {
+  animation: miniGameSlideOut 0.3s ease-in forwards;
+}
+
+/* Animations */
+@keyframes miniGameOverlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes miniGameOverlayFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes miniGameSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes miniGameSlideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.98);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .mini-game-overlay {
+    padding: 0.5rem;
+    padding-top: 1vh;
+    align-items: flex-start;
+  }
+  
+  .mini-game-container {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+@media (max-height: 600px) {
+  .mini-game-overlay {
+    padding-top: 0.5vh;
+    align-items: flex-start;
+  }
+}

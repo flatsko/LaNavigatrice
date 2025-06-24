@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import './MiniGameAlert.css';
 
 const MiniGameAlert = ({ onComplete, gameType }) => {
@@ -43,8 +44,8 @@ const MiniGameAlert = ({ onComplete, gameType }) => {
 
   if (!isVisible) return null;
 
-  return (
-    <div className="minigame-alert-overlay">
+  const alertContent = (
+    <div className={`minigame-alert-overlay ${!isVisible ? 'fade-out' : ''}`}>
       <div className="minigame-alert-card">
         <div className="minigame-alert-icon">
           ⚡
@@ -70,6 +71,8 @@ const MiniGameAlert = ({ onComplete, gameType }) => {
       </div>
     </div>
   );
+
+  return createPortal(alertContent, document.body);
 };
 
 export default MiniGameAlert;

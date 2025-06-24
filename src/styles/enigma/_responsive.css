@@ -1,5 +1,41 @@
 /* ===== RESPONSIVE DESIGN ===== */
 
+/* Navigateurs avec onglets en bas (comme Brave) */
+@media (max-height: 700px) {
+  .enigma-card {
+    max-height: 80vh;
+  }
+  
+  .enigma-content {
+    padding: var(--enigma-spacing-md);
+  }
+  
+  .enigma-actions {
+    padding: var(--enigma-spacing-md) var(--enigma-spacing-xl);
+  }
+}
+
+/* Très petites hauteurs d'écran */
+@media (max-height: 600px) {
+  .enigma-card {
+    max-height: 75vh;
+  }
+  
+  .enigma-content {
+    padding: var(--enigma-spacing-sm);
+  }
+  
+  .enigma-actions {
+    padding: var(--enigma-spacing-sm) var(--enigma-spacing-lg);
+  }
+  
+  .submit-btn {
+    padding: var(--enigma-spacing-sm) var(--enigma-spacing-lg);
+    font-size: 1rem;
+    min-width: 150px;
+  }
+}
+
 /* Tablettes (portrait) */
 @media (max-width: 768px) {
   .enigma-card {
@@ -112,6 +148,7 @@
 
   .enigma-actions {
     padding: var(--enigma-spacing-md) var(--enigma-spacing-lg);
+    margin-bottom: 2rem;
   }
 
   .submit-btn {

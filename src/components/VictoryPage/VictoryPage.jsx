@@ -330,7 +330,7 @@ ${
               <span className="stat-label">Voyage terminé le</span>
             </div>
 
-            <div className="stat-item rank-item">
+            {/* <div className="stat-item rank-item">
               <span className="stat-icon" style={{ color: rankDetails.color }}>
                 {rankDetails.icon}
               </span>
@@ -338,12 +338,12 @@ ${
                 {rankDetails.name}
               </span>
               <span className="stat-label">{rankDetails.description}</span>
-            </div>
+            </div> */}
 
             {quizCompleted && quizScore !== null && (
               <div className="stat-item quiz-item">
                 <span className="stat-icon">🏴‍☠️</span>
-                <span className="stat-value">{quizScore.toFixed(1)}%</span>
+                <span className="stat-value">{quizScore} / 7 </span>
                 <span className="stat-label">Quiz des Drapeaux réussi</span>
               </div>
             )}
@@ -359,15 +359,19 @@ ${
             </div>
           )}
         </div>
-              <button
-            className="victory-btn achievements"
-            onClick={() => setShowAchievements(true)}
-          >
-            🏆 Mes Trophées
-          </button>
+        <button
+          className="victory-btn achievements"
+          onClick={() => setShowAchievements(true)}
+        >
+          🏆 Mes Trophées
+        </button>
 
         {/* Affichage du système de points */}
-        <ScoreDisplay player={player} minigameResults={minigameResults} isVictory={true} />
+        <ScoreDisplay
+          player={player}
+          minigameResults={minigameResults}
+          isVictory={true}
+        />
 
         {/* Instructions intégrées directement dans la page */}
         <div className="instructions-section">
@@ -492,10 +496,6 @@ ${
           <button className="victory-btn secondary" onClick={onRestart}>
             ⛵ Nouveau Voyage
           </button>
-
-         
-
-    
         </div>
 
         <div className="captain-signature">

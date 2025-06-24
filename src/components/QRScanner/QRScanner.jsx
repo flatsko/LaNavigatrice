@@ -772,7 +772,10 @@ const QRScanner = ({ onScan, onClose }) => {
                 <div className="camera-controls">
                   <button className="switch-camera-btn" onClick={switchCamera}>
                     🔄 Changer caméra (
-                    {cameraFacing === "environment" ? "→ Frontale" : "→ Arrière"})
+                    {cameraFacing === "environment"
+                      ? "→ Frontale"
+                      : "→ Arrière"}
+                    )
                   </button>
 
                   {cameraFacing === "environment" && (
@@ -782,7 +785,7 @@ const QRScanner = ({ onScan, onClose }) => {
                   )}
                 </div>
               )}
-              
+
               {/* Boutons principaux */}
               <div className="main-buttons">
                 {cameraReady && cameraFacing === "environment" && (
@@ -791,7 +794,10 @@ const QRScanner = ({ onScan, onClose }) => {
                   </button>
                 )}
 
-                <button className="manual-input-btn" onClick={handleManualInput}>
+                <button
+                  className="manual-input-btn"
+                  onClick={handleManualInput}
+                >
                   📝 Saisie manuelle
                 </button>
               </div>
