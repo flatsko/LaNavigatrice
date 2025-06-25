@@ -49,7 +49,7 @@ const FlagQuiz = ({
         return {
           id: enigma.id,
           flag: enigma.flag,
-          question: `Quel pays correspond à ce drapeau ?`,
+          question: `A pays correspond à ce drapeau ?`,
           options: options,
           correctAnswer: correctCountry,
           funFact: `Vous avez visité ${correctCountry} lors de votre aventure !`,

@@ -250,6 +250,31 @@ function App() {
 
   // Fonction pour fermer le quiz sans le compléter
   const handleQuizClose = () => {
+    // Vérifier si une énigme doit être marquée comme échouée
+    if (currentEnigma && currentPlayer) {
+      const enigmaAttempts = currentPlayer?.enigmaAttempts || {};
+      const currentAttempts = enigmaAttempts[currentEnigma.id] || 0;
+      const completed = currentPlayer?.completed || [];
+      const failed = currentPlayer?.failed || [];
+      
+      // Si toutes les tentatives sont épuisées et l'énigme n'est ni complétée ni échouée
+      if (currentAttempts >= GAME_RULES.MAX_ATTEMPTS_PER_ENIGMA && 
+          !completed.includes(currentEnigma.id) && 
+          !failed.includes(currentEnigma.id)) {
+        
+        const updatedPlayer = {
+          ...currentPlayer,
+          failed: [...failed, currentEnigma.id],
+          lastUpdate: new Date().toISOString(),
+        };
+        
+        console.log("🔒 Énigme marquée comme échouée lors de la fermeture du quiz:", currentEnigma.id);
+        setCurrentPlayer(updatedPlayer);
+        savePlayerData(updatedPlayer);
+        updateLeaderboard();
+      }
+    }
+    
     setShowMandatoryQuiz(false);
     // Le joueur reste en mode jeu et peut relancer le quiz plus tard
   };
@@ -949,6 +974,31 @@ function App() {
             player={currentPlayer} // CORRECTION: Passer le player
             onSolve={solveEnigma}
             onClose={() => {
+              // Vérifier si l'énigme doit être marquée comme échouée avant de fermer
+              if (currentEnigma && currentPlayer) {
+                const enigmaAttempts = currentPlayer?.enigmaAttempts || {};
+                const currentAttempts = enigmaAttempts[currentEnigma.id] || 0;
+                const completed = currentPlayer?.completed || [];
+                const failed = currentPlayer?.failed || [];
+                
+                // Si toutes les tentatives sont épuisées et l'énigme n'est ni complétée ni échouée
+                if (currentAttempts >= GAME_RULES.MAX_ATTEMPTS_PER_ENIGMA && 
+                    !completed.includes(currentEnigma.id) && 
+                    !failed.includes(currentEnigma.id)) {
+                  
+                  const updatedPlayer = {
+                    ...currentPlayer,
+                    failed: [...failed, currentEnigma.id],
+                    lastUpdate: new Date().toISOString(),
+                  };
+                  
+                  console.log("🔒 Énigme marquée comme échouée lors de la fermeture:", currentEnigma.id);
+                  setCurrentPlayer(updatedPlayer);
+                  savePlayerData(updatedPlayer);
+                  updateLeaderboard();
+                }
+              }
+              
               setShowEnigma(false);
               setCurrentEnigma(null);
             }}

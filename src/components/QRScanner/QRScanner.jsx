@@ -627,9 +627,9 @@ const QRScanner = ({ onScan, onClose }) => {
 
         if (code && code.data) {
           console.log(`✅ QR trouvé avec mode ${mode}:`, code.data);
-          alert(
-            `✅ QR détecté: "${code.data}"\nMode: ${mode}\nCaméra: ${cameraFacing}`
-          );
+          // alert(
+          //   `✅ QR détecté: "${code.data}"\nMode: ${mode}\nCaméra: ${cameraFacing}`
+          // );
           onScan(code.data.trim());
           return;
         }
@@ -640,7 +640,9 @@ const QRScanner = ({ onScan, onClose }) => {
       );
     } catch (error) {
       console.error("Erreur lors du test scan:", error);
-      alert(`❌ Erreur lors du scan: ${error.message}`);
+      alert(
+        `❌ Erreur lors du scan: vous pouvez réessayer, passer à la camera frontale ou rentrer le code manuellement`
+      );
     }
   };
 

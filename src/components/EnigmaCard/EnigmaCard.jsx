@@ -127,7 +127,8 @@ const EnigmaCard = ({
         type: "SUBMIT_FAILURE",
         payload: {
           type: "error",
-          message: `❌ Tentatives épuisées !\nVous devez passer à une autre énigme.\n\n${enigma.funFact}`,
+          message: `❌ Tentatives épuisées !\nVous devez passer à une autre énigme.`,
+          funFact: enigma.funFact,
         },
       });
     }
@@ -140,15 +141,15 @@ const EnigmaCard = ({
   }, [isClosing, onClose]);
 
   const handleSubmit = useCallback(() => {
-    if (!selectedAnswer.trim() || hasProcessedSuccess.current)
-      return;
+    if (!selectedAnswer.trim() || hasProcessedSuccess.current) return;
 
     if (!canAttempt) {
       dispatch({
         type: "SUBMIT_FAILURE",
         payload: {
           type: "error",
-          message: `❌ Tentatives épuisées !\nVous devez passer à une autre énigme.\n\n${enigma.funFact}`,
+          message: `❌ Tentatives épuisées !\nVous devez passer à une autre énigme.`,
+          funFact: enigma.funFact,
         },
       });
       return;
@@ -172,8 +173,8 @@ const EnigmaCard = ({
         type: "SUBMIT_FAILURE",
         payload: {
           type: "error",
-          message:
-            `❌ Réponse incorrecte !\nVous devez passer à une autre énigme.\n\n${enigma.funFact}`,
+          message: `❌ Réponse incorrecte !\nVous devez passer à une autre énigme.`,
+          funFact: enigma.funFact,
         },
       });
     }
@@ -194,10 +195,10 @@ const EnigmaCard = ({
         type: "success",
       });
       if (onPhotoShared) onPhotoShared(savedPhoto);
-      
+
       // Déclencher un mini-jeu aléatoirement avant la fermeture
       const minigameTriggered = onTriggerMinigame ? onTriggerMinigame() : false;
-      
+
       if (player?.pendingVictory) {
         setTimeout(() => onTriggerVictory?.(), minigameTriggered ? 3000 : 2000);
       } else {
@@ -211,16 +212,39 @@ const EnigmaCard = ({
     }
   };
 
+  // Fonction pour générer un feedback par défaut
+  const getDefaultFeedback = () => {
+    if (isSuccess) {
+      return {
+        type: 'success',
+        message: `🎉 Bravo ! Vous avez découvert ${enigma.title} !`,
+        funFact: enigma.funFact
+      };
+    }
+    if (isFailure) {
+      return {
+        type: 'error',
+        message: '❌ Énigme non résolue',
+        funFact: enigma.funFact
+      };
+    }
+    return {
+      type: 'info',
+      message: '🤔 Réfléchissez bien avant de répondre...',
+      funFact: null
+    };
+  };
+
   const handleContinueWithoutPhoto = () => {
     dispatch({ type: "HIDE_CAMERA" });
-    
+
     // Déclencher un mini-jeu aléatoirement avant la fermeture
     const minigameTriggered = onTriggerMinigame ? onTriggerMinigame() : false;
-    
+
     if (player?.pendingVictory) {
-      setTimeout(() => onTriggerVictory?.(), minigameTriggered ? 1000 : 500);
+      setTimeout(() => onTriggerVictory?.(), minigameTriggered ? 3000 : 2000);
     } else {
-      setTimeout(handleClose, minigameTriggered ? 1000 : 500);
+      setTimeout(handleClose, minigameTriggered ? 3000 : 2000);
     }
   };
 
@@ -264,7 +288,7 @@ const EnigmaCard = ({
             />
           )}
 
-          <EnigmaFeedback feedback={feedback} />
+          <EnigmaFeedback feedback={feedback || getDefaultFeedback()} />
 
           {(isSuccess || isFailure) && (
             <PhotoSection
@@ -277,13 +301,13 @@ const EnigmaCard = ({
               photoPrompt={enigma.photoPrompt}
             />
           )}
-          {!canAttempt && !isSuccess && (
+          {/* {!canAttempt && !isSuccess && (
             <div className="attempts-exhausted">
               <div className="exhausted-icon">🚫</div>
               <h3>Tentatives épuisées</h3>
               <p>Vous avez utilisé toutes vos tentatives pour cette énigme.</p>
             </div>
-          )}
+          )} */}
           {!isSuccess && !isFailure && canAttempt && (
             <>
               <AnswerOptions

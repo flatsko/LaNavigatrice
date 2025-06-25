@@ -1,16 +1,20 @@
 import React from 'react';
 const EnigmaFeedback = ({ feedback }) => {
-  if (!feedback) return null;
+  // Toujours afficher quelque chose, même sans feedback
+  const displayFeedback = feedback || {
+    type: 'neutral',
+    message: '💭 Prenez votre temps pour réfléchir...'
+  };
 
   return (
-    <div className={`enigma-feedback ${feedback.type}`}>
-      {feedback.message.split('\n').map((line, index) => (
+    <div className={`enigma-feedback ${displayFeedback.type}`}>
+      {displayFeedback.message.split('\n').map((line, index) => (
         <p key={index}>{line}</p>
       ))}
-      {feedback.funFact && (
+      {displayFeedback.funFact && (
         <div className="fun-fact">
           <h3>Le saviez-vous ?</h3>
-          <p>{feedback.funFact}</p>
+          <p>{displayFeedback.funFact}</p>
         </div>
       )}
     </div>

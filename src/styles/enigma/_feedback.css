@@ -244,3 +244,25 @@
   font-size: 1.1rem;
   color: var(--text-secondary);
 }
+
+/* Styles pour les nouveaux types de feedback */
+.enigma-feedback.neutral {
+  background: linear-gradient(135deg, rgba(148, 163, 184, 0.1) 0%, rgba(203, 213, 225, 0.05) 100%);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  color: #64748b;
+  animation: feedbackSlideIn 0.5s ease-out;
+}
+
+.enigma-feedback.info {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 197, 253, 0.05) 100%);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  color: #1e40af;
+  animation: feedbackSlideIn 0.5s ease-out;
+}
+
+.enigma-feedback.neutral p,
+.enigma-feedback.info p {
+  margin: 0;
+  font-style: italic;
+  font-weight: 500;
+}
