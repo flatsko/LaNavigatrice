@@ -12,6 +12,8 @@
   
   .enigma-actions {
     padding: var(--enigma-spacing-md) var(--enigma-spacing-xl);
+    /* Espace supplémentaire pour éviter les onglets du navigateur */
+    padding-bottom: calc(var(--enigma-spacing-md) + 70px);
   }
 }
 
@@ -27,6 +29,8 @@
   
   .enigma-actions {
     padding: var(--enigma-spacing-sm) var(--enigma-spacing-lg);
+    /* Espace supplémentaire pour éviter les onglets du navigateur */
+    padding-bottom: calc(var(--enigma-spacing-sm) + 80px);
   }
   
   .submit-btn {
@@ -103,8 +107,15 @@
 
   .enigma-card {
     max-height: 100vh;
+    min-height: 100vh;
     border-radius: 0;
     border: none;
+  }
+
+  .enigma-content {
+    max-height: calc(100vh - 140px);
+    padding: var(--enigma-spacing-md);
+    gap: var(--enigma-spacing-md);
   }
 
   .enigma-header {
@@ -149,6 +160,8 @@
   .enigma-actions {
     padding: var(--enigma-spacing-md) var(--enigma-spacing-lg);
     margin-bottom: 2rem;
+    /* Espace supplémentaire pour éviter les onglets du navigateur */
+    padding-bottom: calc(var(--enigma-spacing-md) + 60px);
   }
 
   .submit-btn {
@@ -163,6 +176,12 @@
     font-size: 1.1rem;
   }
 
+  .enigma-content {
+    max-height: calc(100vh - 160px);
+    padding: var(--enigma-spacing-sm);
+    gap: var(--enigma-spacing-sm);
+  }
+
   .enigma-image-container {
     background: linear-gradient(
       135deg,
@@ -173,7 +192,7 @@
   }
 
   .enigma-image {
-    height: 160px;
+    height: 140px;
   }
 
   .enigma-location {
@@ -183,5 +202,21 @@
   .attempt-counter,
   .success-rate {
     font-size: 0.75rem;
+  }
+  
+  .enigma-actions {
+    /* Espace supplémentaire pour iPhone SE et très petits écrans */
+    padding-bottom: calc(var(--enigma-spacing-sm) + 90px) !important;
+  }
+}
+
+/* iPhone SE et écrans similaires */
+@media (max-width: 375px) and (max-height: 667px) {
+  .enigma-card {
+    max-height: 85vh;
+  }
+  
+  .enigma-actions {
+    padding-bottom: calc(var(--enigma-spacing-md) + 80px) !important;
   }
 }

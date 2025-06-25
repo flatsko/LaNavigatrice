@@ -22,7 +22,8 @@
   box-shadow: var(--enigma-shadow-xl);
   width: 100%;
   max-width: 700px;
-  max-height: 85vh;
+  max-height: 90vh;
+  min-height: 400px;
   display: flex;
   flex-direction: column;
   overflow: hidden;

@@ -9,6 +9,9 @@
   margin-top: var(--enigma-spacing-lg);
   text-align: center;
   transition: var(--enigma-transition-medium);
+  /* Assurer que la section photo ne déborde pas */
+  flex-shrink: 0;
+  min-height: fit-content;
 }
 
 .photo-section.failure {
@@ -174,36 +177,80 @@
 @media (max-width: 480px) {
   .photo-section,
   .desktop-photo-section {
-    margin-left: calc(var(--enigma-spacing-lg) * -1);
-    margin-right: calc(var(--enigma-spacing-lg) * -1);
+    margin-left: calc(var(--enigma-spacing-md) * -1);
+    margin-right: calc(var(--enigma-spacing-md) * -1);
     border-radius: 0;
     border-left: none;
     border-right: none;
+    padding: var(--enigma-spacing-md);
+    margin-top: var(--enigma-spacing-md);
+    /* Assurer que la section reste dans les limites */
+    max-height: 40vh;
+    overflow-y: auto;
   }
 
-  .photo-prompt h4,
-  .desktop-photo-prompt h4 {
-    font-size: 1.2rem;
-  }
-
-  .photo-btn {
-    min-width: 180px;
-    padding: var(--enigma-spacing-sm) var(--enigma-spacing-lg);
-  }
-
-  .photo-actions {
-    gap: var(--enigma-spacing-sm);
-  }
-}
-
-@media (max-width: 320px) {
-  .photo-btn {
-    min-width: 160px;
-    font-size: 0.9rem;
+  .photo-prompt {
+    /* Limiter la hauteur du texte pour éviter le débordement */
+    max-height: 25vh;
+    overflow-y: auto;
   }
 
   .photo-prompt h4,
   .desktop-photo-prompt h4 {
     font-size: 1.1rem;
+    margin-bottom: var(--enigma-spacing-sm);
+  }
+
+  .photo-prompt p {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin-bottom: var(--enigma-spacing-md);
+  }
+
+  .photo-btn {
+    min-width: 160px;
+    padding: var(--enigma-spacing-sm) var(--enigma-spacing-md);
+    font-size: 0.9rem;
+  }
+
+  .photo-actions {
+    gap: var(--enigma-spacing-sm);
+    /* Assurer que les boutons restent visibles */
+    flex-shrink: 0;
+    margin-top: auto;
+  }
+}
+
+@media (max-width: 320px) {
+  .photo-section,
+  .desktop-photo-section {
+    padding: var(--enigma-spacing-sm);
+    max-height: 35vh;
+  }
+
+  .photo-prompt {
+    max-height: 20vh;
+  }
+
+  .photo-prompt h4,
+  .desktop-photo-prompt h4 {
+    font-size: 1rem;
+    margin-bottom: var(--enigma-spacing-xs);
+  }
+
+  .photo-prompt p {
+    font-size: 0.85rem;
+    line-height: 1.3;
+    margin-bottom: var(--enigma-spacing-sm);
+  }
+
+  .photo-btn {
+    min-width: 140px;
+    font-size: 0.85rem;
+    padding: var(--enigma-spacing-xs) var(--enigma-spacing-sm);
+  }
+
+  .photo-actions {
+    gap: var(--enigma-spacing-xs);
   }
 }

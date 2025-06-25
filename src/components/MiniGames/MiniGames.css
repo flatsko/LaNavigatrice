@@ -1227,6 +1227,11 @@
   .tentacle-challenge h3 {
     font-size: 1.1rem;
   }
+  
+  /* Espace supplémentaire pour éviter les onglets du navigateur */
+  .tentacle-game-card .enigma-actions {
+    padding-bottom: calc(1rem + 60px);
+  }
 }
 
 /* Responsive Design pour MorseGameCard */
@@ -1270,5 +1275,58 @@
   
   .alphabet-grid {
     grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+  }
+  
+  /* Espace supplémentaire pour éviter les onglets du navigateur sur mobile */
+  .enigma-actions {
+    padding-bottom: calc(1rem + 70px) !important;
+  }
+}
+
+/* Navigateurs avec onglets en bas (comme Brave) - Mini-jeux */
+@media (max-height: 700px) {
+  .mini-game-modal {
+    max-height: 85vh;
+  }
+  
+  .enigma-actions {
+    padding-bottom: calc(1rem + 60px) !important;
+  }
+}
+
+/* Très petites hauteurs d'écran - Mini-jeux */
+@media (max-height: 600px) {
+  .mini-game-modal {
+    max-height: 80vh;
+  }
+  
+  .enigma-actions {
+    padding-bottom: calc(0.5rem + 80px) !important;
+  }
+  
+  .mini-game-content {
+    padding: 1rem;
+  }
+}
+
+/* iPhone SE et écrans similaires - Mini-jeux */
+@media (max-width: 375px) and (max-height: 667px) {
+  .mini-game-modal {
+    max-height: 85vh;
+  }
+  
+  .enigma-actions {
+    padding-bottom: calc(1rem + 80px) !important;
+  }
+}
+
+/* Très petits écrans - Mini-jeux */
+@media (max-width: 320px) {
+  .enigma-actions {
+    padding-bottom: calc(0.5rem + 90px) !important;
+  }
+  
+  .mini-game-modal {
+    max-height: 80vh;
   }
 }

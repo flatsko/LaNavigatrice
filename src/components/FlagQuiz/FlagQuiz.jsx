@@ -318,7 +318,7 @@ const FlagQuiz = ({
                   className="progress-fill"
                   style={{
                     width: `${
-                      (currentQuestionIndex / questions.length) * 100
+                      ((currentQuestionIndex + 1) / questions.length) * 100
                     }%`,
                   }}
                 />
