@@ -16,10 +16,8 @@ import VictoryPage from "./components/VictoryPage/VictoryPage";
 import FailurePage from "./components/FailurePage/FailurePage"; // CORRECTION: Ajouter FailurePage
 
 import AchievementSystem from "./components/AchievementSystem/AchievementSystem";
-import {
-  AchievementNotificationProvider,
-  useAchievementNotifications,
-} from "./components/AchievementSystem";
+import { AchievementNotificationProvider } from "./components/AchievementSystem";
+import TestNotifications from "./components/AchievementSystem/TestNotifications";
 import ParticleEffect from "./components/ParticleEffect/ParticleEffect";
 import TipsSystem from "./components/TipsSystem/TipsSystem";
 import SoundManager from "./components/SoundManager/SoundManager";
@@ -36,7 +34,6 @@ import { getCurrentTheme, applyThemeVariables, THEMES } from "./data/themes";
 // Utils
 
 function App() {
-  const { checkAchievements } = useAchievementNotifications();
   // États principaux
   const [gameState, setGameState] = useState("welcome");
   const [currentPlayer, setCurrentPlayer] = useState(null);
@@ -126,7 +123,16 @@ function App() {
       timestamp: photo.timestamp || Date.now(),
     };
 
+    // Ajout à la galerie partagée (état local)
     setAllPhotos((prev) => [photoWithPlayer, ...prev]);
+
+    // Sauvegarde dans le localStorage spécifique au joueur
+    if (currentPlayer?.name) {
+      const playerPhotosKey = `photos_${currentPlayer.name}`;
+      const existingPhotos = JSON.parse(localStorage.getItem(playerPhotosKey) || '[]');
+      const updatedPhotos = [...existingPhotos, photoWithPlayer];
+      localStorage.setItem(playerPhotosKey, JSON.stringify(updatedPhotos));
+    }
 
     // Note: Les mini-jeux sont maintenant déclenchés lors de la fermeture d'EnigmaCard
     // via la fonction triggerMinigameOnEnigmaClose()
@@ -205,9 +211,11 @@ function App() {
   };
 
   // Fonction pour gérer la completion du quiz obligatoire
+  const MIN_QUIZ_SUCCESS_RATE = 80; // 80%
+
   const handleQuizCompletion = (score, totalQuestions) => {
     const percentage = (score / totalQuestions) * 100;
-    const passed = percentage >= 80;
+    const passed = percentage >= MIN_QUIZ_SUCCESS_RATE;
 
     console.log(
       `Quiz terminé: ${score}/${totalQuestions} (${percentage.toFixed(1)}%)`
@@ -235,8 +243,7 @@ function App() {
       console.log("✅ Quiz réussi! Accès à la victoire");
       setQuizCompleted(true);
       setGameState("victory");
-      // Vérifier les achievements à la victoire
-      checkAchievements(currentPlayer, minigameResults);
+      // La vérification des achievements est maintenant gérée par le Provider
     } else {
       console.log("❌ Quiz échoué, score insuffisant");
       // Rester en mode jeu, le joueur peut réessayer
@@ -256,25 +263,29 @@ function App() {
       const currentAttempts = enigmaAttempts[currentEnigma.id] || 0;
       const completed = currentPlayer?.completed || [];
       const failed = currentPlayer?.failed || [];
-      
+
       // Si toutes les tentatives sont épuisées et l'énigme n'est ni complétée ni échouée
-      if (currentAttempts >= GAME_RULES.MAX_ATTEMPTS_PER_ENIGMA && 
-          !completed.includes(currentEnigma.id) && 
-          !failed.includes(currentEnigma.id)) {
-        
+      if (
+        currentAttempts >= GAME_RULES.MAX_ATTEMPTS_PER_ENIGMA &&
+        !completed.includes(currentEnigma.id) &&
+        !failed.includes(currentEnigma.id)
+      ) {
         const updatedPlayer = {
           ...currentPlayer,
           failed: [...failed, currentEnigma.id],
           lastUpdate: new Date().toISOString(),
         };
-        
-        console.log("🔒 Énigme marquée comme échouée lors de la fermeture du quiz:", currentEnigma.id);
+
+        console.log(
+          "🔒 Énigme marquée comme échouée lors de la fermeture du quiz:",
+          currentEnigma.id
+        );
         setCurrentPlayer(updatedPlayer);
         savePlayerData(updatedPlayer);
         updateLeaderboard();
       }
     }
-    
+
     setShowMandatoryQuiz(false);
     // Le joueur reste en mode jeu et peut relancer le quiz plus tard
   };
@@ -377,14 +388,19 @@ function App() {
 
       // Charger les résultats des mini-jeux sauvegardés
       try {
-        const savedMinigameResults = localStorage.getItem(`minigameResults_${migratedPlayer.name}`);
+        const savedMinigameResults = localStorage.getItem(
+          `minigameResults_${migratedPlayer.name}`
+        );
         if (savedMinigameResults) {
           const parsedResults = JSON.parse(savedMinigameResults);
           setMinigameResults(parsedResults);
           console.log("Résultats mini-jeux chargés:", parsedResults);
         }
       } catch (error) {
-        console.error("Erreur lors du chargement des résultats mini-jeux:", error);
+        console.error(
+          "Erreur lors du chargement des résultats mini-jeux:",
+          error
+        );
       }
 
       // Calculer l'état du jeu basé sur la progression
@@ -393,8 +409,11 @@ function App() {
       const totalProcessed = completed.length + failed.length;
 
       // Déterminer l'état du jeu
-      const enigmasToUse = currentTheme.id === "dune_page_a_lautre" ? ENIGMAS_ALSACE_CHARENTE : ENIGMAS;
-      
+      const enigmasToUse =
+        currentTheme.id === "dune_page_a_lautre"
+          ? ENIGMAS_ALSACE_CHARENTE
+          : ENIGMAS;
+
       console.log("État du jeu:", {
         completed: completed.length,
         failed: failed.length,
@@ -402,7 +421,7 @@ function App() {
         totalEnigmas: enigmasToUse.length,
         theme: currentTheme.id,
       });
-      
+
       if (totalProcessed === enigmasToUse.length) {
         // Toutes les énigmes ont été traitées
         console.log(
@@ -425,8 +444,6 @@ function App() {
               setQuizCompleted(true);
               setQuizScore(parsedQuizData.score);
               setGameState("victory");
-              // Vérifier les achievements à la victoire
-              checkAchievements(migratedPlayer, minigameResults);
             } else {
               console.log("🔄 Quiz à refaire (score insuffisant)");
               setShowMandatoryQuiz(true);
@@ -656,9 +673,6 @@ function App() {
 
       console.log("✅ Énigme résolue:", enigmaId);
 
-      // Vérifier les achievements immédiatement après résolution
-      checkAchievements(updatedPlayer, minigameResults);
-
       // Déclencher les effets de succès
       setParticleType("success");
       setShowParticles(true);
@@ -710,8 +724,6 @@ function App() {
         const validation = isGameValid(updatedPlayer, currentEnigmas.length);
         if (validation.isValid) {
           setGameState("victory");
-          // Vérifier les achievements à la victoire
-          checkAchievements(updatedPlayer, minigameResults);
         } else {
           setFailureReason(validation.reason);
           setGameState("failure");
@@ -742,11 +754,6 @@ function App() {
     savePlayerData(updatedPlayer);
     updateLeaderboard();
 
-    // Vérifier les nouveaux achievements
-    if (updatedPlayer) {
-      checkAchievements(updatedPlayer, minigameResults);
-    }
-
     return isCorrect;
   };
 
@@ -758,58 +765,46 @@ function App() {
     setPendingMiniGame(null);
   };
 
-  // Fonction unifiée de gestion de la completion des mini-jeux
   const handleMiniGameComplete = (result) => {
-    // Ajouter le résultat du mini-jeu
-    const newResult = {
-      type: result.gameType,
-      success: result.success,
-      score: result.score,
-      timeBonus: result.timeBonus || 0,
-      skipped: result.skipped || false,
-      message: result.message || "",
-    };
+    console.log("Résultat du mini-jeu reçu:", result);
 
-    // Éviter les doublons en vérifiant si ce type de mini-jeu n'a pas déjà été ajouté
-    setMinigameResults((prev) => {
-      const existingIndex = prev.findIndex((r) => r.type === newResult.type);
-      let updatedResults;
-      if (existingIndex >= 0) {
+    setMinigameResults((prevResults) => {
+      // Vérifier si un résultat pour ce type de jeu existe déjà
+      const existingResultIndex = prevResults.findIndex(
+        (r) => r.gameType === result.gameType
+      );
+
+      let newResults;
+      if (existingResultIndex !== -1) {
         // Remplacer le résultat existant
-        updatedResults = [...prev];
-        updatedResults[existingIndex] = newResult;
-        console.log(
-          `🎮 Mise à jour du résultat pour ${newResult.type}:`,
-          newResult
-        );
+        newResults = [...prevResults];
+        newResults[existingResultIndex] = result;
+        console.log(`Résultat pour ${result.gameType} mis à jour.`);
       } else {
         // Ajouter le nouveau résultat
-        updatedResults = [...prev, newResult];
-        console.log(`🎮 Ajout du résultat pour ${newResult.type}:`, newResult);
+        newResults = [...prevResults, result];
+        console.log(`Nouveau résultat pour ${result.gameType} ajouté.`);
       }
-      
-      // Sauvegarder les résultats des mini-jeux dans le localStorage
-      if (currentPlayer?.name) {
+
+      // Sauvegarder dans le localStorage
+      if (currentPlayer) {
         localStorage.setItem(
           `minigameResults_${currentPlayer.name}`,
-          JSON.stringify(updatedResults)
+          JSON.stringify(newResults)
         );
       }
-      
-      return updatedResults;
+      return newResults;
     });
 
     setShowMiniGame(false);
     setCurrentMiniGameType(null);
 
-    // Passer à la victoire après le mini-jeu seulement si c'est la fin du jeu
+    // Si une victoire était en attente, on la déclenche maintenant
     if (pendingVictory) {
-      setPendingVictory(false);
+      console.log("Déclenchement de la victoire après le mini-jeu.");
       setGameState("victory");
-      // Vérifier les achievements à la victoire
-      checkAchievements(currentPlayer, minigameResults);
+      setPendingVictory(false);
     }
-    // Sinon, continuer le jeu normalement
   };
 
   // Fonction unifiée de fermeture des mini-jeux
@@ -1005,25 +1000,29 @@ function App() {
                 const currentAttempts = enigmaAttempts[currentEnigma.id] || 0;
                 const completed = currentPlayer?.completed || [];
                 const failed = currentPlayer?.failed || [];
-                
+
                 // Si toutes les tentatives sont épuisées et l'énigme n'est ni complétée ni échouée
-                if (currentAttempts >= GAME_RULES.MAX_ATTEMPTS_PER_ENIGMA && 
-                    !completed.includes(currentEnigma.id) && 
-                    !failed.includes(currentEnigma.id)) {
-                  
+                if (
+                  currentAttempts >= GAME_RULES.MAX_ATTEMPTS_PER_ENIGMA &&
+                  !completed.includes(currentEnigma.id) &&
+                  !failed.includes(currentEnigma.id)
+                ) {
                   const updatedPlayer = {
                     ...currentPlayer,
                     failed: [...failed, currentEnigma.id],
                     lastUpdate: new Date().toISOString(),
                   };
-                  
-                  console.log("🔒 Énigme marquée comme échouée lors de la fermeture:", currentEnigma.id);
+
+                  console.log(
+                    "🔒 Énigme marquée comme échouée lors de la fermeture:",
+                    currentEnigma.id
+                  );
                   setCurrentPlayer(updatedPlayer);
                   savePlayerData(updatedPlayer);
                   updateLeaderboard();
                 }
               }
-              
+
               setShowEnigma(false);
               setCurrentEnigma(null);
             }}
@@ -1119,6 +1118,9 @@ function App() {
 
         {/* Indicateur de connexion (optionnel) */}
         <NetworkStatus />
+
+        {/* Composant de test pour les notifications d'achievements */}
+        {/* <TestNotifications /> */}
       </div>
     </AchievementNotificationProvider>
   );

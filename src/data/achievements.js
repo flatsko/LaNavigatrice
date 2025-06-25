@@ -14,8 +14,11 @@ export const ACHIEVEMENTS = [
     title: "Photographe Aventurier",
     description: "Prendre 3 photos souvenirs",
     icon: "📸",
-    condition: () => {
-      const photos = JSON.parse(localStorage.getItem("gamePhotos") || "[]");
+    condition: (player) => {
+      if (!player?.name) return false;
+      const photos = JSON.parse(
+        localStorage.getItem(`photos_${player.name}`) || "[]"
+      );
       return photos.length >= 3;
     },
     rarity: "rare",
@@ -23,17 +26,18 @@ export const ACHIEVEMENTS = [
   {
     id: "perfect_navigator",
     title: "Navigateur Parfait",
-    description: "Résoudre 3 énigmes sans erreur",
+    description: "Résoudre au moins 5 déstinations sans erreur",
     icon: "🧭",
     condition: (player) => {
-      // Vérifier d'abord que le joueur existe et a gagné (au moins 5 énigmes complétées)
+      // Le joueur doit avoir terminé au moins 5 énigmes
       if (!player || (player.completed?.length || 0) < 5) return false;
-      
+
       const perfectSolves = player.completed?.filter((enigmaId) => {
         const attempts = player.enigmaAttempts?.[enigmaId] || 0;
         return attempts === 1;
       });
-      return perfectSolves?.length >= 3;
+      // Doit avoir au moins 5 énigmes réussies du premier coup
+      return perfectSolves?.length >= 5;
     },
     rarity: "epic",
   },
@@ -42,8 +46,10 @@ export const ACHIEVEMENTS = [
     title: "Éclair des Mers",
     description: "Résoudre une énigme en moins de 30 secondes",
     icon: "⚡",
-    condition: () => {
-      return false; // À implémenter avec un système de timing
+    condition: (player) => {
+      if (!player?.name) return false;
+      const solveTimes = JSON.parse(localStorage.getItem(`enigmaSolveTimes_${player.name}`) || '{}');
+      return Object.values(solveTimes).some(time => time < 30);
     },
     rarity: "legendary",
   },
@@ -54,7 +60,7 @@ export const ACHIEVEMENTS = [
     icon: "🏆",
     condition: (player) => {
       // Ce trophée ne devrait pas être accordé en cas d'échec global
-      if (!player || (player.completed?.length || 0) < 5) return false;
+      if (!player || (player.completed?.length || 0) < 7) return false;
       return player.completed?.length >= 7;
     },
     rarity: "legendary",
@@ -65,14 +71,15 @@ export const ACHIEVEMENTS = [
     description: "Terminer toutes les énigmes sans aucune erreur",
     icon: "👑",
     condition: (player) => {
-      // Vérifier d'abord que le joueur existe et a gagné (au moins 5 énigmes complétées)
-      if (!player || (player.completed?.length || 0) < 5) return false;
-      
+      // Le joueur doit avoir terminé les 7 énigmes
+      if (!player || (player.completed?.length || 0) !== 7) return false;
+
       const perfectSolves = player.completed?.filter((enigmaId) => {
         const attempts = player.enigmaAttempts?.[enigmaId] || 0;
         return attempts === 1;
       });
-      return perfectSolves?.length >= 5;
+      // Toutes les énigmes terminées doivent avoir été réussies du premier coup
+      return perfectSolves?.length === 7;
     },
     rarity: "mythic",
   },
@@ -82,7 +89,9 @@ export const ACHIEVEMENTS = [
     description: "Compléter un mini-jeu avec succès",
     icon: "🎮",
     condition: (player, minigameResults = []) => {
-      return minigameResults.some(result => result.success && !result.skipped);
+      return minigameResults.some(
+        (result) => result.success && !result.skipped
+      );
     },
     rarity: "common",
   },
@@ -92,10 +101,10 @@ export const ACHIEVEMENTS = [
     description: "Compléter tous les mini-jeux avec succès",
     icon: "🏅",
     condition: (player, minigameResults = []) => {
-      const gameTypes = ['morse', 'tentacle', 'sharing'];
-      return gameTypes.every(type => 
-        minigameResults.some(result => 
-          result.type === type && result.success && !result.skipped
+      const gameTypes = ["morse", "tentacle", "sharing"];
+      return gameTypes.every((type) =>
+        minigameResults.some(
+          (result) => result.type === type && result.success && !result.skipped
         )
       );
     },

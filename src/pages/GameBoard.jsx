@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../components/Header/Header";
 import QRScanner from "../components/QRScanner/QRScanner";
 import WorldMap from "../components/WorldMap/WorldMap";
@@ -10,6 +10,7 @@ const GameBoard = ({ playerName, completedEnigmas, onCompleteEnigma }) => {
   const [currentEnigma, setCurrentEnigma] = useState(null);
   const [showScanner, setShowScanner] = useState(false);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [enigmaStartTime, setEnigmaStartTime] = useState(null);
 
   const handleQRScan = (qrData) => {
     // Format attendu: "alison-treasure-1" pour l'énigma 1
@@ -21,11 +22,21 @@ const GameBoard = ({ playerName, completedEnigmas, onCompleteEnigma }) => {
       if (enigma && !completedEnigmas.includes(enigmaId)) {
         setCurrentEnigma(enigma);
         setShowScanner(false);
+        setEnigmaStartTime(Date.now());
       }
     }
   };
 
   const handleEnigmaSolve = (enigmaId) => {
+    if (enigmaStartTime) {
+      const endTime = Date.now();
+      const duration = (endTime - enigmaStartTime) / 1000; // en secondes
+      const solveTimesKey = `enigmaSolveTimes_${playerName}`;
+      const solveTimes = JSON.parse(localStorage.getItem(solveTimesKey) || '{}');
+      solveTimes[enigmaId] = duration;
+      localStorage.setItem(solveTimesKey, JSON.stringify(solveTimes));
+      setEnigmaStartTime(null);
+    }
     onCompleteEnigma(enigmaId);
     setCurrentEnigma(null);
   };

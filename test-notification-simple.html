@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Notification Simple</title>
+    <style>
+        .test-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: red;
+            color: white;
+            padding: 20px;
+            border: 3px solid blue;
+            z-index: 999999;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .test-button {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            font-size: 16px;
+            background: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <button class="test-button" onclick="showNotification()">CLIQUER POUR TEST</button>
+    
+    <script>
+        function showNotification() {
+            // Supprimer notification existante
+            const existing = document.querySelector('.test-notification');
+            if (existing) {
+                existing.remove();
+            }
+            
+            // Créer nouvelle notification
+            const notification = document.createElement('div');
+            notification.className = 'test-notification';
+            notification.innerHTML = 'NOTIFICATION TEST VISIBLE';
+            document.body.appendChild(notification);
+            
+            console.log('Notification ajoutée au DOM');
+            
+            // Auto-suppression après 3 secondes
+            setTimeout(() => {
+                notification.remove();
+                console.log('Notification supprimée');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

@@ -38,14 +38,17 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--welcome-gradient-ocean, linear-gradient(
-    180deg,
-    #87ceeb 0%,
-    /* Ciel bleu clair */ #4682b4 25%,
-    /* Bleu acier */ #1e90ff 50%,
-    /* Bleu dodger */ #0066cc 75%,
-    /* Bleu océan */ #003366 100% /* Bleu profond */
-  ));
+  background: var(
+    --welcome-gradient-ocean,
+    linear-gradient(
+      180deg,
+      #87ceeb 0%,
+      /* Ciel bleu clair */ #4682b4 25%,
+      /* Bleu acier */ #1e90ff 50%,
+      /* Bleu dodger */ #0066cc 75%,
+      /* Bleu océan */ #003366 100% /* Bleu profond */
+    )
+  );
   z-index: -2;
 }
 

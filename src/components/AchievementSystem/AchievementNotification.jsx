@@ -1,82 +1,108 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './AchievementNotification.css';
 
 const AchievementNotification = ({ achievement, onClose }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isLeaving, setIsLeaving] = useState(false);
 
+  console.log('🎨 AchievementNotification rendu avec:', { achievement: achievement?.id, onClose: !!onClose });
+
   useEffect(() => {
     if (achievement) {
-      setIsVisible(true);
-      
-      // Auto-fermeture après 5 secondes
+      console.log('🎯 Notification montée:', achievement.id);
+      // Petit délai pour l'animation d'entrée
       const timer = setTimeout(() => {
-        handleClose();
-      }, 5000);
-
+        console.log('👁️ Définition isVisible = true pour:', achievement.id);
+        setIsVisible(true);
+      }, 50);
       return () => clearTimeout(timer);
     }
   }, [achievement]);
 
+  useEffect(() => {
+    if (isVisible) {
+      const autoCloseTimer = setTimeout(() => {
+        handleClose();
+      }, 5000); // Auto-close after 5 seconds
+
+      return () => clearTimeout(autoCloseTimer);
+    }
+  }, [isVisible]);
+
   const handleClose = () => {
+    console.log('❌ Fermeture notification demandée');
     setIsLeaving(true);
+    
+    // Attendre la fin de l'animation avant de fermer
     setTimeout(() => {
       setIsVisible(false);
       setIsLeaving(false);
-      onClose();
+      if (onClose) {
+        onClose();
+      }
     }, 300);
   };
 
-  const getRarityClass = (rarity) => {
-    return `notification-${rarity}`;
-  };
+  if (!achievement) {
+    console.log('⚠️ Pas d\'achievement à afficher');
+    return null;
+  }
 
-  const getRarityLabel = (rarity) => {
-    const labels = {
-      common: 'COMMUN',
-      rare: 'RARE',
-      epic: 'ÉPIQUE',
-      legendary: 'LÉGENDAIRE'
-    };
-    return labels[rarity] || rarity.toUpperCase();
-  };
+  const rarityClass = `notification-${achievement.rarity || 'common'}`;
+  const visibilityClass = isVisible ? 'visible' : 'hidden';
+  const leavingClass = isLeaving ? 'leaving' : '';
 
-  if (!achievement || !isVisible) return null;
+  console.log('🎨 Rendu notification:', {
+    id: achievement.id,
+    isVisible,
+    isLeaving,
+    classes: `achievement-notification-overlay ${visibilityClass} ${leavingClass}`
+  });
 
   return (
-    <div className={`achievement-notification-overlay ${isLeaving ? 'leaving' : ''}`}>
-      <div className={`achievement-notification ${getRarityClass(achievement.rarity)} ${isLeaving ? 'slide-out' : 'slide-in'}`}>
+    <div 
+      className={`achievement-notification-overlay ${visibilityClass} ${leavingClass}`}
+    >
+      <div className={`achievement-notification ${rarityClass}`}>
+        {/* Header */}
         <div className="notification-header">
-          <div className="notification-title">🏆 EXPLOIT DÉBLOQUÉ!</div>
-          <button className="notification-close" onClick={handleClose}>
-            ✕
+          <span className="notification-title">🏆 Trophé Débloqué!</span>
+          <button 
+            className="notification-close" 
+            onClick={handleClose}
+            aria-label="Fermer"
+          >
+            ×
           </button>
         </div>
-        
+
+        {/* Contenu */}
         <div className="notification-content">
           <div className="notification-icon">
-            {achievement.icon}
+            {achievement.icon || '🏆'}
           </div>
-          
           <div className="notification-info">
             <h3 className="notification-achievement-title">
-              {achievement.title}
+              {achievement.title || achievement.name}
             </h3>
             <p className="notification-description">
               {achievement.description}
             </p>
-            <span className={`notification-rarity ${achievement.rarity}`}>
-              {getRarityLabel(achievement.rarity)}
+            <span className={`notification-rarity ${achievement.rarity || 'common'}`}>
+              {achievement.rarity || 'Common'}
             </span>
           </div>
         </div>
-        
-        <div className="notification-effects">
-          <div className="sparkle sparkle-1">✨</div>
-          <div className="sparkle sparkle-2">⭐</div>
-          <div className="sparkle sparkle-3">💫</div>
-          <div className="sparkle sparkle-4">✨</div>
-        </div>
+
+        {/* Effets visuels pour les achievements légendaires */}
+        {achievement.rarity === 'legendary' && (
+          <div className="notification-effects">
+            <span className="sparkle sparkle-1">✨</span>
+            <span className="sparkle sparkle-2">⭐</span>
+            <span className="sparkle sparkle-3">💫</span>
+            <span className="sparkle sparkle-4">🌟</span>
+          </div>
+        )}
       </div>
     </div>
   );

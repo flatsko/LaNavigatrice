@@ -215,6 +215,7 @@ function App() {
   // Reset du localStorage
   const resetStorage = () => {
     if (window.confirm("⚠️ Êtes-vous sûr de vouloir effacer toutes les données ? Cette action est irréversible.")) {
+      localStorage.removeItem('playerAchievements'); // Supprimer les succès
       localStorage.clear();
       setCurrentPlayer(null);
       setGameState("welcome");
