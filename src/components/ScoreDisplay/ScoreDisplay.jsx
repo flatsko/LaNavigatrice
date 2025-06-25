@@ -81,7 +81,7 @@ const ScoreDisplay = ({ player, minigameResults = [], isVictory = true }) => {
                       return `🎮 ${type}`;
                   }
                 };
-                
+
                 return (
                   <div key={index} className="detail-item">
                     <span className="detail-text">
@@ -112,11 +112,14 @@ const ScoreDisplay = ({ player, minigameResults = [], isVictory = true }) => {
             </div>
             <div className="category-details">
               {breakdown.trophies.details.map((detail, index) => {
-                const achievement = ACHIEVEMENTS.find(a => a.id === detail.id);
+                const achievement = ACHIEVEMENTS.find(
+                  (a) => a.id === detail.id
+                );
                 return (
                   <div key={index} className="detail-item">
                     <span className="detail-text">
-                      {achievement?.icon || "🏆"} {achievement?.title || detail.id}
+                      {achievement?.icon || "🏆"}{" "}
+                      {achievement?.title || detail.id}
                       <span className={`rarity-badge rarity-${detail.rarity}`}>
                         {detail.rarity.charAt(0).toUpperCase() +
                           detail.rarity.slice(1)}
@@ -159,8 +162,8 @@ const ScoreDisplay = ({ player, minigameResults = [], isVictory = true }) => {
           {isVictory ? (
             scoreData.total >= 2000 ? (
               <p>
-                🎉 Performance exceptionnelle ! Vous êtes un véritable maître de
-                la navigation !
+                🎉 Performance exceptionnelle ! Vous êtes des véritable maître
+                de la navigation !
               </p>
             ) : scoreData.total >= 1000 ? (
               <p>

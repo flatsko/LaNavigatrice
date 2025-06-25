@@ -863,6 +863,7 @@
   font-size: 2.5rem;
   margin-bottom: var(--spacing-md);
   display: block;
+  text-align: center;
   animation: infoIconBounce 2s ease-in-out infinite;
 }
 

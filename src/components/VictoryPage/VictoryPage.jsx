@@ -234,8 +234,8 @@ ${
             {rankDetails.icon} {rankDetails.name} {player?.name || "Navigateur"}
           </h2>
           <p className="victory-message">
-            Vous avez collecté toutes les cartes postales et découvert la
-            destination de rêve du capitaine ⚓ !
+            Vous avez visité toutes les destinations et découvert l'endroit de
+            rêve du capitaine ⚓ !
           </p>
         </div>
 
@@ -247,7 +247,7 @@ ${
               <span className="stat-value">
                 {player?.completed?.length || 0}
               </span>
-              <span className="stat-label">Cartes postales collectées</span>
+              <span className="stat-label">Visites réussies</span>
             </div>
 
             <div className="stat-item">
