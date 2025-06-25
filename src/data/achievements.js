@@ -44,12 +44,14 @@ export const ACHIEVEMENTS = [
   {
     id: "speed_demon",
     title: "Éclair des Mers",
-    description: "Résoudre une énigme en moins de 30 secondes",
+    description: "Résoudre une énigme en moins de 15 secondes",
     icon: "⚡",
     condition: (player) => {
       if (!player?.name) return false;
-      const solveTimes = JSON.parse(localStorage.getItem(`enigmaSolveTimes_${player.name}`) || '{}');
-      return Object.values(solveTimes).some(time => time < 30);
+      const solveTimes = JSON.parse(
+        localStorage.getItem(`enigmaSolveTimes_${player.name}`) || "{}"
+      );
+      return Object.values(solveTimes).some((time) => time < 15);
     },
     rarity: "legendary",
   },
@@ -104,7 +106,8 @@ export const ACHIEVEMENTS = [
       const gameTypes = ["morse", "tentacle", "sharing"];
       return gameTypes.every((type) =>
         minigameResults.some(
-          (result) => result.gameType === type && result.success && !result.skipped
+          (result) =>
+            result.gameType === type && result.success && !result.skipped
         )
       );
     },
