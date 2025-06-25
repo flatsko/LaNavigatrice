@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test des Corrections de Trophées</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏆 Test des Corrections de Trophées</h1>
+        <p>Ce test vérifie que les corrections pour <strong>minigame_master</strong> et <strong>photo_enthusiast</strong> fonctionnent correctement.</p>
+        
+        <div class="test-section">
+            <h3>🎮 Test Minigame Master</h3>
+            <p>Simule la completion des 3 mini-jeux avec la correction <code>result.gameType</code></p>
+            <button onclick="testMinigameMaster()">Tester Minigame Master</button>
+            <div id="minigame-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>📸 Test Photo Enthusiast</h3>
+            <p>Simule l'ajout de photos et vérifie la condition</p>
+            <button onclick="testPhotoEnthusiast()">Tester Photo Enthusiast</button>
+            <button onclick="addTestPhoto()">Ajouter une Photo Test</button>
+            <button onclick="clearTestPhotos()">Effacer Photos Test</button>
+            <div id="photo-result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>📊 État Actuel</h3>
+            <button onclick="checkCurrentState()">Vérifier État Actuel</button>
+            <div id="current-state"></div>
+        </div>
+    </div>
+
+    <script>
+        const testPlayer = { name: 'TestPlayer' };
+        
+        // Condition corrigée pour minigame_master
+        function checkMinigameMaster(player, minigameResults = []) {
+            const gameTypes = ["morse", "tentacle", "sharing"];
+            return gameTypes.every((type) =>
+                minigameResults.some(
+                    (result) => result.gameType === type && result.success && !result.skipped
+                )
+            );
+        }
+        
+        // Condition pour photo_enthusiast
+        function checkPhotoEnthusiast(player) {
+            if (!player?.name) return false;
+            const photos = JSON.parse(
+                localStorage.getItem(`photos_${player.name}`) || "[]"
+            );
+            return photos.length >= 3;
+        }
+        
+        function testMinigameMaster() {
+            const resultDiv = document.getElementById('minigame-result');
+            
+            // Test avec l'ancienne structure (result.type) - devrait échouer
+            const oldResults = [
+                { type: 'morse', success: true, skipped: false },
+                { type: 'tentacle', success: true, skipped: false },
+                { type: 'sharing', success: true, skipped: false }
+            ];
+            
+            // Test avec la nouvelle structure (result.gameType) - devrait réussir
+            const newResults = [
+                { gameType: 'morse', success: true, skipped: false },
+                { gameType: 'tentacle', success: true, skipped: false },
+                { gameType: 'sharing', success: true, skipped: false }
+            ];
+            
+            const oldCheck = checkMinigameMaster(testPlayer, oldResults);
+            const newCheck = checkMinigameMaster(testPlayer, newResults);
+            
+            resultDiv.innerHTML = `
+                <div class="result ${oldCheck ? 'error' : 'success'}">
+                    ❌ Ancienne structure (result.type): ${oldCheck ? 'RÉUSSI (problème!)' : 'ÉCHOUÉ (correct)'}
+                </div>
+                <div class="result ${newCheck ? 'success' : 'error'}">
+                    ✅ Nouvelle structure (result.gameType): ${newCheck ? 'RÉUSSI (correct!)' : 'ÉCHOUÉ (problème)'}
+                </div>
+                <div class="result info">
+                    🔧 Correction appliquée: La condition utilise maintenant <code>result.gameType</code> au lieu de <code>result.type</code>
+                </div>
+            `;
+        }
+        
+        function testPhotoEnthusiast() {
+            const resultDiv = document.getElementById('photo-result');
+            const photos = JSON.parse(localStorage.getItem(`photos_${testPlayer.name}`) || '[]');
+            const isUnlocked = checkPhotoEnthusiast(testPlayer);
+            
+            resultDiv.innerHTML = `
+                <div class="result info">
+                    📸 Photos actuelles: ${photos.length}
+                </div>
+                <div class="result ${isUnlocked ? 'success' : 'error'}">
+                    🏆 Trophée Photo Enthusiast: ${isUnlocked ? 'DÉBLOQUÉ' : 'VERROUILLÉ'} (requis: 3 photos)
+                </div>
+            `;
+        }
+        
+        function addTestPhoto() {
+            const photos = JSON.parse(localStorage.getItem(`photos_${testPlayer.name}`) || '[]');
+            const newPhoto = {
+                id: `test_photo_${Date.now()}`,
+                timestamp: Date.now(),
+                enigmaId: 'test_enigma',
+                playerName: testPlayer.name
+            };
+            photos.push(newPhoto);
+            localStorage.setItem(`photos_${testPlayer.name}`, JSON.stringify(photos));
+            
+            testPhotoEnthusiast();
+        }
+        
+        function clearTestPhotos() {
+            localStorage.removeItem(`photos_${testPlayer.name}`);
+            testPhotoEnthusiast();
+        }
+        
+        function checkCurrentState() {
+            const resultDiv = document.getElementById('current-state');
+            
+            // Vérifier toutes les clés de photos
+            const photoKeys = Object.keys(localStorage).filter(key => key.startsWith('photos_'));
+            
+            // Vérifier toutes les clés de mini-jeux
+            const minigameKeys = Object.keys(localStorage).filter(key => key.startsWith('minigameResults_'));
+            
+            let html = '<div class="result info"><h4>📊 État du localStorage:</h4>';
+            
+            if (photoKeys.length > 0) {
+                html += '<h5>📸 Photos par joueur:</h5>';
+                photoKeys.forEach(key => {
+                    const playerName = key.replace('photos_', '');
+                    const photos = JSON.parse(localStorage.getItem(key) || '[]');
+                    html += `<p>• ${playerName}: ${photos.length} photos</p>`;
+                });
+            } else {
+                html += '<p>Aucune photo trouvée</p>';
+            }
+            
+            if (minigameKeys.length > 0) {
+                html += '<h5>🎮 Résultats mini-jeux par joueur:</h5>';
+                minigameKeys.forEach(key => {
+                    const playerName = key.replace('minigameResults_', '');
+                    const results = JSON.parse(localStorage.getItem(key) || '[]');
+                    html += `<p>• ${playerName}: ${results.length} résultats</p>`;
+                    results.forEach(result => {
+                        html += `  - ${result.gameType || result.type}: ${result.success ? 'Réussi' : 'Échoué'}</p>`;
+                    });
+                });
+            } else {
+                html += '<p>Aucun résultat de mini-jeu trouvé</p>';
+            }
+            
+            html += '</div>';
+            resultDiv.innerHTML = html;
+        }
+        
+        // Test initial
+        window.onload = function() {
+            checkCurrentState();
+        };
+    </script>
+</body>
+</html>

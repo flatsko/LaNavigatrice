@@ -104,7 +104,7 @@ export const ACHIEVEMENTS = [
       const gameTypes = ["morse", "tentacle", "sharing"];
       return gameTypes.every((type) =>
         minigameResults.some(
-          (result) => result.type === type && result.success && !result.skipped
+          (result) => result.gameType === type && result.success && !result.skipped
         )
       );
     },

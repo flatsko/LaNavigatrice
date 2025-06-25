@@ -305,6 +305,7 @@
 
 .welcome-description {
   margin: 0;
+  margin-bottom: 4rem !important;
   font-size: 1.1rem;
   font-weight: var(--font-weight-medium);
   color: #1a365d;
@@ -2195,3 +2196,106 @@
  * - Scrollbars personnalisées
  * - Easter eggs interactifs
  */
+/* Nouvelles animations */
+.talking-parrot {
+  position: relative;
+  font-size: 2rem;
+  margin: 1rem 0;
+}
+
+.parrot-bubble {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  color: #1e3a8a;
+  white-space: nowrap;
+  border: 2px solid #d4af37;
+}
+
+.parrot-bubble::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 8px solid transparent;
+  border-top-color: #d4af37;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-decoration {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  color: #d4af37;
+}
+
+.floating-particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.particle {
+  position: absolute;
+  font-size: 1.2rem;
+  left: calc(10% + var(--random-x, 0) * 80%);
+}
+
+.sailor-tip {
+  font-size: 0.85rem;
+  color: #ffd700;
+  text-align: center;
+  margin-top: 1rem;
+  font-style: italic;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  line-height: 1.4;
+}
+
+.btn.animating {
+  background: linear-gradient(45deg, #16a34a, #22c55e) !important;
+}
+
+/* Amélioration des cartes info */
+.info-card {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.info-card:hover .info-icon {
+  transform: scale(1.2);
+}
+
+/* Responsive ajusté */
+@media (max-width: 768px) {
+  .talking-parrot {
+    font-size: 1.5rem;
+  }
+
+  .parrot-bubble {
+    font-size: 0.7rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .particle {
+    font-size: 1rem;
+  }
+
+  .floating-particles {
+    display: none; /* Masque sur mobile pour les performances */
+  }
+}

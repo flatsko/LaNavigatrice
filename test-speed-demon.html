@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Speed Demon Achievement</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test du Trophée Speed Demon</h1>
+    
+    <div class="test-container">
+        <h2>Test de la logique du trophée</h2>
+        <p>Ce test vérifie si la logique du trophée "speed_demon" fonctionne correctement.</p>
+        
+        <button class="button" onclick="testSpeedDemonLogic()">Tester la logique</button>
+        <button class="button" onclick="simulateQuickSolve()">Simuler résolution rapide (20s)</button>
+        <button class="button" onclick="simulateSlowSolve()">Simuler résolution lente (45s)</button>
+        <button class="button" onclick="checkCurrentData()">Vérifier données actuelles</button>
+        <button class="button" onclick="clearTestData()">Effacer données de test</button>
+        
+        <div id="results"></div>
+    </div>
+
+    <script>
+        // Copie de la logique du trophée speed_demon
+        const SPEED_DEMON_ACHIEVEMENT = {
+            id: "speed_demon",
+            title: "Éclair des Mers",
+            description: "Résoudre une énigme en moins de 30 secondes",
+            icon: "⚡",
+            condition: (player) => {
+                if (!player?.name) return false;
+                const solveTimes = JSON.parse(localStorage.getItem(`enigmaSolveTimes_${player.name}`) || '{}');
+                return Object.values(solveTimes).some(time => time < 30);
+            },
+            rarity: "legendary",
+        };
+
+        function addResult(message, type = 'info') {
+            const resultsDiv = document.getElementById('results');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `result ${type}`;
+            resultDiv.innerHTML = message;
+            resultsDiv.appendChild(resultDiv);
+            resultsDiv.scrollTop = resultsDiv.scrollHeight;
+        }
+
+        function testSpeedDemonLogic() {
+            addResult('🧪 Test de la logique du trophée speed_demon...', 'info');
+            
+            // Test avec des données simulées
+            const testPlayer = { name: 'TestPlayer' };
+            
+            // Test 1: Aucune donnée
+            localStorage.removeItem(`enigmaSolveTimes_${testPlayer.name}`);
+            let result = SPEED_DEMON_ACHIEVEMENT.condition(testPlayer);
+            addResult(`Test 1 - Aucune donnée: ${result ? '✅ PASS' : '❌ FAIL'} (attendu: false, obtenu: ${result})`, result === false ? 'success' : 'error');
+            
+            // Test 2: Temps lent uniquement
+            const slowTimes = { enigma1: 45, enigma2: 60 };
+            localStorage.setItem(`enigmaSolveTimes_${testPlayer.name}`, JSON.stringify(slowTimes));
+            result = SPEED_DEMON_ACHIEVEMENT.condition(testPlayer);
+            addResult(`Test 2 - Temps lents: ${result ? '✅ PASS' : '❌ FAIL'} (attendu: false, obtenu: ${result})`, result === false ? 'success' : 'error');
+            
+            // Test 3: Un temps rapide
+            const mixedTimes = { enigma1: 25, enigma2: 60 };
+            localStorage.setItem(`enigmaSolveTimes_${testPlayer.name}`, JSON.stringify(mixedTimes));
+            result = SPEED_DEMON_ACHIEVEMENT.condition(testPlayer);
+            addResult(`Test 3 - Un temps rapide: ${result ? '✅ PASS' : '❌ FAIL'} (attendu: true, obtenu: ${result})`, result === true ? 'success' : 'error');
+            
+            // Test 4: Exactement 30 secondes (limite)
+            const limitTimes = { enigma1: 30, enigma2: 60 };
+            localStorage.setItem(`enigmaSolveTimes_${testPlayer.name}`, JSON.stringify(limitTimes));
+            result = SPEED_DEMON_ACHIEVEMENT.condition(testPlayer);
+            addResult(`Test 4 - Exactement 30s: ${result ? '✅ PASS' : '❌ FAIL'} (attendu: false, obtenu: ${result})`, result === false ? 'success' : 'error');
+            
+            // Test 5: Joueur sans nom
+            const noNamePlayer = {};
+            result = SPEED_DEMON_ACHIEVEMENT.condition(noNamePlayer);
+            addResult(`Test 5 - Joueur sans nom: ${result ? '✅ PASS' : '❌ FAIL'} (attendu: false, obtenu: ${result})`, result === false ? 'success' : 'error');
+            
+            addResult('🏁 Tests terminés!', 'info');
+        }
+
+        function simulateQuickSolve() {
+            const playerName = prompt('Nom du joueur (ou laissez vide pour "TestPlayer"):') || 'TestPlayer';
+            const enigmaId = prompt('ID de l\'énigme (ou laissez vide pour "enigma_test"):') || 'enigma_test';
+            const solveTime = 20; // 20 secondes
+            
+            const key = `enigmaSolveTimes_${playerName}`;
+            const existingTimes = JSON.parse(localStorage.getItem(key) || '{}');
+            existingTimes[enigmaId] = solveTime;
+            localStorage.setItem(key, JSON.stringify(existingTimes));
+            
+            addResult(`✅ Simulation: ${playerName} a résolu ${enigmaId} en ${solveTime}s`, 'success');
+            
+            // Tester le trophée
+            const testPlayer = { name: playerName };
+            const shouldUnlock = SPEED_DEMON_ACHIEVEMENT.condition(testPlayer);
+            addResult(`🏆 Trophée speed_demon: ${shouldUnlock ? 'DÉBLOQUÉ ✅' : 'NON DÉBLOQUÉ ❌'}`, shouldUnlock ? 'success' : 'error');
+        }
+
+        function simulateSlowSolve() {
+            const playerName = prompt('Nom du joueur (ou laissez vide pour "TestPlayer"):') || 'TestPlayer';
+            const enigmaId = prompt('ID de l\'énigme (ou laissez vide pour "enigma_test"):') || 'enigma_test';
+            const solveTime = 45; // 45 secondes
+            
+            const key = `enigmaSolveTimes_${playerName}`;
+            const existingTimes = JSON.parse(localStorage.getItem(key) || '{}');
+            existingTimes[enigmaId] = solveTime;
+            localStorage.setItem(key, JSON.stringify(existingTimes));
+            
+            addResult(`⏱️ Simulation: ${playerName} a résolu ${enigmaId} en ${solveTime}s`, 'info');
+            
+            // Tester le trophée
+            const testPlayer = { name: playerName };
+            const shouldUnlock = SPEED_DEMON_ACHIEVEMENT.condition(testPlayer);
+            addResult(`🏆 Trophée speed_demon: ${shouldUnlock ? 'DÉBLOQUÉ ✅' : 'NON DÉBLOQUÉ ❌'}`, shouldUnlock ? 'success' : 'info');
+        }
+
+        function checkCurrentData() {
+            addResult('🔍 Vérification des données actuelles...', 'info');
+            
+            // Lister toutes les clés enigmaSolveTimes
+            const keys = Object.keys(localStorage).filter(key => key.startsWith('enigmaSolveTimes_'));
+            
+            if (keys.length === 0) {
+                addResult('❌ Aucune donnée de temps de résolution trouvée', 'error');
+                return;
+            }
+            
+            keys.forEach(key => {
+                const playerName = key.replace('enigmaSolveTimes_', '');
+                const times = JSON.parse(localStorage.getItem(key) || '{}');
+                
+                addResult(`👤 Joueur: ${playerName}`, 'info');
+                
+                if (Object.keys(times).length === 0) {
+                    addResult(`   Aucun temps enregistré`, 'info');
+                } else {
+                    Object.entries(times).forEach(([enigmaId, time]) => {
+                        const status = time < 30 ? '⚡ RAPIDE' : '🐌 LENT';
+                        addResult(`   ${enigmaId}: ${time}s ${status}`, time < 30 ? 'success' : 'info');
+                    });
+                }
+                
+                // Tester le trophée pour ce joueur
+                const testPlayer = { name: playerName };
+                const shouldUnlock = SPEED_DEMON_ACHIEVEMENT.condition(testPlayer);
+                addResult(`   🏆 Speed Demon: ${shouldUnlock ? 'DÉBLOQUÉ ✅' : 'NON DÉBLOQUÉ ❌'}`, shouldUnlock ? 'success' : 'info');
+                addResult('', 'info'); // Ligne vide
+            });
+        }
+
+        function clearTestData() {
+            if (confirm('Êtes-vous sûr de vouloir effacer toutes les données de test?')) {
+                const keys = Object.keys(localStorage).filter(key => key.startsWith('enigmaSolveTimes_'));
+                keys.forEach(key => localStorage.removeItem(key));
+                addResult('🗑️ Données de test effacées', 'info');
+                document.getElementById('results').innerHTML = '';
+            }
+        }
+
+        // Afficher les instructions au chargement
+        window.onload = function() {
+            addResult('🎯 Utilisez les boutons ci-dessus pour tester le trophée speed_demon', 'info');
+            addResult('📝 Le trophée se débloque quand un joueur résout une énigme en moins de 30 secondes', 'info');
+        };
+    </script>
+</body>
+</html>

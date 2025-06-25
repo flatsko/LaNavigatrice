@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Reset Issue</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .result {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 3px;
+        }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+        }
+        button:hover { background-color: #0056b3; }
+        .storage-content {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 3px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Debug Reset Issue - Trophées Mini-jeux</h1>
+    
+    <div class="test-section">
+        <h2>1. État actuel du localStorage</h2>
+        <button onclick="showCurrentStorage()">Afficher le localStorage</button>
+        <div id="current-storage" class="storage-content"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Simulation de données de test</h2>
+        <button onclick="createTestData()">Créer des données de test</button>
+        <button onclick="simulateReset()">Simuler reset (localStorage.clear())</button>
+        <div id="test-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Test de persistance après reset</h2>
+        <button onclick="testPersistence()">Tester la persistance</button>
+        <div id="persistence-results"></div>
+    </div>
+
+    <script>
+        function showCurrentStorage() {
+            const storageDiv = document.getElementById('current-storage');
+            const storage = {};
+            
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                storage[key] = value;
+            }
+            
+            storageDiv.textContent = JSON.stringify(storage, null, 2);
+        }
+
+        function createTestData() {
+            const testPlayer = { name: 'TestPlayer' };
+            
+            // Créer des données de mini-jeux
+            const minigameResults = [
+                { gameType: 'morse', success: true, skipped: false },
+                { gameType: 'tentacle', success: true, skipped: false },
+                { gameType: 'sharing', success: true, skipped: false }
+            ];
+            
+            localStorage.setItem(`minigameResults_${testPlayer.name}`, JSON.stringify(minigameResults));
+            localStorage.setItem('currentPlayer', JSON.stringify(testPlayer));
+            localStorage.setItem('testKey', 'testValue');
+            
+            document.getElementById('test-results').innerHTML = `
+                <div class="result success">✅ Données de test créées</div>
+                <div class="result info">📊 Clés créées: minigameResults_TestPlayer, currentPlayer, testKey</div>
+            `;
+            
+            showCurrentStorage();
+        }
+
+        function simulateReset() {
+            console.log('Avant reset:', Object.keys(localStorage));
+            localStorage.clear();
+            console.log('Après reset:', Object.keys(localStorage));
+            
+            document.getElementById('test-results').innerHTML += `
+                <div class="result info">🔄 Reset effectué (localStorage.clear())</div>
+                <div class="result ${localStorage.length === 0 ? 'success' : 'error'}">
+                    ${localStorage.length === 0 ? '✅' : '❌'} localStorage ${localStorage.length === 0 ? 'vide' : 'contient encore ' + localStorage.length + ' éléments'}
+                </div>
+            `;
+            
+            showCurrentStorage();
+        }
+
+        function testPersistence() {
+            const resultsDiv = document.getElementById('persistence-results');
+            
+            // Test 1: Vérifier si des données persistent après reset
+            const beforeReset = localStorage.length;
+            localStorage.clear();
+            const afterReset = localStorage.length;
+            
+            // Test 2: Vérifier si des données sont recréées automatiquement
+            setTimeout(() => {
+                const afterDelay = localStorage.length;
+                
+                resultsDiv.innerHTML = `
+                    <div class="result info">📊 Avant reset: ${beforeReset} éléments</div>
+                    <div class="result info">📊 Après reset: ${afterReset} éléments</div>
+                    <div class="result info">📊 Après délai (1s): ${afterDelay} éléments</div>
+                    <div class="result ${afterDelay === 0 ? 'success' : 'error'}">
+                        ${afterDelay === 0 ? '✅ Aucune donnée recréée automatiquement' : '❌ Des données ont été recréées automatiquement!'}
+                    </div>
+                `;
+                
+                if (afterDelay > 0) {
+                    resultsDiv.innerHTML += '<div class="result error">🚨 Problème détecté: des données persistent ou sont recréées après reset!</div>';
+                    showCurrentStorage();
+                }
+            }, 1000);
+        }
+
+        // Surveiller les changements dans le localStorage
+        const originalSetItem = localStorage.setItem;
+        localStorage.setItem = function(key, value) {
+            console.log('localStorage.setItem appelé:', key, value);
+            return originalSetItem.apply(this, arguments);
+        };
+
+        // Afficher l'état initial
+        showCurrentStorage();
+    </script>
+</body>
+</html>

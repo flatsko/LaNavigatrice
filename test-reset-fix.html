@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Reset Fix - Trophées Mini-jeux</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .result {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 3px;
+        }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        .warning { background-color: #fff3cd; color: #856404; }
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+        }
+        button:hover { background-color: #0056b3; }
+        .storage-content {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 3px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Test Reset Fix - Problème Trophées Mini-jeux</h1>
+    
+    <div class="test-section">
+        <h2>🔍 Diagnostic du problème</h2>
+        <div class="result warning">
+            <strong>Problème identifié:</strong> La fonction <code>resetStorage()</code> dans App.jsx ne réinitialisait pas l'état React des mini-jeux (<code>minigameResults</code>), ce qui faisait que les trophées persistaient même après un reset du localStorage.
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🛠️ Solution appliquée</h2>
+        <div class="result success">
+            <strong>Correction:</strong> Ajout des appels suivants dans la fonction <code>resetStorage()</code>:
+            <ul>
+                <li><code>setMinigameResults([])</code></li>
+                <li><code>setTriggeredMinigames([])</code></li>
+                <li><code>setShowMiniGame(false)</code></li>
+                <li><code>setCurrentMiniGameType(null)</code></li>
+                <li><code>setPendingMiniGame(null)</code></li>
+                <li><code>setPendingVictory(false)</code></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🧪 Test de simulation</h2>
+        <button onclick="simulateScenario()">Simuler le scénario problématique</button>
+        <div id="simulation-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>📋 Instructions de test</h2>
+        <div class="result info">
+            <strong>Pour tester la correction:</strong>
+            <ol>
+                <li>Démarrez l'application</li>
+                <li>Créez un joueur et complétez quelques mini-jeux</li>
+                <li>Vérifiez que les trophées <code>minigame_player</code> et <code>minigame_master</code> apparaissent</li>
+                <li>Utilisez le bouton de reset dans le header (🔄)</li>
+                <li>Confirmez le reset</li>
+                <li>Créez un nouveau joueur</li>
+                <li>Vérifiez que les trophées de mini-jeux n'apparaissent PAS automatiquement</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function simulateScenario() {
+            const resultsDiv = document.getElementById('simulation-results');
+            
+            // Simulation de l'état avant correction
+            const beforeFix = {
+                localStorage: {},
+                reactState: {
+                    minigameResults: [
+                        { gameType: 'morse', success: true, skipped: false },
+                        { gameType: 'tentacle', success: true, skipped: false },
+                        { gameType: 'sharing', success: true, skipped: false }
+                    ]
+                }
+            };
+            
+            // Simulation du reset AVANT correction
+            const afterResetBeforeFix = {
+                localStorage: {}, // Vidé par localStorage.clear()
+                reactState: {
+                    minigameResults: [
+                        { gameType: 'morse', success: true, skipped: false },
+                        { gameType: 'tentacle', success: true, skipped: false },
+                        { gameType: 'sharing', success: true, skipped: false }
+                    ] // ❌ PROBLÈME: État React non réinitialisé
+                }
+            };
+            
+            // Simulation du reset APRÈS correction
+            const afterResetAfterFix = {
+                localStorage: {}, // Vidé par localStorage.clear()
+                reactState: {
+                    minigameResults: [] // ✅ CORRIGÉ: État React réinitialisé
+                }
+            };
+            
+            resultsDiv.innerHTML = `
+                <div class="result info">
+                    <h4>📊 État initial (joueur avec mini-jeux complétés)</h4>
+                    <div class="storage-content">localStorage: ${JSON.stringify(beforeFix.localStorage, null, 2)}
+React State: ${JSON.stringify(beforeFix.reactState, null, 2)}</div>
+                </div>
+                
+                <div class="result error">
+                    <h4>❌ Après reset AVANT correction</h4>
+                    <div class="storage-content">localStorage: ${JSON.stringify(afterResetBeforeFix.localStorage, null, 2)}
+React State: ${JSON.stringify(afterResetBeforeFix.reactState, null, 2)}</div>
+                    <strong>Problème:</strong> Les trophées apparaissent car minigameResults contient encore les anciens résultats
+                </div>
+                
+                <div class="result success">
+                    <h4>✅ Après reset APRÈS correction</h4>
+                    <div class="storage-content">localStorage: ${JSON.stringify(afterResetAfterFix.localStorage, null, 2)}
+React State: ${JSON.stringify(afterResetAfterFix.reactState, null, 2)}</div>
+                    <strong>Solution:</strong> Les trophées n'apparaissent plus car minigameResults est vide
+                </div>
+            `;
+        }
+        
+        // Fonction pour vérifier les conditions de trophées
+        function checkTrophyConditions(minigameResults) {
+            // minigame_player: au moins un mini-jeu réussi
+            const minigamePlayer = minigameResults.some(result => result.success && !result.skipped);
+            
+            // minigame_master: tous les types de mini-jeux réussis
+            const gameTypes = ['morse', 'tentacle', 'sharing'];
+            const minigameMaster = gameTypes.every(type => 
+                minigameResults.some(result => 
+                    result.gameType === type && result.success && !result.skipped
+                )
+            );
+            
+            return { minigamePlayer, minigameMaster };
+        }
+    </script>
+</body>
+</html>

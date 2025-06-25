@@ -15,7 +15,8 @@ const MorseGameCard = ({ onComplete, onClose }) => {
 
   const messages = [
     "LA ROCHELLE",
-    "CAPITAINE PREFEREE",
+    "STRASBOURG",
+    "MULHOUSE",
     "CATAMARAN",
     "VIVE DUDU",
   ];
@@ -106,7 +107,7 @@ const MorseGameCard = ({ onComplete, onClose }) => {
 
       setTimeout(() => {
         onComplete({
-          gameType: 'morse',
+          gameType: "morse",
           success: true,
           score: finalScore,
           timeBonus: timeBonus,
@@ -132,7 +133,7 @@ const MorseGameCard = ({ onComplete, onClose }) => {
 
       setTimeout(() => {
         onComplete({
-          gameType: 'morse',
+          gameType: "morse",
           success: false,
           score: 0,
           timeBonus: 0,
@@ -147,7 +148,7 @@ const MorseGameCard = ({ onComplete, onClose }) => {
     setIsClosing(true);
     setTimeout(() => {
       onComplete({
-        gameType: 'morse',
+        gameType: "morse",
         success: false,
         score: 0,
         timeBonus: 0,

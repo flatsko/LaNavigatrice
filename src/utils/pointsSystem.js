@@ -83,7 +83,7 @@ export const calculateMinigamePoints = (minigameResults = []) => {
     if (result.skipped) {
       // Aucun point pour les mini-jeux passés
       details.push({
-        type: result.type || "unknown",
+        type: result.gameType || result.type || "unknown",
         success: false,
         points: 0,
         skipped: true,
@@ -92,14 +92,17 @@ export const calculateMinigamePoints = (minigameResults = []) => {
       return;
     }
 
-    const gameType = result.type || "unknown";
-    const basePoints = POINTS_CONFIG.MINIGAME_BASE[gameType] || 300;
+    const gameType = result.gameType || result.type || "unknown";
     
+    // Utiliser le score déjà calculé par le mini-jeu pour éviter le double comptage
     let gamePoints = 0;
-    if (result.success) {
+    if (result.success && result.score !== undefined) {
+      gamePoints = result.score; // Utiliser le score calculé par le mini-jeu
+    } else if (result.success) {
+      // Fallback vers l'ancien système si pas de score fourni
+      const basePoints = POINTS_CONFIG.MINIGAME_BASE[gameType] || 300;
       gamePoints = basePoints;
       
-      // Ajouter le bonus de temps si présent
       if (result.timeBonus) {
         const timeBonusPoints = Math.floor(result.timeBonus * POINTS_CONFIG.MINIGAME_TIME_MULTIPLIER);
         gamePoints += timeBonusPoints;
@@ -112,9 +115,8 @@ export const calculateMinigamePoints = (minigameResults = []) => {
       success: result.success,
       points: gamePoints,
       skipped: false,
-      basePoints,
+      originalScore: result.score || 0,
       timeBonus: result.timeBonus || 0,
-      timeBonusPoints: result.timeBonus ? Math.floor(result.timeBonus * POINTS_CONFIG.MINIGAME_TIME_MULTIPLIER) : 0,
     });
   });
 

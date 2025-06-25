@@ -16,7 +16,7 @@ import VictoryPage from "./components/VictoryPage/VictoryPage";
 import FailurePage from "./components/FailurePage/FailurePage"; // CORRECTION: Ajouter FailurePage
 
 import AchievementSystem from "./components/AchievementSystem/AchievementSystem";
-import { AchievementNotificationProvider } from "./components/AchievementSystem";
+import { AchievementNotificationProvider, useAchievementNotifications } from "./components/AchievementSystem";
 import TestNotifications from "./components/AchievementSystem/TestNotifications";
 import ParticleEffect from "./components/ParticleEffect/ParticleEffect";
 import TipsSystem from "./components/TipsSystem/TipsSystem";
@@ -34,6 +34,9 @@ import { getCurrentTheme, applyThemeVariables, THEMES } from "./data/themes";
 // Utils
 
 function App() {
+  // Hook pour les achievements
+  const { checkAchievements } = useAchievementNotifications();
+
   // États principaux
   const [gameState, setGameState] = useState("welcome");
   const [currentPlayer, setCurrentPlayer] = useState(null);
@@ -42,6 +45,9 @@ function App() {
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [currentEnigma, setCurrentEnigma] = useState(null);
   const [leaderboardData, setLeaderboardData] = useState([]);
+
+  // État pour le timing des énigmes
+  const [enigmaStartTime, setEnigmaStartTime] = useState(null);
 
   // État pour le quiz obligatoire
   const [showMandatoryQuiz, setShowMandatoryQuiz] = useState(false);
@@ -129,9 +135,14 @@ function App() {
     // Sauvegarde dans le localStorage spécifique au joueur
     if (currentPlayer?.name) {
       const playerPhotosKey = `photos_${currentPlayer.name}`;
-      const existingPhotos = JSON.parse(localStorage.getItem(playerPhotosKey) || '[]');
+      const existingPhotos = JSON.parse(
+        localStorage.getItem(playerPhotosKey) || "[]"
+      );
       const updatedPhotos = [...existingPhotos, photoWithPlayer];
       localStorage.setItem(playerPhotosKey, JSON.stringify(updatedPhotos));
+
+      // Vérifier les achievements après l'ajout d'une photo
+      checkAchievements(currentPlayer, minigameResults);
     }
 
     // Note: Les mini-jeux sont maintenant déclenchés lors de la fermeture d'EnigmaCard
@@ -530,6 +541,13 @@ function App() {
       setQuizCompleted(false);
       setQuizScore(null);
       setLeaderboardData([]);
+      // Réinitialiser les mini-jeux
+      setMinigameResults([]);
+      setTriggeredMinigames([]);
+      setShowMiniGame(false);
+      setCurrentMiniGameType(null);
+      setPendingMiniGame(null);
+      setPendingVictory(false);
 
       alert("✅ Toutes les données ont été effacées.");
     }
@@ -577,8 +595,9 @@ function App() {
         return;
       }
 
-      // Afficher l'énigme
+      // Afficher l'énigme et démarrer le chrono
       setCurrentEnigma(enigma);
+      setEnigmaStartTime(Date.now());
       setShowEnigma(true);
       setShowQRScanner(false);
     } catch (error) {
@@ -665,6 +684,20 @@ function App() {
     const failed = currentPlayer?.failed || [];
 
     if (isCorrect) {
+      // Enregistrer le temps de résolution si disponible
+      if (enigmaStartTime && currentPlayer?.name) {
+        const endTime = Date.now();
+        const duration = (endTime - enigmaStartTime) / 1000; // en secondes
+        const solveTimesKey = `enigmaSolveTimes_${currentPlayer.name}`;
+        const solveTimes = JSON.parse(
+          localStorage.getItem(solveTimesKey) || "{}"
+        );
+        solveTimes[enigmaId] = duration;
+        localStorage.setItem(solveTimesKey, JSON.stringify(solveTimes));
+        setEnigmaStartTime(null);
+        console.log(`⏱️ Temps de résolution pour ${enigmaId}: ${duration}s`);
+      }
+
       // Bonne réponse : ajouter à completed si pas déjà présent
       if (!completed.includes(enigmaId)) {
         updatedPlayer.completed = [...completed, enigmaId];
@@ -1025,6 +1058,7 @@ function App() {
 
               setShowEnigma(false);
               setCurrentEnigma(null);
+              setEnigmaStartTime(null); // Reset timer when closing enigma
             }}
             onTriggerVictory={triggerVictoryAfterPhoto} // NOUVEAU
             onPhotoShared={addPhotoToSharedGallery}
