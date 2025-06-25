@@ -127,7 +127,7 @@ const EnigmaCard = ({
         type: "SUBMIT_FAILURE",
         payload: {
           type: "error",
-          message: "❌ Tentatives épuisées !\nVous devez passer à une autre énigme.",
+          message: `❌ Tentatives épuisées !\nVous devez passer à une autre énigme.\n\n${enigma.funFact}`,
         },
       });
     }
@@ -148,7 +148,7 @@ const EnigmaCard = ({
         type: "SUBMIT_FAILURE",
         payload: {
           type: "error",
-          message: "❌ Tentatives épuisées !\nVous devez passer à une autre énigme.",
+          message: `❌ Tentatives épuisées !\nVous devez passer à une autre énigme.\n\n${enigma.funFact}`,
         },
       });
       return;
@@ -173,7 +173,7 @@ const EnigmaCard = ({
         payload: {
           type: "error",
           message:
-            "❌ Réponse incorrecte !\nVous devez passer à une autre énigme.",
+            `❌ Réponse incorrecte !\nVous devez passer à une autre énigme.\n\n${enigma.funFact}`,
         },
       });
     }
