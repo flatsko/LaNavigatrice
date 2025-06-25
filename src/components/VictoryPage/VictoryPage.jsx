@@ -275,8 +275,8 @@ ${
             {quizCompleted && quizScore !== null && (
               <div className="stat-item quiz-item">
                 <span className="stat-icon">🏴‍☠️</span>
-                <span className="stat-value">{quizScore} / 7 </span>
-                <span className="stat-label">Quiz des Drapeaux réussi</span>
+                <span className="stat-value">{quizScore} % </span>
+                <span className="stat-label">Quizz des Drapeaux réussi</span>
               </div>
             )}
           </div>

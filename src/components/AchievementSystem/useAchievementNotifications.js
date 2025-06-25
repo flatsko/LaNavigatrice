@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { ACHIEVEMENTS } from "../../data/achievements";
 
 export const useAchievementNotifications = () => {
@@ -26,6 +26,9 @@ export const useAchievementNotifications = () => {
       (achievement) => !savedAchievements.includes(achievement.id)
     );
 
+    console.log("🔍 Achievements sauvegardés:", savedAchievements);
+    console.log("🆕 Nouveaux achievements:", newlyUnlocked.map(a => a.id));
+
     if (newlyUnlocked.length > 0) {
       const updatedAchievements = [
         ...savedAchievements,
@@ -36,8 +39,14 @@ export const useAchievementNotifications = () => {
         JSON.stringify(updatedAchievements)
       );
 
+      console.log("📢 Ajout à la queue de notifications:", newlyUnlocked.map(a => a.id));
       // Ajouter les nouveaux achievements à la queue de notifications
-      setNotificationQueue((prev) => [...prev, ...newlyUnlocked]);
+      setNotificationQueue((prev) => {
+        console.log("📋 Queue actuelle:", prev.map(a => a.id));
+        const newQueue = [...prev, ...newlyUnlocked];
+        console.log("📋 Nouvelle queue:", newQueue.map(a => a.id));
+        return newQueue;
+      });
     }
 
     return currentUnlocked;
@@ -53,8 +62,15 @@ export const useAchievementNotifications = () => {
 
   // Gérer la queue des notifications
   useEffect(() => {
+    console.log("🔄 useEffect queue:", {
+      queueLength: notificationQueue.length,
+      hasCurrentNotification: !!currentNotification,
+      queue: notificationQueue.map(a => a.id)
+    });
+    
     if (notificationQueue.length > 0 && !currentNotification) {
       const nextNotification = notificationQueue[0];
+      console.log("🎯 Affichage notification:", nextNotification.id);
       setCurrentNotification(nextNotification);
       setNotificationQueue((prev) => prev.slice(1));
     }

@@ -94,8 +94,8 @@ const MorseGameCard = ({ onComplete, onClose }) => {
     const isCorrect = userInput.trim() === currentMessage;
 
     if (isCorrect) {
-      const timeBonus = Math.max(0, timeLeft * 3); // Bonus plus généreux
-      const finalScore = 500 + timeBonus; // Score de base plus élevé
+      const timeBonus = Math.max(0, timeLeft * 1); // Bonus aligné avec le nouveau système
+      const finalScore = 200 + timeBonus; // Score de base aligné
       setScore(finalScore);
       setFeedback({
         type: "success",

@@ -375,26 +375,41 @@ function App() {
 
       setCurrentPlayer(migratedPlayer);
 
+      // Charger les résultats des mini-jeux sauvegardés
+      try {
+        const savedMinigameResults = localStorage.getItem(`minigameResults_${migratedPlayer.name}`);
+        if (savedMinigameResults) {
+          const parsedResults = JSON.parse(savedMinigameResults);
+          setMinigameResults(parsedResults);
+          console.log("Résultats mini-jeux chargés:", parsedResults);
+        }
+      } catch (error) {
+        console.error("Erreur lors du chargement des résultats mini-jeux:", error);
+      }
+
       // Calculer l'état du jeu basé sur la progression
       const completed = migratedPlayer.completed || [];
       const failed = migratedPlayer.failed || [];
       const totalProcessed = completed.length + failed.length;
 
+      // Déterminer l'état du jeu
+      const enigmasToUse = currentTheme.id === "dune_page_a_lautre" ? ENIGMAS_ALSACE_CHARENTE : ENIGMAS;
+      
       console.log("État du jeu:", {
         completed: completed.length,
         failed: failed.length,
         totalProcessed,
-        totalEnigmas: ENIGMAS.length,
+        totalEnigmas: enigmasToUse.length,
+        theme: currentTheme.id,
       });
-
-      // Déterminer l'état du jeu
-      if (totalProcessed === ENIGMAS.length) {
+      
+      if (totalProcessed === enigmasToUse.length) {
         // Toutes les énigmes ont été traitées
         console.log(
           "🏁 Toutes les énigmes traitées, vérification des conditions..."
         );
 
-        const validation = isGameValid(migratedPlayer);
+        const validation = isGameValid(migratedPlayer, enigmasToUse.length);
         console.log("Validation:", validation);
 
         if (validation.isValid) {
@@ -692,7 +707,7 @@ function App() {
         updatedPlayer.pendingVictory = true; // Flag pour indiquer victoire en attente
       } else {
         console.log("🎉 Victoire immédiate - pas de photo");
-        const validation = isGameValid(updatedPlayer);
+        const validation = isGameValid(updatedPlayer, currentEnigmas.length);
         if (validation.isValid) {
           setGameState("victory");
           // Vérifier les achievements à la victoire
@@ -758,20 +773,30 @@ function App() {
     // Éviter les doublons en vérifiant si ce type de mini-jeu n'a pas déjà été ajouté
     setMinigameResults((prev) => {
       const existingIndex = prev.findIndex((r) => r.type === newResult.type);
+      let updatedResults;
       if (existingIndex >= 0) {
         // Remplacer le résultat existant
-        const updated = [...prev];
-        updated[existingIndex] = newResult;
+        updatedResults = [...prev];
+        updatedResults[existingIndex] = newResult;
         console.log(
           `🎮 Mise à jour du résultat pour ${newResult.type}:`,
           newResult
         );
-        return updated;
       } else {
         // Ajouter le nouveau résultat
+        updatedResults = [...prev, newResult];
         console.log(`🎮 Ajout du résultat pour ${newResult.type}:`, newResult);
-        return [...prev, newResult];
       }
+      
+      // Sauvegarder les résultats des mini-jeux dans le localStorage
+      if (currentPlayer?.name) {
+        localStorage.setItem(
+          `minigameResults_${currentPlayer.name}`,
+          JSON.stringify(updatedResults)
+        );
+      }
+      
+      return updatedResults;
     });
 
     setShowMiniGame(false);
@@ -939,12 +964,12 @@ function App() {
           onResetStorage={resetStorage}
           showQuizButton={
             currentPlayer &&
-            currentPlayer.completed?.length +
+            (currentPlayer.completed?.length || 0) +
               (currentPlayer.failed?.length || 0) ===
               currentEnigmas.length &&
             !quizCompleted
           }
-          totalEnigmas={ENIGMAS.length}
+          totalEnigmas={currentEnigmas.length}
         />
         {/* {<QRVariations></QRVariations>} */}
 

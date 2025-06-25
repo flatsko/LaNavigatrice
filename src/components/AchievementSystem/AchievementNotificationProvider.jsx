@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import AchievementNotification from './AchievementNotification';
 import { useAchievementNotifications } from './useAchievementNotifications';
 

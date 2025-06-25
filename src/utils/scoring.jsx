@@ -1,9 +1,14 @@
 export const GAME_RULES = {
   MIN_SUCCESS_RATE: 0.49, // 50% minimum
   MAX_ATTEMPTS_PER_ENIGMA: 1,
-  PENALTY_PER_WRONG_ANSWER: 100,
+  PENALTY_PER_WRONG_ANSWER: 50, // Réduit pour cohérence avec nouveau système
   TIME_PENALTY_THRESHOLD: 300000, // 5 minutes
-  TOTAL_ENIGMAS: 4, // AJOUT: Centraliser le nombre total d'énigmes
+  // TOTAL_ENIGMAS supprimé - sera calculé dynamiquement
+  
+  // === COHÉRENCE AVEC LE NOUVEAU SYSTÈME DE POINTS ===
+  BASE_SCORE_PER_ENIGMA: 200, // Aligné avec pointsSystem.js
+  PERFECT_BONUS: 100, // Bonus pour résolution en 1 tentative
+  TIME_TARGET_MINUTES: 40, // Temps cible aligné
 };
 
 export const calculateSuccessRate = (player) => {
@@ -90,7 +95,7 @@ export const calculateDetailedStats = (player) => {
   };
 };
 
-export const isGameValid = (player) => {
+export const isGameValid = (player, totalEnigmas = 4) => {
   if (!player) {
     return {
       isValid: false,
@@ -103,13 +108,13 @@ export const isGameValid = (player) => {
   const stats = calculateDetailedStats(player);
 
   // CORRECTION: Vérifier que toutes les énigmes ont été traitées (réussies + échouées)
-  const hasProcessedAll = stats.totalProcessed >= GAME_RULES.TOTAL_ENIGMAS;
+  const hasProcessedAll = stats.totalProcessed >= totalEnigmas;
 
   console.log("🔍 Validation du jeu:", {
     completedEnigmas: stats.completedEnigmas,
     failedEnigmas: stats.failedEnigmas,
     totalProcessed: stats.totalProcessed,
-    requiredTotal: GAME_RULES.TOTAL_ENIGMAS,
+    requiredTotal: totalEnigmas,
     hasProcessedAll,
     successRate: stats.successRate,
     minRequired: GAME_RULES.MIN_SUCCESS_RATE,
@@ -134,7 +139,7 @@ export const isGameValid = (player) => {
     completedEnigmas: stats.completedEnigmas,
     failedEnigmas: stats.failedEnigmas,
     reason: !hasProcessedAll
-      ? `Toutes les énigmes doivent être traitées (${stats.totalProcessed}/${GAME_RULES.TOTAL_ENIGMAS})`
+      ? `Toutes les énigmes doivent être traitées (${stats.totalProcessed}/${totalEnigmas})`
       : !stats.isValid
       ? `Données incohérentes: ${stats.issues.join(", ")}`
       : stats.successRate < GAME_RULES.MIN_SUCCESS_RATE
@@ -145,7 +150,7 @@ export const isGameValid = (player) => {
   };
 };
 
-// AJOUT: Fonction calculateScore manquante
+// AJOUT: Fonction calculateScore manquante - MISE À JOUR AVEC NOUVEAU SYSTÈME
 export const calculateScore = (player) => {
   if (!player)
     return {
@@ -172,23 +177,31 @@ export const calculateScore = (player) => {
       successRate: validation.successRate,
     };
 
-  const baseScore = 1000;
+  // Utiliser les nouvelles constantes alignées
+  const baseScore = GAME_RULES.BASE_SCORE_PER_ENIGMA * player.completed.length;
   const timeBonus = calculateTimeBonus(player);
-  const accuracyBonus = Math.round(validation.successRate * 500);
-  const wrongAnswerPenalty =
-    (player.wrongAnswers || 0) * GAME_RULES.PENALTY_PER_WRONG_ANSWER;
+  const accuracyBonus = Math.round(validation.successRate * 300); // Réduit pour équilibrage
+  const wrongAnswerPenalty = (player.wrongAnswers || 0) * GAME_RULES.PENALTY_PER_WRONG_ANSWER;
+
+  // Bonus pour énigmes parfaites (résolues en 1 tentative)
+  let perfectBonus = 0;
+  if (player.enigmaAttempts) {
+    const perfectSolves = player.completed.filter(enigmaId => {
+      const attempts = player.enigmaAttempts[enigmaId] || 1;
+      return attempts === 1;
+    });
+    perfectBonus = perfectSolves.length * GAME_RULES.PERFECT_BONUS;
+  }
 
   return {
-    base: baseScore * player.completed.length,
+    base: baseScore,
     timeBonus,
     accuracyBonus,
+    perfectBonus,
     penalty: wrongAnswerPenalty,
     total: Math.max(
       0,
-      baseScore * player.completed.length +
-        timeBonus +
-        accuracyBonus -
-        wrongAnswerPenalty
+      baseScore + timeBonus + accuracyBonus + perfectBonus - wrongAnswerPenalty
     ),
     valid: true,
     successRate: validation.successRate,
@@ -196,21 +209,19 @@ export const calculateScore = (player) => {
 };
 
 // AJOUT: Fonction calculateTimeBonus manquante
-const calculateTimeBonus = (player) => {
-  if (!player || !player.startTime || !player.lastUpdate) return 0;
+export const calculateTimeBonus = (player) => {
+  if (!player || !player.gameTime) return 0;
 
-  try {
-    const totalTime = new Date(player.lastUpdate) - new Date(player.startTime);
-    const maxBonus = 1000;
+  const gameTimeMinutes = player.gameTime / (1000 * 60);
+  const targetTime = GAME_RULES.TIME_TARGET_MINUTES; // Utiliser la constante alignée
+  const maxBonus = 400; // Réduit pour équilibrage
 
-    if (totalTime < 600000) return maxBonus; // < 10 min
-    if (totalTime < 1200000) return 500; // < 20 min
-    if (totalTime < 1800000) return 250; // < 30 min
-    return 0;
-  } catch (error) {
-    console.error("Erreur calcul bonus temps:", error);
-    return 0;
+  if (gameTimeMinutes <= targetTime) {
+    const timeRatio = 1 - gameTimeMinutes / targetTime;
+    return Math.round(maxBonus * timeRatio);
   }
+
+  return 0;
 };
 
 // Fonction pour corriger les données incohérentes

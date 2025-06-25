@@ -18,8 +18,8 @@ const SharingGameCard = ({ onComplete, onClose }) => {
     question: "Que serait un bon mousse sans l'esprit de partage ?",
     mission: "Allez chercher une boisson pour chaque membre d'une équipe adverse et apportez-leur",
     validation: "Prenez une photo avec l'équipe adverse en train de boire",
-    baseScore: 1000,
-    timeBonus: 5 // 5 points par seconde restante
+    baseScore: 200,
+    timeBonus: 1 // 1 point par seconde restante
   };
 
   useEffect(() => {

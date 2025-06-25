@@ -49,8 +49,8 @@ const TentacleGameCard = ({ onComplete, onClose }) => {
     const isCorrect = userAnswer === challenge.answer;
     
     // Calcul du bonus de temps et score de base (définis ici pour être accessibles partout)
-    const baseScore = 800; // Score plus élevé pour la difficulté accrue
-    const timeBonus = isCorrect ? Math.floor(timeLeft * 2) : 0;
+    const baseScore = 200; // Score aligné avec le nouveau système
+    const timeBonus = isCorrect ? Math.floor(timeLeft * 1) : 0;
 
     if (isCorrect) {
       // Calcul du score avec bonus de temps

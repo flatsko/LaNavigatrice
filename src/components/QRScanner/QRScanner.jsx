@@ -759,13 +759,13 @@ const QRScanner = ({ onScan, onClose }) => {
               </p>
             </div>
 
-            <div className="scanner-actions">
+            {/* <div className="scanner-actions">
               {!cameraReady && (
                 <button className="force-start-btn" onClick={forceStart}>
                   🚀 Forcer démarrage
                 </button>
               )}
-            </div>
+            </div> */}
 
             {/* Contrôles de caméra et boutons principaux repositionnés en bas */}
             <div className="camera-controls-bottom">
