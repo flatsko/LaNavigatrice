@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <linearGradient id="oceanGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4682B4;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="compassGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background océan -->
+  <circle cx="16" cy="16" r="16" fill="url(#oceanGradient)"/>
+  
+  <!-- Vagues stylisées -->
+  <path d="M2 20 Q8 18 14 20 T30 20 L30 32 L2 32 Z" fill="#4169E1" opacity="0.6"/>
+  <path d="M0 24 Q6 22 12 24 T28 24 L32 24 L32 32 L0 32 Z" fill="#191970" opacity="0.4"/>
+  
+  <!-- Boussole centrale -->
+  <circle cx="16" cy="16" r="8" fill="url(#compassGradient)" stroke="#8B4513" stroke-width="0.5"/>
+  
+  <!-- Aiguille Nord (rouge) -->
+  <polygon points="16,8 14,15 16,14 18,15" fill="#DC143C"/>
+  
+  <!-- Aiguille Sud (blanc) -->
+  <polygon points="16,24 14,17 16,18 18,17" fill="#FFFFFF"/>
+  
+  <!-- Points cardinaux -->
+  <circle cx="16" cy="10" r="1" fill="#8B4513"/>
+  <circle cx="16" cy="22" r="1" fill="#8B4513"/>
+  <circle cx="10" cy="16" r="1" fill="#8B4513"/>
+  <circle cx="22" cy="16" r="1" fill="#8B4513"/>
+  
+  <!-- Centre de la boussole -->
+  <circle cx="16" cy="16" r="1.5" fill="#8B4513"/>
+  
+  <!-- Étoiles décoratives -->
+  <polygon points="6,6 6.5,7.5 8,8 6.5,8.5 6,10 5.5,8.5 4,8 5.5,7.5" fill="#FFFFFF" opacity="0.8"/>
+  <polygon points="26,4 26.3,5 27,5.3 26.3,5.6 26,6.3 25.7,5.6 25,5.3 25.7,5" fill="#FFFFFF" opacity="0.6"/>
+</svg>
