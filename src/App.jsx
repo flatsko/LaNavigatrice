@@ -16,7 +16,10 @@ import VictoryPage from "./components/VictoryPage/VictoryPage";
 import FailurePage from "./components/FailurePage/FailurePage"; // CORRECTION: Ajouter FailurePage
 
 import AchievementSystem from "./components/AchievementSystem/AchievementSystem";
-import { AchievementNotificationProvider, useAchievementNotifications } from "./components/AchievementSystem";
+import {
+  AchievementNotificationProvider,
+  useAchievementNotifications,
+} from "./components/AchievementSystem";
 import ParticleEffect from "./components/ParticleEffect/ParticleEffect";
 import TipsSystem from "./components/TipsSystem/TipsSystem";
 import SoundManager from "./components/SoundManager/SoundManager";
@@ -124,7 +127,7 @@ function App() {
     };
 
     setAllPhotos((prev) => [photoWithPlayer, ...prev]);
-    
+
     // Note: Les mini-jeux sont maintenant déclenchés lors de la fermeture d'EnigmaCard
     // via la fonction triggerMinigameOnEnigmaClose()
   };
@@ -151,7 +154,9 @@ function App() {
 
     // Ne pas déclencher de mini-jeu sur la dernière énigme (réservée au quiz des drapeaux)
     if (remainingEnigmas <= 1) {
-      console.log("🎮 Dernière énigme atteinte, pas de mini-jeu (quiz des drapeaux prévu)");
+      console.log(
+        "🎮 Dernière énigme atteinte, pas de mini-jeu (quiz des drapeaux prévu)"
+      );
       return false;
     }
 
@@ -163,7 +168,11 @@ function App() {
       // Forcer le déclenchement si on risque de manquer des mini-jeux
       shouldTriggerMinigame = true;
       console.log(
-        `🎮 Déclenchement forcé: ${untriggeredMinigames.length} mini-jeux restants pour ${remainingEnigmas - 1} énigmes disponibles (${processedEnigmas} énigmes traitées)`
+        `🎮 Déclenchement forcé: ${
+          untriggeredMinigames.length
+        } mini-jeux restants pour ${
+          remainingEnigmas - 1
+        } énigmes disponibles (${processedEnigmas} énigmes traitées)`
       );
     } else {
       // Probabilité aléatoire normale (40% de chance)
@@ -176,7 +185,9 @@ function App() {
           Math.floor(Math.random() * untriggeredMinigames.length)
         ];
       console.log(
-        `🎮 Déclenchement du mini-jeu: ${randomMinigame} (${remainingEnigmas - 1} énigmes restantes, ${processedEnigmas} traitées)`
+        `🎮 Déclenchement du mini-jeu: ${randomMinigame} (${
+          remainingEnigmas - 1
+        } énigmes restantes, ${processedEnigmas} traitées)`
       );
 
       // Marquer le mini-jeu comme déclenché
@@ -186,10 +197,10 @@ function App() {
       setTimeout(() => {
         startMiniGame(randomMinigame);
       }, 500);
-      
+
       return true;
     }
-    
+
     return false;
   };
 
@@ -224,8 +235,8 @@ function App() {
       console.log("✅ Quiz réussi! Accès à la victoire");
       setQuizCompleted(true);
       setGameState("victory");
-       // Vérifier les achievements à la victoire
-       checkAchievements(currentPlayer, minigameResults);
+      // Vérifier les achievements à la victoire
+      checkAchievements(currentPlayer, minigameResults);
     } else {
       console.log("❌ Quiz échoué, score insuffisant");
       // Rester en mode jeu, le joueur peut réessayer
@@ -374,8 +385,8 @@ function App() {
               setQuizCompleted(true);
               setQuizScore(parsedQuizData.score);
               setGameState("victory");
-        // Vérifier les achievements à la victoire
-        checkAchievements(migratedPlayer, minigameResults);
+              // Vérifier les achievements à la victoire
+              checkAchievements(migratedPlayer, minigameResults);
             } else {
               console.log("🔄 Quiz à refaire (score insuffisant)");
               setShowMandatoryQuiz(true);
@@ -721,12 +732,15 @@ function App() {
 
     // Éviter les doublons en vérifiant si ce type de mini-jeu n'a pas déjà été ajouté
     setMinigameResults((prev) => {
-      const existingIndex = prev.findIndex(r => r.type === newResult.type);
+      const existingIndex = prev.findIndex((r) => r.type === newResult.type);
       if (existingIndex >= 0) {
         // Remplacer le résultat existant
         const updated = [...prev];
         updated[existingIndex] = newResult;
-        console.log(`🎮 Mise à jour du résultat pour ${newResult.type}:`, newResult);
+        console.log(
+          `🎮 Mise à jour du résultat pour ${newResult.type}:`,
+          newResult
+        );
         return updated;
       } else {
         // Ajouter le nouveau résultat
@@ -734,7 +748,7 @@ function App() {
         return [...prev, newResult];
       }
     });
-    
+
     setShowMiniGame(false);
     setCurrentMiniGameType(null);
 
@@ -879,7 +893,10 @@ function App() {
   };
   // État de jeu principal
   return (
-    <AchievementNotificationProvider player={currentPlayer} minigameResults={minigameResults}>
+    <AchievementNotificationProvider
+      player={currentPlayer}
+      minigameResults={minigameResults}
+    >
       <div className="app">
         {/* Header avec informations du joueur */}
         <Header

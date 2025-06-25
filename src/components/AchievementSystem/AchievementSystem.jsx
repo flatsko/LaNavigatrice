@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./AchievementSystem.css";
-import { ACHIEVEMENTS } from '../../data/achievements';
+import { ACHIEVEMENTS } from "../../data/achievements";
 
 const AchievementSystem = ({ player, onClose }) => {
   const [unlockedAchievements, setUnlockedAchievements] = useState([]);
@@ -9,7 +9,7 @@ const AchievementSystem = ({ player, onClose }) => {
     const savedAchievements = JSON.parse(
       localStorage.getItem("playerAchievements") || "[]"
     );
-    
+
     // Récupérer uniquement les achievements déjà débloqués depuis le localStorage
     const currentUnlocked = ACHIEVEMENTS.filter((achievement) =>
       savedAchievements.includes(achievement.id)
@@ -25,29 +25,27 @@ const AchievementSystem = ({ player, onClose }) => {
   // Écouter les changements du localStorage pour mettre à jour l'affichage
   useEffect(() => {
     const handleStorageChange = (e) => {
-      if (e.key === 'playerAchievements') {
+      if (e.key === "playerAchievements") {
         updateUnlockedAchievements();
       }
     };
 
-    window.addEventListener('storage', handleStorageChange);
-    
+    window.addEventListener("storage", handleStorageChange);
+
     // Également écouter les changements internes (même onglet)
     const originalSetItem = localStorage.setItem;
-    localStorage.setItem = function(key, value) {
+    localStorage.setItem = function (key, value) {
       originalSetItem.apply(this, arguments);
-      if (key === 'playerAchievements') {
+      if (key === "playerAchievements") {
         updateUnlockedAchievements();
       }
     };
 
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener("storage", handleStorageChange);
       localStorage.setItem = originalSetItem;
     };
   }, []);
-
-
 
   const getRarityClass = (rarity) => {
     return `achievement-${rarity}`;
@@ -115,7 +113,6 @@ const AchievementSystem = ({ player, onClose }) => {
                       {achievement.rarity.toUpperCase()}
                     </span>
                   </div>
-
                 </div>
               );
             })}

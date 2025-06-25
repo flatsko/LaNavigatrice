@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test des Trophées</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .achievement {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .unlocked {
+            background-color: #e8f5e8;
+            border-color: #4caf50;
+        }
+        .locked {
+            background-color: #f5f5f5;
+            border-color: #ccc;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .storage-info {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🏆 Test du Système de Trophées</h1>
+    
+    <div class="storage-info">
+        <h3>État actuel du localStorage:</h3>
+        <p><strong>playerAchievements:</strong> <span id="storage-content"></span></p>
+        <button onclick="refreshStorage()">Actualiser</button>
+        <button onclick="clearStorage()">Vider le localStorage</button>
+        <button onclick="addTestAchievements()">Ajouter des trophées de test</button>
+    </div>
+
+    <div id="achievements-list"></div>
+
+    <script>
+        // Liste des achievements (copié depuis achievements.js)
+        const ACHIEVEMENTS = [
+            {
+                id: "first_discovery",
+                title: "Premier Explorateur",
+                description: "Découvrir votre première destination",
+                icon: "🗺️",
+                rarity: "common",
+            },
+            {
+                id: "photo_enthusiast",
+                title: "Photographe Aventurier",
+                description: "Prendre 3 photos souvenirs",
+                icon: "📸",
+                rarity: "rare",
+            },
+            {
+                id: "perfect_navigator",
+                title: "Navigateur Parfait",
+                description: "Résoudre 3 énigmes sans erreur",
+                icon: "🧭",
+                rarity: "epic",
+            },
+            {
+                id: "minigame_player",
+                title: "Joueur Aventurier",
+                description: "Compléter un mini-jeu avec succès",
+                icon: "🎮",
+                rarity: "common",
+            },
+            {
+                id: "minigame_master",
+                title: "Maître des Mini-Jeux",
+                description: "Compléter tous les mini-jeux avec succès",
+                icon: "🏅",
+                rarity: "rare",
+            }
+        ];
+
+        function refreshStorage() {
+            const saved = localStorage.getItem('playerAchievements') || '[]';
+            document.getElementById('storage-content').textContent = saved;
+            displayAchievements();
+        }
+
+        function clearStorage() {
+            localStorage.removeItem('playerAchievements');
+            refreshStorage();
+        }
+
+        function addTestAchievements() {
+            const testAchievements = ['first_discovery', 'minigame_player', 'photo_enthusiast'];
+            localStorage.setItem('playerAchievements', JSON.stringify(testAchievements));
+            refreshStorage();
+        }
+
+        function displayAchievements() {
+            const savedAchievements = JSON.parse(localStorage.getItem('playerAchievements') || '[]');
+            const container = document.getElementById('achievements-list');
+            
+            container.innerHTML = '<h3>Liste des Trophées:</h3>';
+            
+            ACHIEVEMENTS.forEach(achievement => {
+                const isUnlocked = savedAchievements.includes(achievement.id);
+                const div = document.createElement('div');
+                div.className = `achievement ${isUnlocked ? 'unlocked' : 'locked'}`;
+                div.innerHTML = `
+                    <strong>${isUnlocked ? achievement.icon : '🔒'} ${isUnlocked ? achievement.title : '???'}</strong><br>
+                    <em>${isUnlocked ? achievement.description : 'Exploit mystérieux à découvrir...'}</em><br>
+                    <small>Rareté: ${achievement.rarity.toUpperCase()} | ID: ${achievement.id}</small>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Initialiser l'affichage
+        refreshStorage();
+    </script>
+</body>
+</html>

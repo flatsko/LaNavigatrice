@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { getRankDetails, getRankAdvice } from "../../utils/ranking";
 import { getStoredPhotos } from "../../utils/photoStorage"; // AJOUT
 import { calculateTotalScore } from "../../utils/pointsSystem"; // AJOUT

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { ACHIEVEMENTS } from '../../data/achievements';
+import React, { useState, useEffect, useCallback } from "react";
+import { ACHIEVEMENTS } from "../../data/achievements";
 
 export const useAchievementNotifications = () => {
   const [currentNotification, setCurrentNotification] = useState(null);
@@ -9,13 +9,13 @@ export const useAchievementNotifications = () => {
   const checkAchievements = useCallback((player, minigameResults = []) => {
     console.log("🏆 Vérification des achievements:", {
       player: player?.completed?.length || 0,
-      minigameResults: minigameResults.length
+      minigameResults: minigameResults.length,
     });
-    
+
     const savedAchievements = JSON.parse(
       localStorage.getItem("playerAchievements") || "[]"
     );
-    
+
     const currentUnlocked = ACHIEVEMENTS.filter((achievement) => {
       const result = achievement.condition(player, minigameResults);
       console.log(`🎯 Achievement ${achievement.id}: ${result}`);
@@ -35,9 +35,9 @@ export const useAchievementNotifications = () => {
         "playerAchievements",
         JSON.stringify(updatedAchievements)
       );
-      
+
       // Ajouter les nouveaux achievements à la queue de notifications
-      setNotificationQueue(prev => [...prev, ...newlyUnlocked]);
+      setNotificationQueue((prev) => [...prev, ...newlyUnlocked]);
     }
 
     return currentUnlocked;
@@ -45,9 +45,9 @@ export const useAchievementNotifications = () => {
 
   // Déclencher manuellement une notification (pour des achievements spéciaux)
   const triggerNotification = useCallback((achievementId) => {
-    const achievement = ACHIEVEMENTS.find(a => a.id === achievementId);
+    const achievement = ACHIEVEMENTS.find((a) => a.id === achievementId);
     if (achievement) {
-      setNotificationQueue(prev => [...prev, achievement]);
+      setNotificationQueue((prev) => [...prev, achievement]);
     }
   }, []);
 
@@ -56,7 +56,7 @@ export const useAchievementNotifications = () => {
     if (notificationQueue.length > 0 && !currentNotification) {
       const nextNotification = notificationQueue[0];
       setCurrentNotification(nextNotification);
-      setNotificationQueue(prev => prev.slice(1));
+      setNotificationQueue((prev) => prev.slice(1));
     }
   }, [notificationQueue, currentNotification]);
 
@@ -69,7 +69,7 @@ export const useAchievementNotifications = () => {
     checkAchievements,
     triggerNotification,
     handleNotificationClose,
-    achievements: ACHIEVEMENTS
+    achievements: ACHIEVEMENTS,
   };
 };
 
