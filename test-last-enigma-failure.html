@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Échec Dernière Énigme</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .test-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+        .problem {
+            background: rgba(220, 53, 69, 0.2);
+            border-left: 4px solid #dc3545;
+        }
+        .solution {
+            background: rgba(40, 167, 69, 0.2);
+            border-left: 4px solid #28a745;
+        }
+        .test-case {
+            background: rgba(255, 193, 7, 0.2);
+            border-left: 4px solid #ffc107;
+        }
+        code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        .code-block {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        .highlight {
+            background: rgba(255, 255, 0, 0.3);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔧 Test - Correction Échec Dernière Énigme</h1>
+        <p><strong>Date:</strong> <span id="currentDate"></span></p>
+        <p><strong>Problème identifié:</strong> Quand on rate la dernière énigme, le quiz final se déclenche automatiquement sans attendre la prise de photo.</p>
+    </div>
+
+    <div class="test-section problem">
+        <h2>❌ Problème Original</h2>
+        <p><strong>Comportement incorrect:</strong></p>
+        <ul>
+            <li>Échec sur la dernière énigme → Quiz final immédiat</li>
+            <li>Pas d'attente pour la prise de photo</li>
+            <li>L'énigme ne passe pas en statut "failed" correctement</li>
+            <li>Comportement différent entre succès et échec sur la dernière énigme</li>
+        </ul>
+        
+        <h3>🔍 Cause du problème</h3>
+        <div class="code-block">
+            <code>
+// Ancienne logique dans App.jsx - solveEnigma()
+if (isLastEnigma && isCorrect) {
+    // Seulement pour les SUCCÈS
+    if (lastEnigmaHasPhoto) {
+        updatedPlayer.pendingVictory = true;
+    }
+} else if (totalProcessed === currentEnigmas.length) {
+    // ÉCHECS tombaient ici → Quiz immédiat
+    const validation = isGameValid(updatedPlayer);
+    if (!quizCompleted) {
+        setShowMandatoryQuiz(true); // ❌ Quiz immédiat
+    }
+}
+            </code>
+        </div>
+    </div>
+
+    <div class="test-section solution">
+        <h2>✅ Solution Implémentée</h2>
+        <p><strong>Comportement corrigé:</strong></p>
+        <ul>
+            <li>✅ Échec sur la dernière énigme → Attente photo si <code>hasPhoto = true</code></li>
+            <li>✅ Même logique pour succès et échec</li>
+            <li>✅ <code>pendingVictory</code> défini pour les deux cas</li>
+            <li>✅ Quiz déclenché après photo ou bouton "Continuer sans photo"</li>
+        </ul>
+        
+        <h3>🔧 Modifications apportées</h3>
+        
+        <h4>1. Logique unifiée dans <code>solveEnigma()</code></h4>
+        <div class="code-block">
+            <code>
+// Nouvelle logique - traite succès ET échecs
+if (isLastEnigma) {
+    console.log("🏁 Dernière énigme traitée !", isCorrect ? "✅ Réussie" : "❌ Échouée");
+    
+    if (lastEnigmaHasPhoto) {
+        // Pour SUCCÈS ET ÉCHECS avec photo
+        updatedPlayer.pendingVictory = true; // Flag pour fin de jeu en attente
+    } else {
+        // Fin de jeu immédiate si pas de photo
+        const validation = isGameValid(updatedPlayer, currentEnigmas.length);
+        if (validation.isValid) {
+            if (!quizCompleted) {
+                setShowMandatoryQuiz(true);
+                return isCorrect;
+            }
+            setGameState("victory");
+        } else {
+            setGameState("failure");
+        }
+    }
+}
+            </code>
+        </div>
+        
+        <h4>2. Fonction <code>triggerVictoryAfterPhoto()</code> mise à jour</h4>
+        <div class="code-block">
+            <code>
+// Renommée en triggerEndGameAfterPhoto conceptuellement
+const triggerVictoryAfterPhoto = () => {
+    console.log("🎉 Déclenchement fin de jeu après photo");
+    
+    // Utilise le bon nombre total d'énigmas
+    const validation = isGameValid(currentPlayer, currentEnigmas.length);
+    
+    if (validation.isValid) {
+        if (!quizCompleted) {
+            setShowMandatoryQuiz(true); // Quiz après photo
+            return;
+        }
+        setGameState("victory");
+    } else {
+        setGameState("failure");
+    }
+};
+            </code>
+        </div>
+    </div>
+
+    <div class="test-section test-case">
+        <h2>🧪 Cas de Test</h2>
+        
+        <h3>Scénario 1: Échec dernière énigme AVEC photo</h3>
+        <ol>
+            <li>Jouer jusqu'à la dernière énigme</li>
+            <li>Donner une mauvaise réponse</li>
+            <li><span class="highlight">Vérifier:</span> PhotoSection s'affiche avec message d'échec</li>
+            <li><span class="highlight">Vérifier:</span> Boutons "Prendre photo" et "Continuer sans photo" disponibles</li>
+            <li>Cliquer "Prendre photo" ou "Continuer sans photo"</li>
+            <li><span class="highlight">Vérifier:</span> Quiz final se déclenche APRÈS l'action</li>
+        </ol>
+        
+        <h3>Scénario 2: Échec dernière énigme SANS photo</h3>
+        <ol>
+            <li>Jouer jusqu'à la dernière énigme (sans photo)</li>
+            <li>Donner une mauvaise réponse</li>
+            <li><span class="highlight">Vérifier:</span> Quiz final se déclenche immédiatement</li>
+        </ol>
+        
+        <h3>Scénario 3: Succès dernière énigme AVEC photo</h3>
+        <ol>
+            <li>Jouer jusqu'à la dernière énigme</li>
+            <li>Donner la bonne réponse</li>
+            <li><span class="highlight">Vérifier:</span> PhotoSection s'affiche avec message de succès</li>
+            <li><span class="highlight">Vérifier:</span> Même comportement qu'en cas d'échec</li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h2>📋 Checklist de Validation</h2>
+        <ul>
+            <li>☐ Échec dernière énigme → PhotoSection affiché si <code>hasPhoto = true</code></li>
+            <li>☐ Succès dernière énigme → PhotoSection affiché si <code>hasPhoto = true</code></li>
+            <li>☐ Quiz final déclenché APRÈS photo/bouton, pas avant</li>
+            <li>☐ <code>pendingVictory</code> défini pour succès ET échecs</li>
+            <li>☐ Énigme échouée ajoutée à <code>player.failed</code></li>
+            <li>☐ Comportement identique entre succès et échec</li>
+            <li>☐ Pas de régression sur les énigmes non-finales</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>🔍 Points de Vérification Technique</h2>
+        <ul>
+            <li><strong>App.jsx ligne ~742:</strong> <code>if (isLastEnigma)</code> sans condition <code>&& isCorrect</code></li>
+            <li><strong>App.jsx ligne ~754:</strong> <code>updatedPlayer.pendingVictory = true</code> pour succès ET échecs</li>
+            <li><strong>App.jsx ligne ~957:</strong> <code>isGameValid(currentPlayer, currentEnigmas.length)</code></li>
+            <li><strong>EnigmaCard.jsx ligne ~290:</strong> PhotoSection affiché pour <code>isSuccess || isFailure</code></li>
+            <li><strong>PhotoSection.jsx:</strong> Messages adaptés pour succès et échecs</li>
+        </ul>
+    </div>
+
+    <script>
+        // Afficher la date actuelle
+        document.getElementById('currentDate').textContent = new Date().toLocaleString('fr-FR');
+        
+        // Ajouter des interactions pour les checkboxes
+        document.querySelectorAll('li').forEach(li => {
+            if (li.textContent.includes('☐')) {
+                li.style.cursor = 'pointer';
+                li.addEventListener('click', function() {
+                    if (this.textContent.includes('☐')) {
+                        this.innerHTML = this.innerHTML.replace('☐', '✅');
+                        this.style.color = '#28a745';
+                    } else if (this.textContent.includes('✅')) {
+                        this.innerHTML = this.innerHTML.replace('✅', '☐');
+                        this.style.color = '';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -739,23 +739,29 @@ function App() {
       totalEnigmas: ENIGMAS.length,
     });
 
-    // MODIFICATION: Ne pas passer en victoire immédiatement si c'est la dernière énigme avec photo
+    // MODIFICATION: Ne pas passer en victoire/échec immédiatement si c'est la dernière énigme avec photo
     const isLastEnigma = totalProcessed === ENIGMAS.length;
     const lastEnigmaHasPhoto = enigma.hasPhoto;
 
-    if (isLastEnigma && isCorrect) {
-      console.log("🏁 Dernière énigme complétée !");
+    if (isLastEnigma) {
+      console.log("🏁 Dernière énigme traitée !", isCorrect ? "✅ Réussie" : "❌ Échouée");
 
       if (lastEnigmaHasPhoto) {
         console.log(
-          "📸 Dernière énigme avec photo - attendre la photo avant victoire"
+          "📸 Dernière énigme avec photo - attendre la photo avant fin de jeu"
         );
         // Ne pas changer gameState maintenant, on le fera après la photo
-        updatedPlayer.pendingVictory = true; // Flag pour indiquer victoire en attente
+        updatedPlayer.pendingVictory = true; // Flag pour indiquer fin de jeu en attente
       } else {
-        console.log("🎉 Victoire immédiate - pas de photo");
+        console.log("🎉 Fin de jeu immédiate - pas de photo");
         const validation = isGameValid(updatedPlayer, currentEnigmas.length);
         if (validation.isValid) {
+          // Vérifier si le quiz obligatoire doit être fait
+          if (!quizCompleted) {
+            console.log("Quiz obligatoire requis avant la victoire");
+            setShowMandatoryQuiz(true);
+            return isCorrect;
+          }
           setGameState("victory");
         } else {
           setFailureReason(validation.reason);
@@ -763,7 +769,7 @@ function App() {
         }
       }
     } else if (totalProcessed === currentEnigmas.length) {
-      // Cas normal (pas la dernière énigme résolue ou échec)
+      // Cas normal (pas la dernière énigme)
       const validation = isGameValid(updatedPlayer);
       if (validation.isValid) {
         // Vérifier si le quiz obligatoire doit être fait
@@ -945,11 +951,11 @@ function App() {
       </div>
     );
   }
-  // Nouvelle fonction pour déclencher la victoire après photo
+  // Nouvelle fonction pour déclencher la fin de jeu après photo
   const triggerVictoryAfterPhoto = () => {
-    console.log("🎉 Déclenchement victoire après photo");
+    console.log("🎉 Déclenchement fin de jeu après photo");
 
-    const validation = isGameValid(currentPlayer);
+    const validation = isGameValid(currentPlayer, currentEnigmas.length);
     if (validation.isValid) {
       // Vérifier si le quiz obligatoire doit être fait
       if (!quizCompleted) {
