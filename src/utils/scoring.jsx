@@ -4,10 +4,10 @@ export const GAME_RULES = {
   PENALTY_PER_WRONG_ANSWER: 50, // Réduit pour cohérence avec nouveau système
   TIME_PENALTY_THRESHOLD: 300000, // 5 minutes
   // TOTAL_ENIGMAS supprimé - sera calculé dynamiquement
-  
+
   // === COHÉRENCE AVEC LE NOUVEAU SYSTÈME DE POINTS ===
   BASE_SCORE_PER_ENIGMA: 200, // Aligné avec pointsSystem.js
-  PERFECT_BONUS: 100, // Bonus pour résolution en 1 tentative
+  PERFECT_BONUS: 0, // Bonus pour résolution en 1 tentative
   TIME_TARGET_MINUTES: 40, // Temps cible aligné
 };
 
@@ -181,12 +181,13 @@ export const calculateScore = (player) => {
   const baseScore = GAME_RULES.BASE_SCORE_PER_ENIGMA * player.completed.length;
   const timeBonus = calculateTimeBonus(player);
   const accuracyBonus = Math.round(validation.successRate * 300); // Réduit pour équilibrage
-  const wrongAnswerPenalty = (player.wrongAnswers || 0) * GAME_RULES.PENALTY_PER_WRONG_ANSWER;
+  const wrongAnswerPenalty =
+    (player.wrongAnswers || 0) * GAME_RULES.PENALTY_PER_WRONG_ANSWER;
 
   // Bonus pour énigmes parfaites (résolues en 1 tentative)
   let perfectBonus = 0;
   if (player.enigmaAttempts) {
-    const perfectSolves = player.completed.filter(enigmaId => {
+    const perfectSolves = player.completed.filter((enigmaId) => {
       const attempts = player.enigmaAttempts[enigmaId] || 1;
       return attempts === 1;
     });
