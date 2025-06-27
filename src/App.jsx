@@ -302,6 +302,11 @@ function App() {
   };
   // Fonction pour redémarrer le jeu
   const restartGame = () => {
+    // Nettoyer les données du quiz avant de réinitialiser le joueur
+    if (currentPlayer?.name) {
+      localStorage.removeItem(`quiz_${currentPlayer.name}`);
+    }
+    
     setCurrentPlayer(null);
     setCurrentEnigma(null);
     setShowEnigma(false);
@@ -316,6 +321,10 @@ function App() {
     setShowMiniGame(false);
     setCurrentMiniGameType(null);
     setPendingVictory(false);
+    // Réinitialiser les données du quiz
+    setQuizScore(0);
+    setQuizCompleted(false);
+    setShowMandatoryQuiz(false);
     // Note: On ne supprime pas les données du localStorage pour garder l'historique
   };
 
