@@ -70,9 +70,9 @@ const Header = ({
               🏴‍☠️ Quiz Final
             </button>
           )}
-          <button className="reset-btn" onClick={onResetStorage}>
+          {/* <button className="reset-btn" onClick={onResetStorage}>
             🗑️ Reset
-          </button>
+          </button> */}
         </div>
 
         {/* Barre de progression simplifiée */}
