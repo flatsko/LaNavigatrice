@@ -31,7 +31,7 @@ export const THEMES = {
       welcomeTitle: "Bienvenue à bord !",
       welcomeSubtitle: "Voyage Maritime du\nCapitaine Alison",
       welcomeDescription:
-        "Une quête extraordinaire vous attend dans les eaux mystérieuses ! 🌊",
+        "Une quête extraordinaire vous attend sur les traces du Capitaine Alison, marchez sur ses pas et retracez son voyage pour découvrir sa déstination rêvée ! 🌊",
       formTitle: "📋 Enregistrement de l'équipage",
       shipIcon: "⚓",
       captainName: "Capitaine Alison",

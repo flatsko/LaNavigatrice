@@ -878,12 +878,22 @@
     font-size: 0.75rem;
   }
 
-  .scan-btn {
+  .header-actions {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .scan-btn,
+  .achievements-btn,
+  .quiz-btn,
+  .reset-btn {
     padding: 0.875rem 1.25rem;
     font-size: 0.9rem;
     border-radius: 14px;
-    width: 100%;
+    flex: 1;
+    min-width: 120px;
     justify-content: center;
+    white-space: nowrap;
   }
 }
 
@@ -925,11 +935,22 @@
     border-radius: 10px;
   }
 
-  .scan-btn {
+  .header-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .scan-btn,
+  .achievements-btn,
+  .quiz-btn,
+  .reset-btn {
     padding: 0.75rem 1rem;
     font-size: 0.85rem;
     border-radius: 12px;
     min-height: 44px;
+    width: 100%;
+    justify-content: center;
+    white-space: nowrap;
   }
 }
 
@@ -1084,6 +1105,9 @@
 
 /* États de focus améliorés pour l'accessibilité clavier */
 .scan-btn:focus-visible,
+.achievements-btn:focus-visible,
+.quiz-btn:focus-visible,
+.reset-btn:focus-visible,
 .fragment:focus-visible {
   outline: 3px solid #1da1f2;
   outline-offset: 2px;
@@ -1110,10 +1134,21 @@
     font-size: 1rem;
   }
 
-  .scan-btn {
+  .header-actions {
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .scan-btn,
+  .achievements-btn,
+  .quiz-btn,
+  .reset-btn {
     padding: 0.625rem 0.875rem;
     font-size: 0.8rem;
     min-height: 40px;
+    width: 100%;
+    justify-content: center;
+    white-space: nowrap;
   }
 
   .progress-stat {
