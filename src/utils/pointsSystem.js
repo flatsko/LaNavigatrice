@@ -5,10 +5,10 @@ import { ACHIEVEMENTS } from "../data/achievements.js";
 // Configuration des points - SYSTÈME ÉQUILIBRÉ
 const POINTS_CONFIG = {
   // === ÉNIGMES === (Base du jeu)
-  ENIGMA_SOLVED: 200, // Points de base par énigme résolue
+  ENIGMA_SOLVED: 150, // Points de base par énigme résolue
   ENIGMA_PERFECT: 0, // Bonus pour résoudre en 1 tentative
   ATTEMPT_PENALTY: 25, // Malus par tentative supplémentaire
-  HINT_PENALTY: 30, // Pénalité pour utiliser un indice
+  HINT_PENALTY: 40, // Pénalité pour utiliser un indice
 
   // === MINI-JEUX === (Activités bonus)
   MINIGAME_BASE: {

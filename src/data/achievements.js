@@ -68,24 +68,6 @@ export const ACHIEVEMENTS = [
     rarity: "legende",
   },
   {
-    id: "flawless_captain",
-    title: "Capitaine Impeccable",
-    description: "Terminer toutes les énigmes sans aucune erreur",
-    icon: "👑",
-    condition: (player) => {
-      // Le joueur doit avoir terminé les 7 énigmes
-      if (!player || (player.completed?.length || 0) !== 7) return false;
-
-      const perfectSolves = player.completed?.filter((enigmaId) => {
-        const attempts = player.enigmaAttempts?.[enigmaId] || 0;
-        return attempts === 1;
-      });
-      // Toutes les énigmes terminées doivent avoir été réussies du premier coup
-      return perfectSolves?.length === 7;
-    },
-    rarity: "legende",
-  },
-  {
     id: "minigame_player",
     title: "Joueur Aventurier",
     description: "Compléter un mini-jeu avec succès",
