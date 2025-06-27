@@ -31,6 +31,8 @@ const initialState = {
   isFailure: false,
   showCamera: false,
   isClosing: false,
+  showHint: false,
+  hintUsed: false,
 };
 
 function reducer(state, action) {
@@ -67,6 +69,10 @@ function reducer(state, action) {
       return { ...state, showCamera: false };
     case "START_CLOSING":
       return { ...state, isClosing: true };
+    case "SHOW_HINT":
+      return { ...state, showHint: true, hintUsed: true };
+    case "HIDE_HINT":
+      return { ...state, showHint: false };
     case "RESET":
       return initialState;
     default:
@@ -92,6 +98,8 @@ const EnigmaCard = ({
     isFailure,
     showCamera,
     isClosing,
+    showHint,
+    hintUsed,
   } = state;
 
   const [photoTaken, setPhotoTaken] = useState(false);
@@ -107,6 +115,10 @@ const EnigmaCard = ({
     setPhotoTaken(false);
     setNotification(null);
     hasProcessedSuccess.current = false;
+  }, [enigma?.id]); // Ne se déclenche que quand l'énigme change
+
+  // Effet séparé pour vérifier si l'énigme est déjà complétée
+  useEffect(() => {
     if (player?.completed?.includes(enigma?.id)) {
       hasProcessedSuccess.current = true;
       dispatch({
@@ -118,7 +130,7 @@ const EnigmaCard = ({
         },
       });
     }
-  }, [enigma, player]);
+  }, [player?.completed, enigma?.id, enigma?.title, enigma?.funFact]);
 
   // Détecter automatiquement quand les tentatives sont épuisées
   useEffect(() => {
@@ -140,6 +152,17 @@ const EnigmaCard = ({
     setTimeout(onClose, 500);
   }, [isClosing, onClose]);
 
+  const handleHintClick = useCallback(() => {
+    if (hintUsed || !enigma.indice) return;
+    
+    // Appliquer la pénalité pour l'indice
+    if (onSolve) {
+      onSolve(enigma.id, null, { hintUsed: true });
+    }
+    
+    dispatch({ type: "SHOW_HINT" });
+  }, [hintUsed, enigma.indice, enigma.id, onSolve]);
+
   const handleSubmit = useCallback(() => {
     if (!selectedAnswer.trim() || hasProcessedSuccess.current) return;
 
@@ -157,7 +180,7 @@ const EnigmaCard = ({
 
     dispatch({ type: "SUBMIT_START" });
 
-    const isCorrect = onSolve(enigma.id, selectedAnswer);
+    const isCorrect = onSolve(enigma.id, selectedAnswer, { hintUsed });
 
     if (isCorrect) {
       hasProcessedSuccess.current = true;
@@ -178,7 +201,7 @@ const EnigmaCard = ({
         },
       });
     }
-  }, [selectedAnswer, canAttempt, onSolve, enigma, isClosing]);
+  }, [selectedAnswer, canAttempt, onSolve, enigma, isClosing, hintUsed]);
 
   const handlePhotoCapture = (photoData) => {
     const savedPhoto = savePhoto({
@@ -310,6 +333,49 @@ const EnigmaCard = ({
           )} */}
           {!isSuccess && !isFailure && canAttempt && (
             <>
+              {/* Système d'indices */}
+              {enigma.indice && (
+                <div className="hint-section">
+                  {!showHint && !hintUsed && (
+                    <button 
+                      className="hint-button"
+                      onClick={handleHintClick}
+                      disabled={isSubmitting}
+                    >
+                      💡 Utiliser un indice (-30 points)
+                    </button>
+                  )}
+                  {showHint && (
+                    <div className="hint-display">
+                      <div className="hint-icon">💡</div>
+                      <div className="hint-content">
+                        <h4>Indice :</h4>
+                        <p>{enigma.indice}</p>
+                        <small className="hint-penalty">⚠️ 30 points déduits</small>
+                      </div>
+                      <button 
+                        className="hint-close"
+                        onClick={() => dispatch({ type: "HIDE_HINT" })}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  )}
+                  {hintUsed && !showHint && (
+                    <div className="hint-used">
+                      <span className="hint-used-icon">💡</span>
+                      <span className="hint-used-text">Indice utilisé (-30 points)</span>
+                      <button 
+                        className="hint-show-again"
+                        onClick={() => dispatch({ type: "SHOW_HINT" })}
+                      >
+                        Revoir l'indice
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+              
               <AnswerOptions
                 options={enigma.answers.map((a) => ({ id: a, text: a }))}
                 selectedAnswer={selectedAnswer}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import MiniGameOverlay from "./MiniGameOverlay";
 import "./MiniGames.css";
 import "../../styles/enigmaCard.css";
@@ -14,10 +14,11 @@ const TentacleGameCard = ({ onComplete, onClose }) => {
 
   const challenge = {
     question: "Combien de tentacules au total ?",
-    visual: "🐙 🐙 🐙 🐙 + 🦑 🦑 🦑 + 🐙 🦑",
-    math: "4 poulpes + 3 calmars + 1 poulpe + 1 calmar",
-    explanation: "Poulpe = 8 tentacules, Calmar = 10 tentacules",
-    answer: "58",
+    visual:
+      "🐙 + 🐙 + 🦑 = 26\n 🐙 + 🦑 + 🦑 = 28\n 🐠 + 🐠 + 🐠 = 18\n 🦑 + 🐙 + 🐠 = ?  ",
+    math: "",
+    explanation: "",
+    answer: "24",
     reward: "+80 points + Tentacule magique 🐙",
   };
 
@@ -33,7 +34,7 @@ const TentacleGameCard = ({ onComplete, onClose }) => {
   const handleTimeUp = () => {
     setFeedback({
       type: "timeout",
-      message: "⏰ Temps écoulé ! La réponse était 44 tentacules.",
+      message: "⏰ Temps écoulé ! La réponse était 58 tentacules.",
       points: 0,
     });
     setIsComplete(true);
@@ -47,7 +48,7 @@ const TentacleGameCard = ({ onComplete, onClose }) => {
 
     const userAnswer = userInput.trim();
     const isCorrect = userAnswer === challenge.answer;
-    
+
     // Calcul du bonus de temps et score de base (définis ici pour être accessibles partout)
     const baseScore = 200; // Score aligné avec le nouveau système
     const timeBonus = isCorrect ? Math.floor(timeLeft * 1) : 0;
@@ -73,12 +74,12 @@ const TentacleGameCard = ({ onComplete, onClose }) => {
     setIsComplete(true);
     setTimeout(() => {
       onComplete({
-        gameType: 'tentacle',
+        gameType: "tentacle",
         success: isCorrect,
-        score: isCorrect ? (baseScore + timeBonus) : 0,
+        score: isCorrect ? baseScore + timeBonus : 0,
         timeBonus: timeBonus,
         skipped: false,
-        message: isCorrect ? "Tentacule identifiée !" : "Mauvaise réponse"
+        message: isCorrect ? "Tentacule identifiée !" : "Mauvaise réponse",
       });
     }, 4000);
   };
@@ -93,12 +94,12 @@ const TentacleGameCard = ({ onComplete, onClose }) => {
     setIsComplete(true);
     setTimeout(() => {
       onComplete({
-        gameType: 'tentacle',
+        gameType: "tentacle",
         success: false,
         score: 0,
         timeBonus: 0,
         skipped: true,
-        message: "Mini-jeu passé"
+        message: "Mini-jeu passé",
       });
     }, 4000);
   };
@@ -124,128 +125,123 @@ const TentacleGameCard = ({ onComplete, onClose }) => {
         }`}
         onClick={(e) => e.stopPropagation()}
       >
-          <div className="enigma-header">
-            <button className="close-btn" onClick={handleClose}>
-              ✕
-            </button>
-            <div className="enigma-title">
-              <h2>🐙 Mini-Jeu : Calcul de Tentacules (Difficile)</h2>
-              <p className="enigma-subtitle">
-                🧮 <strong>Défi mathématique avancé :</strong> Comptez les
-                tentacules et gagnez jusqu'à <strong>2000+ points bonus</strong>{" "}
-                ! 🏆
-              </p>
+        <div className="enigma-header">
+          <button className="close-btn" onClick={handleClose}>
+            ✕
+          </button>
+          <div className="enigma-title">
+            <h2>🐙 Mini-Jeu </h2>
+            <p className="enigma-subtitle">
+              <strong>Défi :</strong> gagnez jusqu'à{" "}
+              <strong>800+ points bonus</strong> ! 🏆
+            </p>
+          </div>
+        </div>
+
+        <div className="tentacle-game-content">
+          <div className="tentacle-timer">
+            <div className="timer-display">
+              ⏱️ Temps restant : <strong>{formatTime(timeLeft)}</strong>
+            </div>
+            <div className="timer-bar">
+              <div
+                className="timer-fill"
+                style={{ width: `${(timeLeft / 120) * 100}%` }}
+              ></div>
             </div>
           </div>
 
-          <div className="tentacle-game-content">
-            <div className="tentacle-timer">
-              <div className="timer-display">
-                ⏱️ Temps restant : <strong>{formatTime(timeLeft)}</strong>
-              </div>
-              <div className="timer-bar">
-                <div
-                  className="timer-fill"
-                  style={{ width: `${(timeLeft / 120) * 100}%` }}
-                ></div>
+          <div className="tentacle-challenge">
+            <h3>{challenge.question}</h3>
+            <div className="visual-display">
+              <div className="sea-creatures">
+                {challenge.visual.split("\n").map((line, index) => (
+                  <div key={index}>{line}</div>
+                ))}
               </div>
             </div>
-
-            <div className="tentacle-challenge">
-              <h3>{challenge.question}</h3>
-              <div className="visual-display">
-                <div className="sea-creatures">{challenge.visual}</div>
-              </div>
-              <div className="math-explanation">
-                <p>
-                  <strong>Calcul :</strong> {challenge.math}
-                </p>
-                <p>
-                  <em>{challenge.explanation}</em>
-                </p>
-              </div>
-            </div>
-
-            {!isComplete && (
-              <div className="tentacle-input">
-                <label htmlFor="tentacle-answer">Votre réponse :</label>
-                <input
-                  id="tentacle-answer"
-                  type="number"
-                  value={userInput}
-                  onChange={(e) => setUserInput(e.target.value)}
-                  placeholder="Nombre de tentacules..."
-                  onKeyPress={(e) => e.key === "Enter" && handleSubmit()}
-                  autoFocus
-                />
-              </div>
-            )}
-
-            {feedback && (
-              <div className={`feedback ${feedback.type}`}>
-                <p>{feedback.message}</p>
-                {feedback.points > 0 && (
-                  <p className="points-earned">
-                    +{feedback.points} points gagnés !
-                  </p>
-                )}
-              </div>
-            )}
-
-            {!isComplete && (
-              <div className="tentacle-help">
-                <button
-                  className="hint-btn"
-                  onClick={() => setShowHint(!showHint)}
-                >
-                  💡 {showHint ? "Masquer" : "Afficher"} l'aide
-                </button>
-
-                {showHint && (
-                  <div className="hint-content">
-                    <h4>🔍 Indices :</h4>
-                    <ul>
-                      <li>
-                        🐙 Un poulpe a <strong>8 tentacules</strong>
-                      </li>
-                      <li>
-                        🦑 Un calmar a <strong>10 tentacules</strong>
-                      </li>
-                      <li>📊 Comptez le nombre de chaque créature</li>
-                      <li>🧮 Multipliez et additionnez !</li>
-                    </ul>
-                  </div>
-                )}
-              </div>
-            )}
           </div>
 
           {!isComplete && (
-            <div className="enigma-actions">
-              <button
-                className="submit-btn"
-                onClick={handleSubmit}
-                disabled={!userInput.trim() || isComplete}
-              >
-                🔍 Valider
-              </button>
-
-              <div className="skip-section">
-                <button
-                  className="skip-btn warning"
-                  onClick={handleSkip}
-                  disabled={isComplete}
-                >
-                  ⏭️ Passer le mini-jeu
-                </button>
-                <p className="skip-warning">
-                  ⚠️ Attention : Passer ce mini-jeu vous fera perdre jusqu'à{" "}
-                  <strong>2000+ points bonus</strong> !
-                </p>
-              </div>
+            <div className="tentacle-input">
+              <label htmlFor="tentacle-answer">Votre réponse :</label>
+              <input
+                id="tentacle-answer"
+                type="number"
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+                placeholder="Nombre de tentacules..."
+                onKeyPress={(e) => e.key === "Enter" && handleSubmit()}
+                autoFocus
+              />
             </div>
           )}
+
+          {feedback && (
+            <div className={`feedback ${feedback.type}`}>
+              <p>{feedback.message}</p>
+              {feedback.points > 0 && (
+                <p className="points-earned">
+                  +{feedback.points} points gagnés !
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* {!isComplete && (
+            <div className="tentacle-help">
+              <button
+                className="hint-btn"
+                onClick={() => setShowHint(!showHint)}
+              >
+                💡 {showHint ? "Masquer" : "Afficher"} l'aide
+              </button>
+
+              {showHint && (
+                <div className="hint-content">
+                  <h4>🔍 Indices :</h4>
+                  <ul>
+                    <li>
+                      🐙 Un poulpe a <strong>8 tentacules</strong>
+                    </li>
+                    <li>
+                      🦑 Un calmar a <strong>10 tentacules</strong>
+                    </li>
+                    <li>📊 Comptez le nombre de chaque créature</li>
+                    <li>🧮 Multipliez et additionnez !</li>
+                  </ul>
+                </div>
+              )}
+            </div>
+          )} */}
         </div>
+
+        {!isComplete && (
+          <div className="enigma-actions">
+            <button
+              className="submit-btn"
+              onClick={handleSubmit}
+              disabled={!userInput.trim() || isComplete}
+            >
+              🔍 Valider
+            </button>
+
+            <div className="skip-section">
+              <button
+                className="skip-btn warning"
+                onClick={handleSkip}
+                disabled={isComplete}
+              >
+                ⏭️ Passer le mini-jeu
+              </button>
+              <p className="skip-warning">
+                ⚠️ Attention : Passer ce mini-jeu vous fera perdre jusqu'à{" "}
+                <strong>2000+ points bonus</strong> !
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
     </MiniGameOverlay>
   );
 };

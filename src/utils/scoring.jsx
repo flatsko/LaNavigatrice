@@ -2,6 +2,7 @@ export const GAME_RULES = {
   MIN_SUCCESS_RATE: 0.49, // 50% minimum
   MAX_ATTEMPTS_PER_ENIGMA: 1,
   PENALTY_PER_WRONG_ANSWER: 50, // Réduit pour cohérence avec nouveau système
+  PENALTY_PER_HINT: 30, // Pénalité pour utiliser un indice
   TIME_PENALTY_THRESHOLD: 300000, // 5 minutes
   // TOTAL_ENIGMAS supprimé - sera calculé dynamiquement
 
@@ -183,6 +184,7 @@ export const calculateScore = (player) => {
   const accuracyBonus = Math.round(validation.successRate * 300); // Réduit pour équilibrage
   const wrongAnswerPenalty =
     (player.wrongAnswers || 0) * GAME_RULES.PENALTY_PER_WRONG_ANSWER;
+  const hintPenalty = player.hintPenalties || 0; // Pénalité pour les indices utilisés
 
   // Bonus pour énigmes parfaites (résolues en 1 tentative)
   let perfectBonus = 0;
@@ -194,15 +196,18 @@ export const calculateScore = (player) => {
     perfectBonus = perfectSolves.length * GAME_RULES.PERFECT_BONUS;
   }
 
+  const totalPenalty = wrongAnswerPenalty + hintPenalty;
+
   return {
     base: baseScore,
     timeBonus,
     accuracyBonus,
     perfectBonus,
     penalty: wrongAnswerPenalty,
+    hintPenalty,
     total: Math.max(
       0,
-      baseScore + timeBonus + accuracyBonus + perfectBonus - wrongAnswerPenalty
+      baseScore + timeBonus + accuracyBonus + perfectBonus - totalPenalty
     ),
     valid: true,
     successRate: validation.successRate,

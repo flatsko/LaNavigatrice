@@ -45,7 +45,7 @@ export const ENIGMAS = [
     coordinates: MAP_POSITIONS.tahiti,
     image: "/images/tahiti.JPEG",
     question:
-      "Comment s'appellent les deux nouveaux amis que le capitaine a découvert à Tahiti?",
+      "Comment s'appellent les deux nouveaux amis que le capitaine a découverts à Tahiti ?",
     answers: [
       "Raie et manta",
       "Greg et Marina",
@@ -54,7 +54,7 @@ export const ENIGMAS = [
     ],
     correctAnswer: "Greg et Marina",
     funFact:
-      "Un moment magique de notre que notre captaine a partagé avec ces Raies Manta",
+      "Un moment magique que notre capitaine a partagé avec ces Raies Manta.",
     hasPhoto: true,
     photoPrompt:
       "Prenez une photo en imitant la nage avec les raies manta - allongez-vous et 'nagez' gracieusement près de l'eau !",
@@ -67,7 +67,7 @@ export const ENIGMAS = [
     qrCode: "ENIGMA_BRAZIL",
     coordinates: MAP_POSITIONS.brazil,
     image: "/images/bresil.JPEG",
-    question: "Comment s'apellent les chuttes d'eau derrière le capitaine ?",
+    question: "Comment s'appellent les chutes d'eau derrière le capitaine ?",
     answers: [
       "Chutes d'Iguazu",
       "Chutes de Kaieteur",
@@ -76,7 +76,7 @@ export const ENIGMAS = [
     ],
     correctAnswer: "Chutes d'Iguazu",
     funFact:
-      "Les chutes d'Iguazu sont situées sur la frontière entre l'Argentine et le Brésil. Un moment passé incroyable. Leur nom provient de l'espèce d'araignée Iguana, qui se trouve dans la région.",
+      "Les chutes d'Iguazu sont situées sur la frontière entre l'Argentine et le Brésil. Un moment incroyable passé là-bas. Leur nom provient du mot guarani 'Iguazú' qui signifie 'grandes eaux'.",
     hasPhoto: true,
     photoPrompt:
       "Prenez une photo spectaculaire en imitant les chutes d'eau - sautez ou levez les bras vers le ciel près du lac !",
@@ -89,7 +89,7 @@ export const ENIGMAS = [
     coordinates: MAP_POSITIONS.tanzania,
     image: "/images/zanzibar.JPEG",
     question:
-      "Quel age avait notre capitaine quand il a visité la Tanzanie ? Marius avait 2 ans",
+      "Quel âge avait notre capitaine quand il a visité la Tanzanie ? Marius avait 2 ans.",
     answers: ["40 ans", "37 ans", "35 ans", "36 ans"],
     correctAnswer: "37 ans",
     funFact: "",

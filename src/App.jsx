@@ -620,7 +620,7 @@ function App() {
   // Fonction améliorée pour résoudre une énigme
   // Dans votre fonction solveEnigma, ajoutez une vérification pour éviter les mises à jour multiples
 
-  const solveEnigma = (enigmaId, playerAnswer) => {
+  const solveEnigma = (enigmaId, playerAnswer, options = {}) => {
     const enigma = currentEnigmas.find((e) => e.id === enigmaId);
     if (!enigma) {
       console.error("Énigme non trouvée:", enigmaId);
@@ -670,6 +670,31 @@ function App() {
       : currentWrongAnswers + 1;
     const newAttemptCount = currentAttempts + 1;
 
+    // Gérer l'utilisation d'indices
+    const { hintUsed = false } = options;
+    let hintPenalty = 0;
+    
+    // Si c'est juste pour appliquer la pénalité d'indice (pas de réponse)
+    if (playerAnswer === null && hintUsed) {
+      hintPenalty = GAME_RULES.PENALTY_PER_HINT;
+      
+      // Mettre à jour le joueur avec la pénalité d'indice
+      const updatedPlayer = {
+        ...currentPlayer,
+        hintPenalties: (currentPlayer?.hintPenalties || 0) + hintPenalty,
+        hintsUsed: {
+          ...(currentPlayer?.hintsUsed || {}),
+          [enigmaId]: true,
+        },
+        lastUpdate: new Date().toISOString(),
+      };
+      
+      setCurrentPlayer(updatedPlayer);
+      localStorage.setItem('currentPlayer', JSON.stringify(updatedPlayer));
+      console.log(`💡 Indice utilisé pour ${enigmaId}, pénalité: ${hintPenalty} points`);
+      return false; // Pas de résolution, juste pénalité
+    }
+
     // Créer l'entrée d'historique
     const attemptEntry = {
       enigmaId,
@@ -678,6 +703,7 @@ function App() {
       isCorrect,
       timestamp: new Date().toISOString(),
       attemptNumber: newAttemptCount,
+      hintUsed,
     };
 
     // Mettre à jour le joueur
@@ -690,6 +716,14 @@ function App() {
         [enigmaId]: newAttemptCount,
       },
       attemptHistory: [...(currentPlayer?.attemptHistory || []), attemptEntry],
+      // Ajouter les informations sur les indices si utilisés
+      ...(hintUsed && {
+        hintPenalties: (currentPlayer?.hintPenalties || 0) + GAME_RULES.PENALTY_PER_HINT,
+        hintsUsed: {
+          ...(currentPlayer?.hintsUsed || {}),
+          [enigmaId]: true,
+        },
+      }),
       lastUpdate: new Date().toISOString(),
     };
 

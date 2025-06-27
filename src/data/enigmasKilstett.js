@@ -47,7 +47,7 @@ export const ENIGMAS = [
     ],
     correctAnswer: "Raie manta",
     funFact:
-      "Un moment magique de notre que notre captaine a partagé avec ces Raies Manta",
+      "Un moment magique que notre capitaine a partagé avec ces Raies Manta.",
   },
 
   {
@@ -57,7 +57,7 @@ export const ENIGMAS = [
     qrCode: "ENIGMA_BRAZIL",
     coordinates: MAP_POSITIONS.brazil,
     image: "/images/bresil.JPEG",
-    question: "Comment s'apellent les chuttes d'eau derrière le capitaine ?",
+    question: "Comment s'appellent les chutes d'eau derrière le capitaine ?",
     answers: [
       "Chutes d'Iguazu",
       "Chutes de Kaieteur",
@@ -66,7 +66,7 @@ export const ENIGMAS = [
     ],
     correctAnswer: "Chutes d'Iguazu",
     funFact:
-      "Les chutes d'Iguazu sont situées sur la frontière entre l'Argentine et le Brésil. Un moment passé incroyable. Leur nom provient de l'espèce d'araignée Iguana, qui se trouve dans la région.",
+      "Les chutes d'Iguazu sont situées sur la frontière entre l'Argentine et le Brésil. Un moment incroyable passé là-bas. Leur nom provient du mot guarani 'Iguazú' qui signifie 'grandes eaux'.",
   },
 ];
 

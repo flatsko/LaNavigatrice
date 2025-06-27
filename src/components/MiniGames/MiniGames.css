@@ -297,7 +297,7 @@
 }
 
 .morse-code {
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   font-size: 1.8rem;
   font-weight: bold;
   color: var(--color-accent);
@@ -401,7 +401,7 @@
   background: rgba(255, 255, 255, 0.1);
   padding: 0.5rem;
   border-radius: var(--border-radius);
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
 }
 
 .morse-letter .letter {
@@ -471,8 +471,13 @@
 }
 
 @keyframes pulse-warning {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
 }
 
 .skip-section {
@@ -554,48 +559,48 @@
     top: 50%;
     transform: translateY(-50%);
   }
-  
+
   .enigma-overlay {
     align-items: flex-start;
     padding-top: 5vh;
   }
-  
+
   .sharing-game-content {
     padding: 0.8rem;
   }
-  
+
   .sharing-timer {
     padding: 0.8rem;
     margin-bottom: 1rem;
   }
-  
+
   .sharing-challenge {
     padding: 1rem;
     margin-bottom: 1rem;
   }
-  
+
   .challenge-quote h3 {
     font-size: 1rem;
   }
-  
+
   .mission-instructions {
     padding: 1rem;
     margin-bottom: 1rem;
   }
-  
+
   .instructions-box ol {
     padding-left: 1rem;
   }
-  
+
   .photo-validation {
     padding: 1rem;
     margin-bottom: 1rem;
   }
-  
+
   .photo-tips {
     padding: 0.8rem;
   }
-  
+
   .photo-tips ul {
     padding-left: 1rem;
   }
@@ -682,7 +687,7 @@
 }
 
 .timer-fill {
-  background: linear-gradient(90deg, #4CAF50, #FFC107, #F44336);
+  background: linear-gradient(90deg, #4caf50, #ffc107, #f44336);
   height: 100%;
   transition: width 1s linear;
   border-radius: 4px;
@@ -703,7 +708,7 @@
 }
 
 .morse-code {
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   font-size: 1.8rem;
   font-weight: bold;
   color: var(--color-text);
@@ -791,7 +796,7 @@
   background: white;
   border-radius: var(--border-radius-sm);
   border: 1px solid var(--color-border);
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
 }
 
 .morse-letter .letter {
@@ -816,19 +821,19 @@
 
 .feedback.success {
   background: rgba(76, 175, 80, 0.1);
-  color: #2E7D32;
+  color: #2e7d32;
   border: 1px solid rgba(76, 175, 80, 0.3);
 }
 
 .feedback.error {
   background: rgba(244, 67, 54, 0.1);
-  color: #C62828;
+  color: #c62828;
   border: 1px solid rgba(244, 67, 54, 0.3);
 }
 
 .feedback.warning {
   background: rgba(255, 193, 7, 0.1);
-  color: #F57C00;
+  color: #f57c00;
   border: 1px solid rgba(255, 193, 7, 0.3);
 }
 
@@ -854,14 +859,15 @@
 .points-earned {
   font-size: 1.8rem !important;
   font-weight: bold;
-  color: #FFD700;
+  color: #ffd700;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   animation: pointsGlow 2s ease-in-out infinite;
   margin: 1rem 0 !important;
 }
 
 @keyframes pointsGlow {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   }
@@ -1128,8 +1134,13 @@
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 .math-explanation {
@@ -1237,22 +1248,22 @@
   .tentacle-challenge {
     padding: 1rem;
   }
-  
+
   .sea-creatures {
-    font-size: 2rem;
+    font-size: 1rem;
   }
-  
+
   .tentacle-challenge h3 {
     font-size: 1.1rem;
   }
-  
+
   /* Espace supplémentaire pour éviter les onglets du navigateur */
   .tentacle-game-card .enigma-actions {
     padding-bottom: calc(1rem + 60px);
     flex-shrink: 0;
     margin-top: auto;
   }
-  
+
   .tentacle-game-content {
     max-height: calc(90vh - 200px);
   }
@@ -1264,25 +1275,25 @@
     width: 98%;
     margin: 0.5rem;
   }
-  
+
   .morse-code {
     font-size: 1.4rem;
     letter-spacing: 0.1rem;
   }
-  
+
   .alphabet-grid {
     grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
     gap: 0.3rem;
   }
-  
+
   .morse-letter {
     padding: 0.3rem;
   }
-  
+
   .morse-letter .letter {
     font-size: 1rem;
   }
-  
+
   .morse-letter .code {
     font-size: 0.8rem;
   }
@@ -1292,15 +1303,15 @@
   .morse-code {
     font-size: 1.2rem;
   }
-  
+
   .timer-display {
     font-size: 1rem;
   }
-  
+
   .alphabet-grid {
     grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
   }
-  
+
   /* Espace supplémentaire pour éviter les onglets du navigateur sur mobile */
   .enigma-actions {
     padding-bottom: calc(1rem + 70px) !important;
@@ -1312,7 +1323,7 @@
   .mini-game-modal {
     max-height: 85vh;
   }
-  
+
   .enigma-actions {
     padding-bottom: calc(1rem + 60px) !important;
   }
@@ -1323,11 +1334,11 @@
   .mini-game-modal {
     max-height: 80vh;
   }
-  
+
   .enigma-actions {
     padding-bottom: calc(0.5rem + 80px) !important;
   }
-  
+
   .mini-game-content {
     padding: 1rem;
   }
@@ -1338,7 +1349,7 @@
   .mini-game-modal {
     max-height: 85vh;
   }
-  
+
   .enigma-actions {
     padding-bottom: calc(1rem + 80px) !important;
   }
@@ -1349,7 +1360,7 @@
   .enigma-actions {
     padding-bottom: calc(0.5rem + 90px) !important;
   }
-  
+
   .mini-game-modal {
     max-height: 80vh;
   }

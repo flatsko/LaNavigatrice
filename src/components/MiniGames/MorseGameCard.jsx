@@ -14,8 +14,8 @@ const MorseGameCard = ({ onComplete, onClose }) => {
   const [feedback, setFeedback] = useState(null);
 
   const messages = [
-    "LA ROCHELLE",
-    "STRASBOURG",
+    "ROCHELLE",
+    "QUARANTE",
     "MULHOUSE",
     "CATAMARAN",
     "VIVE DUDU",
