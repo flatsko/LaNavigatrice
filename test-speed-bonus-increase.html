@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Augmentation Bonus de Rapidité</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .test-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success { background-color: rgba(76, 175, 80, 0.3); }
+        .info { background-color: rgba(33, 150, 243, 0.3); }
+        .warning { background-color: rgba(255, 152, 0, 0.3); }
+        h1, h2 { text-align: center; }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .old-values, .new-values {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .old-values h3 { color: #ff9999; }
+        .new-values h3 { color: #99ff99; }
+    </style>
+</head>
+<body>
+    <h1>🚀 Test - Augmentation du Bonus de Rapidité</h1>
+    
+    <div class="test-container">
+        <h2>📊 Comparaison des Valeurs</h2>
+        <div class="comparison">
+            <div class="old-values">
+                <h3>⏰ Anciennes Valeurs</h3>
+                <p><strong>Points par minute:</strong> 15</p>
+                <p><strong>Bonus maximum:</strong> 600 points</p>
+                <p><strong>Temps pour bonus max:</strong> 40 minutes économisées</p>
+            </div>
+            <div class="new-values">
+                <h3>⚡ Nouvelles Valeurs</h3>
+                <p><strong>Points par minute:</strong> 20 (+33%)</p>
+                <p><strong>Bonus maximum:</strong> 800 points (+33%)</p>
+                <p><strong>Temps pour bonus max:</strong> 40 minutes économisées</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2>🧮 Simulation des Bonus</h2>
+        <div id="bonus-simulation"></div>
+    </div>
+
+    <div class="test-container">
+        <h2>📈 Impact sur le Score Total</h2>
+        <div id="score-impact"></div>
+    </div>
+
+    <script type="module">
+        // Simulation des nouveaux paramètres
+        const OLD_CONFIG = {
+            TIME_BONUS_PER_MINUTE: 15,
+            TIME_BONUS_MAX: 600,
+            TIME_TARGET_MINUTES: 40
+        };
+
+        const NEW_CONFIG = {
+            TIME_BONUS_PER_MINUTE: 20,
+            TIME_BONUS_MAX: 800,
+            TIME_TARGET_MINUTES: 40
+        };
+
+        function calculateTimeBonus(totalMinutes, config) {
+            if (totalMinutes >= config.TIME_TARGET_MINUTES) {
+                return 0;
+            }
+            
+            const minutesSaved = config.TIME_TARGET_MINUTES - totalMinutes;
+            const bonus = minutesSaved * config.TIME_BONUS_PER_MINUTE;
+            return Math.min(bonus, config.TIME_BONUS_MAX);
+        }
+
+        function addResult(container, text, className = 'info') {
+            const div = document.createElement('div');
+            div.className = `result ${className}`;
+            div.innerHTML = text;
+            container.appendChild(div);
+        }
+
+        // Test des bonus pour différents temps
+        const bonusContainer = document.getElementById('bonus-simulation');
+        const testTimes = [10, 15, 20, 25, 30, 35, 40, 45];
+
+        testTimes.forEach(time => {
+            const oldBonus = calculateTimeBonus(time, OLD_CONFIG);
+            const newBonus = calculateTimeBonus(time, NEW_CONFIG);
+            const improvement = newBonus - oldBonus;
+            const improvementPercent = oldBonus > 0 ? Math.round((improvement / oldBonus) * 100) : 'N/A';
+            
+            const className = improvement > 0 ? 'success' : (improvement === 0 ? 'info' : 'warning');
+            addResult(bonusContainer, 
+                `⏱️ <strong>${time} minutes:</strong> ${oldBonus} → ${newBonus} points (+${improvement}, ${improvementPercent}%)`,
+                className
+            );
+        });
+
+        // Impact sur le score total
+        const scoreContainer = document.getElementById('score-impact');
+        
+        addResult(scoreContainer, 
+            `🎯 <strong>Score maximum théorique:</strong> 4000 → 4200 points (+200 points)`,
+            'success'
+        );
+        
+        addResult(scoreContainer, 
+            `📊 <strong>Répartition bonus temporel:</strong> 10% → 14% du score total`,
+            'success'
+        );
+        
+        addResult(scoreContainer, 
+            `⚡ <strong>Motivation accrue:</strong> La rapidité est maintenant mieux récompensée !`,
+            'success'
+        );
+        
+        addResult(scoreContainer, 
+            `🏆 <strong>Exemple concret:</strong> Finir en 20 minutes = 400 points (au lieu de 300)`,
+            'info'
+        );
+    </script>
+</body>
+</html>

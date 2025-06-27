@@ -2,7 +2,7 @@
 
 ## Vue d'ensemble
 
-Le système de points a été entièrement revu pour offrir un équilibrage cohérent et motivant. Le score total maximum théorique est d'environ **4000 points**.
+Le système de points a été entièrement revu pour offrir un équilibrage cohérent et motivant. Le score total maximum théorique est d'environ **4200 points**.
 
 ## Structure des Points
 
@@ -31,11 +31,11 @@ Le système de points a été entièrement revu pour offrir un équilibrage coh�
 - **Épique** : 200 points
 - **Légendaire** : 500 points
 
-### 5. Bonus Temporel (0-400 points)
+### 5. Bonus Temporel (0-800 points)
 - **Temps cible** : 40 minutes
-- **Bonus maximum** : 400 points (si terminé très rapidement)
-- **Calcul** : Bonus = 400 × (1 - temps_utilisé/temps_cible)
-- **Plafond** : Le bonus ne peut pas dépasser 400 points
+- **Bonus maximum** : 800 points (si terminé très rapidement)
+- **Calcul** : 20 points par minute économisée sous les 40 minutes
+- **Plafond** : Le bonus ne peut pas dépasser 800 points
 
 ## Rangs et Seuils
 
@@ -54,7 +54,7 @@ Le système de points a été entièrement revu pour offrir un équilibrage coh�
 
 ### 🎯 Priorité Haute
 1. **Résoudre toutes les énigmes en 1 tentative** (+400 points de bonus)
-2. **Terminer sous 40 minutes** (bonus temporel maximum)
+2. **Terminer sous 40 minutes** (bonus temporel maximum de 800 points - AUGMENTÉ !)
 3. **Réussir parfaitement le quiz final** (+600 points)
 
 ### 🎮 Priorité Moyenne
@@ -76,10 +76,10 @@ Le système de points a été entièrement revu pour offrir un équilibrage coh�
 - **Motivation continue** : Objectifs atteignables à tous niveaux
 
 ### Répartition Idéale du Score
-- **40%** : Énigmes et précision
-- **30%** : Mini-jeux et habileté
-- **20%** : Quiz final et connaissances
-- **10%** : Bonus temporel et trophées
+- **38%** : Énigmes et précision
+- **29%** : Mini-jeux et habileté
+- **19%** : Quiz final et connaissances
+- **14%** : Bonus temporel et trophées (augmenté pour récompenser la rapidité)
 
 ## Fichiers Techniques
 

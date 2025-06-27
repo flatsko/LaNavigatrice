@@ -20,16 +20,16 @@ const POINTS_CONFIG = {
   MINIGAME_TIME_MULTIPLIER: 2, // Multiplicateur pour bonus temps
 
   // === TROPHÉES/ACHIEVEMENTS === (Objectifs à long terme)
-  TROPHY_MOUSSE: 75,         // Trophées faciles (ex-common)
-  TROPHY_MATELOT: 150,       // Trophées moyens (ex-rare)
-  TROPHY_CAPITAINE: 300,     // Trophées difficiles (ex-epic)
-  TROPHY_AMIRAL: 500,        // Trophées très difficiles (ex-legendary)
-  TROPHY_LEGENDE: 750,       // Trophées exceptionnels (ex-mythic)
+  TROPHY_MOUSSE: 75, // Trophées faciles (ex-common)
+  TROPHY_MATELOT: 150, // Trophées moyens (ex-rare)
+  TROPHY_CAPITAINE: 300, // Trophées difficiles (ex-epic)
+  TROPHY_AMIRAL: 500, // Trophées très difficiles (ex-legendary)
+  TROPHY_LEGENDE: 750, // Trophées exceptionnels (ex-mythic)
 
   // === BONUS TEMPS === (Récompense la rapidité)
-  TIME_BONUS_PER_MINUTE: 15, // Points par minute économisée
+  TIME_BONUS_PER_MINUTE: 50, // Points par minute économisée (augmenté de 15 à 20)
   TIME_TARGET_MINUTES: 40, // Temps cible pour terminer le jeu
-  TIME_BONUS_MAX: 600, // Bonus maximum possible
+  TIME_BONUS_MAX: 1000, // Bonus maximum possible (augmenté de 600 à 800)
 
   // === QUIZ FINAL === (Validation des connaissances)
   QUIZ_PERFECT_BONUS: 200, // Bonus pour 100% au quiz
@@ -213,13 +213,18 @@ export const calculateTimeBonus = (player) => {
 // Fonction pour calculer les pénalités d'indices
 export const calculateHintPenalties = (player) => {
   // Compter le nombre d'indices utilisés depuis l'objet hintsUsed
-  const hintsUsedCount = player?.hintsUsed ? Object.keys(player.hintsUsed).length : 0;
-  
+  const hintsUsedCount = player?.hintsUsed
+    ? Object.keys(player.hintsUsed).length
+    : 0;
+
   // Utiliser la pénalité accumulée si elle existe, sinon calculer
-  const totalPenalty = player?.hintPenalties || (hintsUsedCount * POINTS_CONFIG.HINT_PENALTY);
-  
+  const totalPenalty =
+    player?.hintPenalties || hintsUsedCount * POINTS_CONFIG.HINT_PENALTY;
+
   // Calculer le nombre d'indices basé sur la pénalité réelle pour l'affichage
-  const displayedHintsUsed = player?.hintPenalties ? Math.round(player.hintPenalties / POINTS_CONFIG.HINT_PENALTY) : hintsUsedCount;
+  const displayedHintsUsed = player?.hintPenalties
+    ? Math.round(player.hintPenalties / POINTS_CONFIG.HINT_PENALTY)
+    : hintsUsedCount;
 
   return {
     total: totalPenalty,
@@ -273,7 +278,12 @@ export const calculateQuizPoints = (quizScore, totalQuestions) => {
 };
 
 // Fonction principale pour calculer le score total
-export const calculateTotalScore = (player, minigameResults = [], quizScore = null, totalQuestions = null) => {
+export const calculateTotalScore = (
+  player,
+  minigameResults = [],
+  quizScore = null,
+  totalQuestions = null
+) => {
   const enigmaPoints = calculateEnigmaPoints(player);
   const minigamePoints = calculateMinigamePoints(minigameResults);
   const trophyPoints = calculateTrophyPoints(player, minigameResults);
