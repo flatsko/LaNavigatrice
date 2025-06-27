@@ -10,12 +10,13 @@ export const ENIGMAS = [
     image: "/images/perou.JPEG",
     successImage: "/images/perou.JPEG",
     question:
-      "Perchée dans les nuages andins, cette citadelle inca où le Capitaine a gravi les terrasses sacrées culmine à quelle altitude ?",
-    answers: ["2 430 mètres", "3 200 mètres", "1 980 mètres", "2 850 mètres"],
-    correctAnswer: "2 430 mètres",
-    indice: "Cette altitude correspond à celle du célèbre site archéologique du Machu Picchu, situé dans la cordillère des Andes.",
+      "Dans les hautes terres andines, le Capitaine a découvert cette graine ancestrale que les Incas appelaient 'chisaya mama' (mère de tous les grains). Comment l'appelle-t-on aujourd'hui ?",
+    answers: ["Quinoa", "Amarante", "Chia", "Kiwicha"],
+    correctAnswer: "Quinoa",
+    indice:
+      "Cette pseudo-céréale sans gluten est devenue un super-aliment mondial. Son nom vient du quechua 'kinwa'.",
     funFact:
-      "Le célèbre Chemin de l'Inca demande 3 jours de trek épique... mais notre Capitaine a préféré l'élégance du train panoramique ! Après tout, pourquoi marcher quand on peut prendre le train ? 🚂⚓ ",
+      "Le quinoa était si précieux pour les Incas qu'ils l'appelaient 'chisaya mama' (mère de tous les grains) ! Aujourd'hui, cette super-graine péruvienne conquiert le monde... et les assiettes du Capitaine ! 🌾⚓",
     hasPhoto: true,
     photoPrompt:
       "Prenez une photo sauté, comme si vous vouliez atteindre les sommets sacrés des Andes !",
@@ -37,7 +38,8 @@ export const ENIGMAS = [
       "López Castelo",
     ],
     correctAnswer: "Perito Moreno",
-    indice: "Cet explorateur était un géographe et naturaliste qui a donné son nom au parc national où se trouve ce glacier.",
+    indice:
+      "Cet explorateur était un géographe et naturaliste qui a donné son nom au parc national où se trouve ce glacier. Son nom en espagnol signifie Expert/Spécialiste",
     funFact:
       "Le glacier Perito Moreno est l'un des rares glaciers au monde qui continue de croître ! Elle a eu la chance d'avoir un morceau qui s'est détaché et est tombé devant elle.",
     hasPhoto: true,
@@ -54,8 +56,9 @@ export const ENIGMAS = [
     successImage: "/images/fidji.JPEG",
     question: "Comment s'appelle l'épice que vous avez sous le nez ?",
     answers: ["Taro", "Kava", "Yaqona", "Bilo"],
-    correctAnswer: "Kava",
-    indice: "Cette racine est traditionnellement utilisée pour préparer une boisson cérémonielle dans le Pacifique Sud.",
+    correctAnswer: "Yaqona",
+    indice:
+      "Cette racine broyée en poudre sert à préparer une boisson relaxante traditionnelle aux Fidji. Au vanuatu elle est apellé Kava'.",
     funFact:
       "Cette poudre de racine est utilisée pour faire une boisson relaxante, Alison en a horreur",
     hasPhoto: true,
@@ -74,7 +77,8 @@ export const ENIGMAS = [
       "Dans cet archipel volcanique du Pacifique Sud où le Capitaine a exploré les récifs coralliens, quelle langue créole est parlée aux côtés du français et de l'anglais ?",
     answers: ["Bislama", "Tok Pisin", "Pijin", "Beach-la-Mar"],
     correctAnswer: "Bislama",
-    indice: "Cette langue créole tire son nom de 'beach-la-mar', une déformation de 'bêche-de-mer', et signifie 'langue du marché'.",
+    indice:
+      "Cette langue créole tire son nom de 'beach-la-mar', une déformation de 'bêche-de-mer', et signifie 'langue du marché'. La réponse n'est pas Beach-la-mar",
     funFact:
       "Piège ! Tok Pisin est parlé en Papouasie-Nouvelle-Guinée, Pijin aux Îles Salomon, et Beach-la-Mar était l'ancien nom du Bislama ! Cette langue créole signifie littéralement 'langue du marché' et permet aux 100+ tribus de communiquer !",
     hasPhoto: true,
@@ -89,11 +93,13 @@ export const ENIGMAS = [
     image: "/images/tahiti.JPEG",
     successImage: "/images/tahiti.JPEG",
     question:
-      "Deux invités se présentent ce soir ont été rencontrés sur l'archipel des Tuamotu, mais sur quelle île précisément ?",
+      "Deux invités présents ce soir ont été rencontrés sur l'archipel des Tuamotu, mais sur quelle île précisément ?",
     answers: ["Bora Bora", "Tikehau", "Rurutu", "Raiatea"],
     correctAnswer: "Tikehau",
-    indice: "Parmi ces îles, une seule fait partie de l'archipel des Tuamotu, les autres appartiennent aux îles de la Société ou aux Australes.",
-    funFact: "De cette liste une seule île fait partie des Tuamotu : Tikehau.",
+    indice:
+      "Parmi ces îles, une seule fait partie de l'archipel des Tuamotu, les autres appartiennent aux îles de la Société ou aux Australes.",
+    funFact:
+      "De cette liste une seule île fait partie des Tuamotu : Tikehau. A visiter absolument! Féstival de requins de récifs et lagons aussi beaux que sur Bora Bora !",
     hasPhoto: true,
     photoPrompt:
       "Prenez une photo de l'équipe en imitant la nage avec les raies manta - allongez-vous et 'nagez' gracieusement près de l'eau !",
@@ -115,12 +121,13 @@ export const ENIGMAS = [
       "Chutes de Gocta",
     ],
     correctAnswer: "Chutes d'Iguazu",
-    indice: "Ces chutes spectaculaires se trouvent à la frontière entre l'Argentine et le Brésil, et leur nom signifie 'grandes eaux' en guarani.",
+    indice:
+      "Ces chutes spectaculaires se trouvent à la frontière entre l'Argentine et le Brésil, et leur nom signifie 'grandes eaux' en guarani.",
     funFact:
-      "Les chutes d'Iguazu sont situées sur la frontière entre l'Argentine et le Brésil. Un moment incroyable passé là-bas. Leur nom provient du mot guarani 'Iguazú' qui signifie 'grandes eaux'.",
+      "Les chutes d'Iguazu sont situées sur la frontière entre l'Argentine et le Brésil. Un moment incroyable passé là-bas. Leur nom provient du mot guarani 'Iguazú' qui signifie 'grandes eaux', pensez à l'eau en espagnol.",
     hasPhoto: true,
     photoPrompt:
-      "Prenez une photo spectaculaire, vous vous souvenez des cours d'acrogym ? ",
+      "Prenez une photo aussi spectaculaire que les chutes, vous vous souvenez des cours d'acrogym ? ",
   },
   {
     id: "tanzania",
@@ -131,10 +138,11 @@ export const ENIGMAS = [
     image: "/images/zanzibar.JPEG",
     successImage: "/images/zanzibar.JPEG",
     question:
-      "Quel âge avait notre capitaine quand il a visité la Tanzanie ? Marius avait 2 ans.",
+      "Quel âge avait notre capitaine quand il a visité la Tanzanie en octobre ? Marius avait 2 ans (mais attention, il est né en novembre !).",
     answers: ["40 ans", "37 ans", "35 ans", "36 ans"],
     correctAnswer: "37 ans",
-    indice: "Si Marius avait 2 ans lors de ce voyage, calculez l'âge du capitaine en fonction de leur différence d'âge.",
+    indice:
+      "Marius avait 2 ans lors de ce voyage mais était dans sa 3ème année (né en novembre), 34 ans séparent Marius de sa Maman.",
     funFact: "",
     hasPhoto: true,
     photoPrompt:

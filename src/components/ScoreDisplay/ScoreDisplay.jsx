@@ -157,6 +157,30 @@ const ScoreDisplay = ({ player, minigameResults = [], isVictory = true }) => {
           </div>
         )}
 
+        {/* Pénalités d'indices */}
+        {breakdown.hintPenalties.total > 0 && (
+          <div className="score-category penalty-category">
+            <div className="category-header">
+              <span className="category-icon">💡</span>
+              <span className="category-title">Pénalités d'Indices</span>
+              <span className="category-points penalty-points">
+                -{formatScore(breakdown.hintPenalties.total)}
+              </span>
+            </div>
+            <div className="category-details">
+              <div className="detail-item">
+                <span className="detail-text">
+                  {breakdown.hintPenalties.details.hintsUsed} indice{breakdown.hintPenalties.details.hintsUsed > 1 ? 's' : ''} utilisé{breakdown.hintPenalties.details.hintsUsed > 1 ? 's' : ''}
+                  ({breakdown.hintPenalties.details.penaltyPerHint} pts chacun)
+                </span>
+                <span className="detail-points penalty-points">
+                  -{breakdown.hintPenalties.total}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Message d'encouragement */}
         <div className="score-message">
           {isVictory ? (

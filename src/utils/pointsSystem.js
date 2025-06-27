@@ -1,39 +1,40 @@
 // Système de points pour La Navigatrice
 
-import { ACHIEVEMENTS } from '../data/achievements.js';
+import { ACHIEVEMENTS } from "../data/achievements.js";
 
 // Configuration des points - SYSTÈME ÉQUILIBRÉ
 const POINTS_CONFIG = {
   // === ÉNIGMES === (Base du jeu)
-  ENIGMA_SOLVED: 200,        // Points de base par énigme résolue
-  ENIGMA_PERFECT: 100,       // Bonus pour résoudre en 1 tentative
-  ATTEMPT_PENALTY: 25,       // Malus par tentative supplémentaire
-  
+  ENIGMA_SOLVED: 200, // Points de base par énigme résolue
+  ENIGMA_PERFECT: 0, // Bonus pour résoudre en 1 tentative
+  ATTEMPT_PENALTY: 25, // Malus par tentative supplémentaire
+  HINT_PENALTY: 30, // Pénalité pour utiliser un indice
+
   // === MINI-JEUX === (Activités bonus)
   MINIGAME_BASE: {
-    morse: 400,              // Mini-jeu difficile
-    tentacle: 500,           // Mini-jeu très difficile
-    sharing: 300,            // Mini-jeu social
-    compass: 350,            // Mini-jeu navigation
+    morse: 400, // Mini-jeu difficile
+    tentacle: 500, // Mini-jeu très difficile
+    sharing: 300, // Mini-jeu social
+    compass: 350, // Mini-jeu navigation
   },
   MINIGAME_TIME_MULTIPLIER: 2, // Multiplicateur pour bonus temps
-  
+
   // === TROPHÉES/ACHIEVEMENTS === (Objectifs à long terme)
-  TROPHY_COMMON: 75,         // Trophées faciles
-  TROPHY_RARE: 150,          // Trophées moyens
-  TROPHY_EPIC: 300,          // Trophées difficiles
-  TROPHY_LEGENDARY: 500,     // Trophées très difficiles
-  TROPHY_MYTHIC: 750,        // Trophées exceptionnels
-  
+  TROPHY_COMMON: 75, // Trophées faciles
+  TROPHY_RARE: 150, // Trophées moyens
+  TROPHY_EPIC: 300, // Trophées difficiles
+  TROPHY_LEGENDARY: 500, // Trophées très difficiles
+  TROPHY_MYTHIC: 750, // Trophées exceptionnels
+
   // === BONUS TEMPS === (Récompense la rapidité)
   TIME_BONUS_PER_MINUTE: 15, // Points par minute économisée
-  TIME_TARGET_MINUTES: 40,   // Temps cible pour terminer le jeu
-  TIME_BONUS_MAX: 600,       // Bonus maximum possible
-  
+  TIME_TARGET_MINUTES: 40, // Temps cible pour terminer le jeu
+  TIME_BONUS_MAX: 600, // Bonus maximum possible
+
   // === QUIZ FINAL === (Validation des connaissances)
-  QUIZ_PERFECT_BONUS: 200,   // Bonus pour 100% au quiz
-  QUIZ_GOOD_BONUS: 100,      // Bonus pour 80-99% au quiz
-  QUIZ_PASS_BONUS: 50,       // Bonus pour 60-79% au quiz
+  QUIZ_PERFECT_BONUS: 200, // Bonus pour 100% au quiz
+  QUIZ_GOOD_BONUS: 100, // Bonus pour 80-99% au quiz
+  QUIZ_PASS_BONUS: 50, // Bonus pour 60-79% au quiz
 };
 
 // Fonction pour calculer les points des énigmes
@@ -87,13 +88,13 @@ export const calculateMinigamePoints = (minigameResults = []) => {
         success: false,
         points: 0,
         skipped: true,
-        reason: "Mini-jeu passé"
+        reason: "Mini-jeu passé",
       });
       return;
     }
 
     const gameType = result.gameType || result.type || "unknown";
-    
+
     // Utiliser le score déjà calculé par le mini-jeu pour éviter le double comptage
     let gamePoints = 0;
     if (result.success && result.score !== undefined) {
@@ -102,9 +103,11 @@ export const calculateMinigamePoints = (minigameResults = []) => {
       // Fallback vers l'ancien système si pas de score fourni
       const basePoints = POINTS_CONFIG.MINIGAME_BASE[gameType] || 300;
       gamePoints = basePoints;
-      
+
       if (result.timeBonus) {
-        const timeBonusPoints = Math.floor(result.timeBonus * POINTS_CONFIG.MINIGAME_TIME_MULTIPLIER);
+        const timeBonusPoints = Math.floor(
+          result.timeBonus * POINTS_CONFIG.MINIGAME_TIME_MULTIPLIER
+        );
         gamePoints += timeBonusPoints;
       }
     }
@@ -129,8 +132,6 @@ export const calculateTrophyPoints = (player, minigameResults = []) => {
   const savedAchievements = JSON.parse(
     localStorage.getItem("playerAchievements") || "[]"
   );
-
-
 
   let totalPoints = 0;
   const details = [];
@@ -174,11 +175,11 @@ export const calculateTimeBonus = (player) => {
 
     let timeBonus = 0;
     let minutesSaved = 0;
-    
+
     if (totalMinutes < POINTS_CONFIG.TIME_TARGET_MINUTES) {
       minutesSaved = POINTS_CONFIG.TIME_TARGET_MINUTES - totalMinutes;
       timeBonus = minutesSaved * POINTS_CONFIG.TIME_BONUS_PER_MINUTE;
-      
+
       // Appliquer le plafond maximum
       timeBonus = Math.min(timeBonus, POINTS_CONFIG.TIME_BONUS_MAX);
     }
@@ -209,6 +210,32 @@ export const calculateTimeBonus = (player) => {
   }
 };
 
+// Fonction pour calculer les pénalités d'indices
+export const calculateHintPenalties = (player) => {
+  if (!player?.hintPenalties) {
+    return {
+      total: 0,
+      details: {
+        hintsUsed: 0,
+        penaltyPerHint: POINTS_CONFIG.HINT_PENALTY,
+        totalPenalty: 0,
+      },
+    };
+  }
+
+  const totalPenalty = player.hintPenalties;
+  const hintsUsed = Math.round(totalPenalty / POINTS_CONFIG.HINT_PENALTY);
+
+  return {
+    total: totalPenalty,
+    details: {
+      hintsUsed,
+      penaltyPerHint: POINTS_CONFIG.HINT_PENALTY,
+      totalPenalty,
+    },
+  };
+};
+
 // Fonction pour calculer les points du quiz final
 export const calculateQuizPoints = (quizScore, totalQuestions) => {
   if (!quizScore || !totalQuestions) {
@@ -218,8 +245,8 @@ export const calculateQuizPoints = (quizScore, totalQuestions) => {
         score: 0,
         percentage: 0,
         bonus: 0,
-        tier: "none"
-      }
+        tier: "none",
+      },
     };
   }
 
@@ -245,8 +272,8 @@ export const calculateQuizPoints = (quizScore, totalQuestions) => {
       totalQuestions,
       percentage: Math.round(percentage),
       bonus,
-      tier
-    }
+      tier,
+    },
   };
 };
 
@@ -257,22 +284,25 @@ export const calculateTotalScore = (player, minigameResults = [], quizScore = nu
   const trophyPoints = calculateTrophyPoints(player, minigameResults);
   const timeBonus = calculateTimeBonus(player);
   const quizPoints = calculateQuizPoints(quizScore, totalQuestions);
+  const hintPenalties = calculateHintPenalties(player);
 
   const totalScore =
     enigmaPoints.total +
     minigamePoints.total +
     trophyPoints.total +
     timeBonus.total +
-    quizPoints.total;
+    quizPoints.total -
+    hintPenalties.total;
 
   return {
-    total: totalScore,
+    total: Math.max(0, totalScore), // S'assurer que le score ne soit jamais négatif
     breakdown: {
       enigmas: enigmaPoints,
       minigames: minigamePoints,
       trophies: trophyPoints,
       timeBonus: timeBonus,
       quiz: quizPoints,
+      hintPenalties: hintPenalties,
     },
   };
 };
@@ -281,20 +311,60 @@ export const calculateTotalScore = (player, minigameResults = [], quizScore = nu
 export const getScoreRank = (score) => {
   // Scores ajustés pour le nouveau système (4 énigmes × 200 = 800 points de base)
   if (score >= 4000)
-    return { name: "Légende Maritime", icon: "👑", color: "#FFD700", description: "Perfection absolue" };
+    return {
+      name: "Légende Maritime",
+      icon: "👑",
+      color: "#FFD700",
+      description: "Perfection absolue",
+    };
   if (score >= 3200)
-    return { name: "Amiral des Sept Mers", icon: "⚓", color: "#C0392B", description: "Excellence remarquable" };
+    return {
+      name: "Amiral des Sept Mers",
+      icon: "⚓",
+      color: "#C0392B",
+      description: "Excellence remarquable",
+    };
   if (score >= 2600)
-    return { name: "Capitaine Expérimenté", icon: "🧭", color: "#8E44AD", description: "Maîtrise confirmée" };
+    return {
+      name: "Capitaine Expérimenté",
+      icon: "🧭",
+      color: "#8E44AD",
+      description: "Maîtrise confirmée",
+    };
   if (score >= 2000)
-    return { name: "Navigateur Émérite", icon: "⛵", color: "#2980B9", description: "Très bon niveau" };
+    return {
+      name: "Navigateur Émérite",
+      icon: "⛵",
+      color: "#2980B9",
+      description: "Très bon niveau",
+    };
   if (score >= 1500)
-    return { name: "Marin Confirmé", icon: "🗺️", color: "#27AE60", description: "Bon navigateur" };
+    return {
+      name: "Marin Confirmé",
+      icon: "🗺️",
+      color: "#27AE60",
+      description: "Bon navigateur",
+    };
   if (score >= 1000)
-    return { name: "Explorateur", icon: "🌊", color: "#F39C12", description: "Début prometteur" };
+    return {
+      name: "Explorateur",
+      icon: "🌊",
+      color: "#F39C12",
+      description: "Début prometteur",
+    };
   if (score >= 500)
-    return { name: "Apprenti Marin", icon: "🐚", color: "#95A5A6", description: "Premiers pas" };
-  return { name: "Mousse", icon: "⚓", color: "#7F8C8D", description: "À l'abordage !" };
+    return {
+      name: "Apprenti Marin",
+      icon: "🐚",
+      color: "#95A5A6",
+      description: "Premiers pas",
+    };
+  return {
+    name: "Mousse",
+    icon: "⚓",
+    color: "#7F8C8D",
+    description: "À l'abordage !",
+  };
 };
 
 // Fonction pour formater l'affichage des points
@@ -308,6 +378,7 @@ export default {
   calculateTrophyPoints,
   calculateTimeBonus,
   calculateQuizPoints,
+  calculateHintPenalties,
   calculateTotalScore,
   getScoreRank,
   formatScore,

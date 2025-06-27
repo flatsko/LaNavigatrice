@@ -58,7 +58,7 @@ export const ACHIEVEMENTS = [
   {
     id: "completionist",
     title: "Maître Explorateur",
-    description: "Terminer toutes les destinations",
+    description: "Terminer toutes les destinations sans erreur",
     icon: "🏆",
     condition: (player) => {
       // Ce trophée ne devrait pas être accordé en cas d'échec global

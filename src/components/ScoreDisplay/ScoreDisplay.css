@@ -321,3 +321,31 @@
     font-size: 20px;
   }
 }
+
+/* Styles pour les pénalités */
+.penalty-category {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+  border-left: 4px solid #ff4757;
+}
+
+.penalty-category .category-header {
+  background: rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.penalty-points {
+  color: #ffebee !important;
+  font-weight: bold;
+}
+
+.penalty-category .category-icon {
+  filter: brightness(1.2);
+}
+
+.penalty-category .detail-item {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.penalty-category .detail-text {
+  color: #ffebee;
+}

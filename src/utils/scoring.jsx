@@ -7,7 +7,7 @@ export const GAME_RULES = {
   // TOTAL_ENIGMAS supprimé - sera calculé dynamiquement
 
   // === COHÉRENCE AVEC LE NOUVEAU SYSTÈME DE POINTS ===
-  BASE_SCORE_PER_ENIGMA: 200, // Aligné avec pointsSystem.js
+  BASE_SCORE_PER_ENIGMA: 150, // Aligné avec pointsSystem.js
   PERFECT_BONUS: 0, // Bonus pour résolution en 1 tentative
   TIME_TARGET_MINUTES: 40, // Temps cible aligné
 };
