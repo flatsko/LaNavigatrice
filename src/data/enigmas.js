@@ -122,9 +122,9 @@ export const ENIGMAS = [
     ],
     correctAnswer: "Chutes d'Iguazu",
     indice:
-      "Ces chutes spectaculaires se trouvent à la frontière entre l'Argentine et le Brésil, et leur nom signifie 'grandes eaux' en guarani.",
+      "Ces chutes spectaculaires se trouvent à la frontière entre l'Argentine et le Brésil, et leur nom signifie 'grandes eaux' en guarani. Pensez à l'eau en espagnol.",
     funFact:
-      "Les chutes d'Iguazu sont situées sur la frontière entre l'Argentine et le Brésil. Un moment incroyable passé là-bas. Leur nom provient du mot guarani 'Iguazú' qui signifie 'grandes eaux', pensez à l'eau en espagnol.",
+      "Les chutes d'Iguazu sont situées sur la frontière entre l'Argentine et le Brésil. Un moment incroyable passé là-bas. Leur nom provient du mot guarani 'Iguazú' qui signifie 'grandes eaux', ",
     hasPhoto: true,
     photoPrompt:
       "Prenez une photo aussi spectaculaire que les chutes, vous vous souvenez des cours d'acrogym ? ",

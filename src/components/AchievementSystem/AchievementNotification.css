@@ -36,34 +36,50 @@
 }
 
 /* Styles par rareté */
-.achievement-notification.notification-common {
-  border-color: #28a745;
-  background: linear-gradient(135deg, rgba(40, 167, 69, 0.1) 0%, rgba(255, 255, 255, 0.98) 100%);
+.achievement-notification.notification-mousse {
+  border-color: #95A5A6;
+  background: linear-gradient(135deg, rgba(149, 165, 166, 0.1) 0%, rgba(255, 255, 255, 0.98) 100%);
 }
 
-.achievement-notification.notification-rare {
-  border-color: #007bff;
-  background: linear-gradient(135deg, rgba(0, 123, 255, 0.1) 0%, rgba(255, 255, 255, 0.98) 100%);
+.achievement-notification.notification-matelot {
+  border-color: #3498DB;
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(255, 255, 255, 0.98) 100%);
 }
 
-.achievement-notification.notification-epic {
-  border-color: #6f42c1;
-  background: linear-gradient(135deg, rgba(111, 66, 193, 0.1) 0%, rgba(255, 255, 255, 0.98) 100%);
+.achievement-notification.notification-capitaine {
+  border-color: #9B59B6;
+  background: linear-gradient(135deg, rgba(155, 89, 182, 0.1) 0%, rgba(255, 255, 255, 0.98) 100%);
 }
 
-.achievement-notification.notification-legendary {
-  border-color: #ffc107;
-  background: linear-gradient(135deg, rgba(255, 193, 7, 0.2) 0%, rgba(255, 255, 255, 0.98) 100%);
-  box-shadow: 0 20px 40px rgba(255, 193, 7, 0.4), 0 8px 16px rgba(0, 0, 0, 0.1);
-  animation: legendaryGlow 2s ease-in-out infinite alternate;
+.achievement-notification.notification-amiral {
+  border-color: #E67E22;
+  background: linear-gradient(135deg, rgba(230, 126, 34, 0.2) 0%, rgba(255, 255, 255, 0.98) 100%);
+  box-shadow: 0 20px 40px rgba(230, 126, 34, 0.4), 0 8px 16px rgba(0, 0, 0, 0.1);
+  animation: amiralGlow 2s ease-in-out infinite alternate;
 }
 
-@keyframes legendaryGlow {
+.achievement-notification.notification-legende {
+  border-color: #FFD700;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 255, 255, 0.98) 100%);
+  box-shadow: 0 20px 40px rgba(255, 215, 0, 0.4), 0 8px 16px rgba(0, 0, 0, 0.1);
+  animation: legendeGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes amiralGlow {
   0% {
-    box-shadow: 0 20px 40px rgba(255, 193, 7, 0.4), 0 8px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 20px 40px rgba(230, 126, 34, 0.4), 0 8px 16px rgba(0, 0, 0, 0.1);
   }
   100% {
-    box-shadow: 0 25px 50px rgba(255, 193, 7, 0.6), 0 10px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 25px 50px rgba(230, 126, 34, 0.6), 0 10px 20px rgba(0, 0, 0, 0.15);
+  }
+}
+
+@keyframes legendeGlow {
+  0% {
+    box-shadow: 0 20px 40px rgba(255, 215, 0, 0.4), 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+  100% {
+    box-shadow: 0 25px 50px rgba(255, 215, 0, 0.6), 0 10px 20px rgba(0, 0, 0, 0.15);
   }
 }
 
@@ -176,24 +192,30 @@
   display: inline-block;
 }
 
-.notification-rarity.common {
-  background: #28a745;
+.notification-rarity.mousse {
+  background: #95A5A6;
   color: white;
 }
 
-.notification-rarity.rare {
-  background: #007bff;
+.notification-rarity.matelot {
+  background: #3498DB;
   color: white;
 }
 
-.notification-rarity.epic {
-  background: #6f42c1;
+.notification-rarity.capitaine {
+  background: #9B59B6;
   color: white;
 }
 
-.notification-rarity.legendary {
-  background: linear-gradient(135deg, #ffc107 0%, #ff8c00 100%);
-  color: #000;
+.notification-rarity.amiral {
+  background: linear-gradient(135deg, #E67E22 0%, #D35400 100%);
+  color: white;
+  animation: rarityGlow 2s ease-in-out infinite alternate;
+}
+
+.notification-rarity.legende {
+  background: linear-gradient(135deg, #FFD700 0%, #FF6B6B 100%);
+  color: white;
   animation: rarityGlow 2s ease-in-out infinite alternate;
 }
 

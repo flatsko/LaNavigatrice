@@ -6,35 +6,43 @@ const TestNotifications = () => {
 
   const testAchievements = [
     {
-      id: 'test_common',
-      title: 'Test Commun',
-      description: 'Ceci est un test de notification commune',
+      id: 'test_mousse',
+      title: 'Test Mousse',
+      description: 'Ceci est un test de notification mousse',
       icon: '🎯',
-      rarity: 'common',
+      rarity: 'mousse',
       first_discovery: true
     },
     {
-      id: 'test_rare',
-      title: 'Test Rare',
-      description: 'Ceci est un test de notification rare',
+      id: 'test_matelot',
+      title: 'Test Matelot',
+      description: 'Ceci est un test de notification matelot',
       icon: '💎',
-      rarity: 'rare',
+      rarity: 'matelot',
       first_discovery: true
     },
     {
-      id: 'test_epic',
-      title: 'Test Épique',
-      description: 'Ceci est un test de notification épique',
+      id: 'test_capitaine',
+      title: 'Test Capitaine',
+      description: 'Ceci est un test de notification capitaine',
       icon: '⚡',
-      rarity: 'epic',
+      rarity: 'capitaine',
       first_discovery: true
     },
     {
-      id: 'test_legendary',
-      title: 'Test Légendaire',
-      description: 'Ceci est un test de notification légendaire',
+      id: 'test_amiral',
+      title: 'Test Amiral',
+      description: 'Ceci est un test de notification amiral',
       icon: '👑',
-      rarity: 'legendary',
+      rarity: 'amiral',
+      first_discovery: true
+    },
+    {
+      id: 'test_legende',
+      title: 'Test Légende',
+      description: 'Ceci est un test de notification légendaire',
+      icon: '🌟',
+      rarity: 'legende',
       first_discovery: true
     }
   ];
@@ -84,10 +92,11 @@ const TestNotifications = () => {
               padding: '6px 12px',
               border: 'none',
               borderRadius: '4px',
-              background: achievement.rarity === 'common' ? '#28a745' :
-                         achievement.rarity === 'rare' ? '#007bff' :
-                         achievement.rarity === 'epic' ? '#6f42c1' : '#ffc107',
-              color: achievement.rarity === 'legendary' ? '#000' : '#fff',
+              background: achievement.rarity === 'mousse' ? '#95A5A6' :
+                   achievement.rarity === 'matelot' ? '#3498DB' :
+                   achievement.rarity === 'capitaine' ? '#9B59B6' :
+                   achievement.rarity === 'amiral' ? '#E67E22' : '#FFD700',
+        color: '#fff',
               cursor: 'pointer',
               fontSize: '12px',
               fontWeight: 'bold'

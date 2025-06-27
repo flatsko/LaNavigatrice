@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Correction Affichage Indices</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-case { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .result { margin: 10px 0; padding: 10px; background: #f0f0f0; border-radius: 3px; }
+        .error { background: #ffebee; border-left: 4px solid #f44336; }
+        .success { background: #e8f5e8; border-left: 4px solid #4caf50; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Test - Correction Affichage Indices</h1>
+    <p>Ce test vérifie que l'affichage du nombre d'indices correspond maintenant à la pénalité réelle.</p>
+    
+    <div id="results"></div>
+
+    <script>
+        // Simulation de la configuration des points
+        const POINTS_CONFIG = {
+            HINT_PENALTY: 30
+        };
+
+        // Fonction corrigée pour calculer les pénalités d'indices
+        function calculateHintPenalties(player) {
+            // Compter le nombre d'indices utilisés depuis l'objet hintsUsed
+            const hintsUsedCount = player?.hintsUsed ? Object.keys(player.hintsUsed).length : 0;
+            
+            // Utiliser la pénalité accumulée si elle existe, sinon calculer
+            const totalPenalty = player?.hintPenalties || (hintsUsedCount * POINTS_CONFIG.HINT_PENALTY);
+            
+            // Calculer le nombre d'indices basé sur la pénalité réelle pour l'affichage
+            const displayedHintsUsed = player?.hintPenalties ? Math.round(player.hintPenalties / POINTS_CONFIG.HINT_PENALTY) : hintsUsedCount;
+
+            return {
+                total: totalPenalty,
+                details: {
+                    hintsUsed: displayedHintsUsed,
+                    penaltyPerHint: POINTS_CONFIG.HINT_PENALTY,
+                    totalPenalty,
+                },
+            };
+        }
+
+        function runTest(testName, player, expectedHints, expectedPenalty) {
+            const result = calculateHintPenalties(player);
+            const isCorrect = result.details.hintsUsed === expectedHints && result.total === expectedPenalty;
+            
+            return {
+                testName,
+                player,
+                result,
+                expectedHints,
+                expectedPenalty,
+                isCorrect,
+                message: isCorrect ? '✅ Test réussi' : '❌ Test échoué'
+            };
+        }
+
+        function displayResult(test) {
+            const div = document.createElement('div');
+            div.className = `test-case ${test.isCorrect ? 'success' : 'error'}`;
+            div.innerHTML = `
+                <h3>${test.testName}</h3>
+                <p><strong>Joueur:</strong></p>
+                <pre>${JSON.stringify(test.player, null, 2)}</pre>
+                <p><strong>Résultat:</strong></p>
+                <ul>
+                    <li>Indices affichés: ${test.result.details.hintsUsed}</li>
+                    <li>Pénalité totale: ${test.result.total}</li>
+                    <li>Attendu: ${test.expectedHints} indices, ${test.expectedPenalty} points</li>
+                </ul>
+                <p><strong>Status:</strong> ${test.message}</p>
+                ${!test.isCorrect ? `<p><strong>Problème:</strong> L'affichage ne correspond pas aux attentes</p>` : ''}
+            `;
+            document.getElementById('results').appendChild(div);
+        }
+
+        // Tests
+        console.log('🧪 Début des tests de correction...');
+
+        // Test 1: Cas problématique original (5 indices dans hintsUsed mais -300 dans hintPenalties)
+        const test1 = runTest(
+            'Cas problématique: 5 indices utilisés mais -300 pénalité',
+            {
+                hintsUsed: {
+                    'enigma1': true,
+                    'enigma2': true,
+                    'enigma3': true,
+                    'enigma4': true,
+                    'enigma5': true
+                },
+                hintPenalties: 300
+            },
+            10, // Devrait afficher 10 indices (300/30)
+            300
+        );
+        displayResult(test1);
+
+        // Test 2: Cas normal (cohérence entre hintsUsed et hintPenalties)
+        const test2 = runTest(
+            'Cas normal: cohérence parfaite',
+            {
+                hintsUsed: {
+                    'enigma1': true,
+                    'enigma2': true,
+                    'enigma3': true
+                },
+                hintPenalties: 90
+            },
+            3, // Devrait afficher 3 indices (90/30)
+            90
+        );
+        displayResult(test2);
+
+        // Test 3: Pas de hintPenalties, utilise hintsUsed
+        const test3 = runTest(
+            'Cas sans hintPenalties: utilise hintsUsed',
+            {
+                hintsUsed: {
+                    'enigma1': true,
+                    'enigma2': true
+                }
+                // pas de hintPenalties
+            },
+            2, // Devrait afficher 2 indices
+            60 // 2 * 30
+        );
+        displayResult(test3);
+
+        // Test 4: Aucun indice utilisé
+        const test4 = runTest(
+            'Cas sans indices',
+            {
+                hintsUsed: {},
+                hintPenalties: 0
+            },
+            0,
+            0
+        );
+        displayResult(test4);
+
+        console.log('✅ Tests terminés');
+    </script>
+</body>
+</html>

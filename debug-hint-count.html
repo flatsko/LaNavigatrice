@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Comptage Indices</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .result {
+            background: #e8f5e8;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .error {
+            background: #ffe8e8;
+            color: #d00;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Debug Comptage Indices</h1>
+    
+    <div class="test-section">
+        <h2>Test du problème : 10 indices pour 7 énigmes</h2>
+        <p>Simulons différents scénarios pour comprendre le problème.</p>
+        
+        <button onclick="testScenario1()">Scénario 1: 1 indice par énigme (7 total)</button>
+        <button onclick="testScenario2()">Scénario 2: Indices multiples sur même énigme</button>
+        <button onclick="testScenario3()">Scénario 3: Données corrompues</button>
+        <button onclick="testCurrentPlayer()">Test joueur actuel</button>
+        
+        <div id="results"></div>
+    </div>
+
+    <script>
+        // Simulation de la fonction calculateHintPenalties
+        const POINTS_CONFIG = {
+            HINT_PENALTY: 30
+        };
+
+        function calculateHintPenalties(player) {
+            const hintsUsedCount = player?.hintsUsed ? Object.keys(player.hintsUsed).length : 0;
+            const totalPenalty = player?.hintPenalties || (hintsUsedCount * POINTS_CONFIG.HINT_PENALTY);
+
+            return {
+                total: totalPenalty,
+                details: {
+                    hintsUsed: hintsUsedCount,
+                    penaltyPerHint: POINTS_CONFIG.HINT_PENALTY,
+                    totalPenalty,
+                },
+            };
+        }
+
+        function displayResult(title, player, result) {
+            const resultsDiv = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = 'result';
+            
+            div.innerHTML = `
+                <h3>${title}</h3>
+                <p><strong>Données joueur:</strong></p>
+                <pre>${JSON.stringify(player, null, 2)}</pre>
+                <p><strong>Résultat calcul:</strong></p>
+                <pre>${JSON.stringify(result, null, 2)}</pre>
+                <p><strong>Problème détecté:</strong> ${result.details.hintsUsed !== Math.round(result.total / 30) ? 'OUI - Incohérence!' : 'Non'}</p>
+            `;
+            
+            if (result.details.hintsUsed !== Math.round(result.total / 30)) {
+                div.className += ' error';
+            }
+            
+            resultsDiv.appendChild(div);
+        }
+
+        function testScenario1() {
+            const player = {
+                hintsUsed: {
+                    'perou': true,
+                    'argentine': true,
+                    'fidji': true,
+                    'vanuatu': true,
+                    'tahiti': true,
+                    'brazil': true,
+                    'tanzania': true
+                },
+                hintPenalties: 210 // 7 * 30
+            };
+            
+            const result = calculateHintPenalties(player);
+            displayResult('Scénario 1: 1 indice par énigme', player, result);
+        }
+
+        function testScenario2() {
+            const player = {
+                hintsUsed: {
+                    'perou': true,
+                    'argentine': true,
+                    'fidji': true,
+                    'vanuatu': true,
+                    'tahiti': true,
+                    'brazil': true,
+                    'tanzania': true
+                },
+                hintPenalties: 300 // 10 * 30 - comme si 10 indices avaient été utilisés
+            };
+            
+            const result = calculateHintPenalties(player);
+            displayResult('Scénario 2: hintPenalties incohérent avec hintsUsed', player, result);
+        }
+
+        function testScenario3() {
+            const player = {
+                hintsUsed: {
+                    'perou': true,
+                    'perou_duplicate': true, // Duplication possible ?
+                    'argentine': true,
+                    'fidji': true,
+                    'vanuatu': true,
+                    'tahiti': true,
+                    'brazil': true,
+                    'tanzania': true,
+                    'unknown1': true,
+                    'unknown2': true
+                },
+                hintPenalties: 300
+            };
+            
+            const result = calculateHintPenalties(player);
+            displayResult('Scénario 3: Données corrompues avec clés supplémentaires', player, result);
+        }
+
+        function testCurrentPlayer() {
+            // Récupérer les données du joueur actuel depuis localStorage
+            try {
+                const currentPlayer = JSON.parse(localStorage.getItem('currentPlayer') || '{}');
+                const result = calculateHintPenalties(currentPlayer);
+                displayResult('Joueur actuel (localStorage)', currentPlayer, result);
+            } catch (error) {
+                const div = document.createElement('div');
+                div.className = 'result error';
+                div.innerHTML = `<h3>Erreur</h3><p>Impossible de lire les données du joueur: ${error.message}</p>`;
+                document.getElementById('results').appendChild(div);
+            }
+        }
+
+        // Nettoyer les résultats
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+
+        // Ajouter un bouton pour nettoyer
+        document.addEventListener('DOMContentLoaded', function() {
+            const button = document.createElement('button');
+            button.textContent = 'Nettoyer les résultats';
+            button.onclick = clearResults;
+            button.style.background = '#6c757d';
+            document.querySelector('.test-section').appendChild(button);
+        });
+    </script>
+</body>
+</html>

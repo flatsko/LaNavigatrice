@@ -179,7 +179,7 @@ const MorseGameCard = ({ onComplete, onClose }) => {
               <h2>📡 Mini-Jeu : Décodage Morse</h2>
               <p className="enigma-subtitle">
                 🎯 <strong>Défi spécial :</strong> Décodez le message morse et
-                gagnez jusqu'à <strong>2000+ points bonus</strong> ! 💰
+                gagnez jusqu'à <strong>500)+ points bonus</strong> ! 💰
               </p>
             </div>
             <button className="close-btn" onClick={handleClose}>
@@ -297,7 +297,7 @@ const MorseGameCard = ({ onComplete, onClose }) => {
                 </button>
                 <p className="skip-warning">
                   ⚠️ Attention : Passer ce mini-jeu vous fera perdre jusqu'à{" "}
-                  <strong>2000+ points bonus</strong> !
+                  <strong>500+ points bonus</strong> !
                 </p>
               </div>
             </div>

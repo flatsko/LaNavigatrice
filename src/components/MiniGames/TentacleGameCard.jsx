@@ -133,7 +133,7 @@ const TentacleGameCard = ({ onComplete, onClose }) => {
             <h2>🐙 Mini-Jeu </h2>
             <p className="enigma-subtitle">
               <strong>Défi :</strong> gagnez jusqu'à{" "}
-              <strong>800+ points bonus</strong> ! 🏆
+              <strong>320+ points bonus</strong> ! 🏆
             </p>
           </div>
         </div>
@@ -236,7 +236,7 @@ const TentacleGameCard = ({ onComplete, onClose }) => {
               </button>
               <p className="skip-warning">
                 ⚠️ Attention : Passer ce mini-jeu vous fera perdre jusqu'à{" "}
-                <strong>2000+ points bonus</strong> !
+                <strong>320+ points bonus</strong> !
               </p>
             </div>
           </div>

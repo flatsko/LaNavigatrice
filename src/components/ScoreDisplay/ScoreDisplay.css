@@ -208,33 +208,33 @@
   text-transform: uppercase;
 }
 
-.rarity-common {
+.rarity-mousse {
   background: #95A5A6;
   color: white;
 }
 
-.rarity-rare {
+.rarity-matelot {
   background: #3498DB;
   color: white;
 }
 
-.rarity-epic {
+.rarity-capitaine {
   background: #9B59B6;
   color: white;
 }
 
-.rarity-legendary {
+.rarity-amiral {
   background: #E67E22;
   color: white;
 }
 
-.rarity-mythic {
+.rarity-legende {
   background: linear-gradient(45deg, #FFD700, #FF6B6B);
   color: white;
-  animation: mythicGlow 2s ease-in-out infinite;
+  animation: legendeGlow 2s ease-in-out infinite;
 }
 
-@keyframes mythicGlow {
+@keyframes legendeGlow {
   0%, 100% {
     box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
   }

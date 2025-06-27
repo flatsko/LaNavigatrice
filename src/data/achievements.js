@@ -7,7 +7,7 @@ export const ACHIEVEMENTS = [
     condition: (player) => {
       return player?.completed?.length >= 1;
     },
-    rarity: "common",
+    rarity: "mousse",
   },
   {
     id: "photo_enthusiast",
@@ -21,7 +21,7 @@ export const ACHIEVEMENTS = [
       );
       return photos.length >= 3;
     },
-    rarity: "rare",
+    rarity: "matelot",
   },
   {
     id: "perfect_navigator",
@@ -39,7 +39,7 @@ export const ACHIEVEMENTS = [
       // Doit avoir au moins 5 énigmes réussies du premier coup
       return perfectSolves?.length >= 5;
     },
-    rarity: "epic",
+    rarity: "capitaine",
   },
   {
     id: "speed_demon",
@@ -53,7 +53,7 @@ export const ACHIEVEMENTS = [
       );
       return Object.values(solveTimes).some((time) => time < 15);
     },
-    rarity: "legendary",
+    rarity: "amiral",
   },
   {
     id: "completionist",
@@ -65,7 +65,7 @@ export const ACHIEVEMENTS = [
       if (!player || (player.completed?.length || 0) < 7) return false;
       return player.completed?.length >= 7;
     },
-    rarity: "legendary",
+    rarity: "legende",
   },
   {
     id: "flawless_captain",
@@ -83,7 +83,7 @@ export const ACHIEVEMENTS = [
       // Toutes les énigmes terminées doivent avoir été réussies du premier coup
       return perfectSolves?.length === 7;
     },
-    rarity: "mythic",
+    rarity: "legende",
   },
   {
     id: "minigame_player",
@@ -95,7 +95,7 @@ export const ACHIEVEMENTS = [
         (result) => result.success && !result.skipped
       );
     },
-    rarity: "common",
+    rarity: "mousse",
   },
   {
     id: "minigame_master",
@@ -111,6 +111,6 @@ export const ACHIEVEMENTS = [
         )
       );
     },
-    rarity: "epic",
+    rarity: "capitaine",
   },
 ];

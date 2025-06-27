@@ -20,11 +20,11 @@ const POINTS_CONFIG = {
   MINIGAME_TIME_MULTIPLIER: 2, // Multiplicateur pour bonus temps
 
   // === TROPHÉES/ACHIEVEMENTS === (Objectifs à long terme)
-  TROPHY_COMMON: 75, // Trophées faciles
-  TROPHY_RARE: 150, // Trophées moyens
-  TROPHY_EPIC: 300, // Trophées difficiles
-  TROPHY_LEGENDARY: 500, // Trophées très difficiles
-  TROPHY_MYTHIC: 750, // Trophées exceptionnels
+  TROPHY_MOUSSE: 75,         // Trophées faciles (ex-common)
+  TROPHY_MATELOT: 150,       // Trophées moyens (ex-rare)
+  TROPHY_CAPITAINE: 300,     // Trophées difficiles (ex-epic)
+  TROPHY_AMIRAL: 500,        // Trophées très difficiles (ex-legendary)
+  TROPHY_LEGENDE: 750,       // Trophées exceptionnels (ex-mythic)
 
   // === BONUS TEMPS === (Récompense la rapidité)
   TIME_BONUS_PER_MINUTE: 15, // Points par minute économisée
@@ -212,24 +212,19 @@ export const calculateTimeBonus = (player) => {
 
 // Fonction pour calculer les pénalités d'indices
 export const calculateHintPenalties = (player) => {
-  if (!player?.hintPenalties) {
-    return {
-      total: 0,
-      details: {
-        hintsUsed: 0,
-        penaltyPerHint: POINTS_CONFIG.HINT_PENALTY,
-        totalPenalty: 0,
-      },
-    };
-  }
-
-  const totalPenalty = player.hintPenalties;
-  const hintsUsed = Math.round(totalPenalty / POINTS_CONFIG.HINT_PENALTY);
+  // Compter le nombre d'indices utilisés depuis l'objet hintsUsed
+  const hintsUsedCount = player?.hintsUsed ? Object.keys(player.hintsUsed).length : 0;
+  
+  // Utiliser la pénalité accumulée si elle existe, sinon calculer
+  const totalPenalty = player?.hintPenalties || (hintsUsedCount * POINTS_CONFIG.HINT_PENALTY);
+  
+  // Calculer le nombre d'indices basé sur la pénalité réelle pour l'affichage
+  const displayedHintsUsed = player?.hintPenalties ? Math.round(player.hintPenalties / POINTS_CONFIG.HINT_PENALTY) : hintsUsedCount;
 
   return {
     total: totalPenalty,
     details: {
-      hintsUsed,
+      hintsUsed: displayedHintsUsed,
       penaltyPerHint: POINTS_CONFIG.HINT_PENALTY,
       totalPenalty,
     },

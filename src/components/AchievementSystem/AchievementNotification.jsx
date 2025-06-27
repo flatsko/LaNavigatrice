@@ -48,7 +48,7 @@ const AchievementNotification = ({ achievement, onClose }) => {
     return null;
   }
 
-  const rarityClass = `notification-${achievement.rarity || 'common'}`;
+  const rarityClass = `notification-${achievement.rarity || 'mousse'}`;
   const visibilityClass = isVisible ? 'visible' : 'hidden';
   const leavingClass = isLeaving ? 'leaving' : '';
 
@@ -88,14 +88,14 @@ const AchievementNotification = ({ achievement, onClose }) => {
             <p className="notification-description">
               {achievement.description}
             </p>
-            <span className={`notification-rarity ${achievement.rarity || 'common'}`}>
-              {achievement.rarity || 'Common'}
+            <span className={`notification-rarity ${achievement.rarity || 'mousse'}`}>
+          {achievement.rarity || 'Mousse'}
             </span>
           </div>
         </div>
 
         {/* Effets visuels pour les achievements légendaires */}
-        {achievement.rarity === 'legendary' && (
+        {(achievement.rarity === 'amiral' || achievement.rarity === 'legende') && (
           <div className="notification-effects">
             <span className="sparkle sparkle-1">✨</span>
             <span className="sparkle sparkle-2">⭐</span>

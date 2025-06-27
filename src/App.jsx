@@ -716,14 +716,7 @@ function App() {
         [enigmaId]: newAttemptCount,
       },
       attemptHistory: [...(currentPlayer?.attemptHistory || []), attemptEntry],
-      // Ajouter les informations sur les indices si utilisés
-      ...(hintUsed && {
-        hintPenalties: (currentPlayer?.hintPenalties || 0) + GAME_RULES.PENALTY_PER_HINT,
-        hintsUsed: {
-          ...(currentPlayer?.hintsUsed || {}),
-          [enigmaId]: true,
-        },
-      }),
+      // Les informations sur les indices sont déjà mises à jour plus haut si hintUsed est true
       lastUpdate: new Date().toISOString(),
     };
 
