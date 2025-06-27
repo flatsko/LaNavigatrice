@@ -673,11 +673,11 @@ function App() {
     // Gérer l'utilisation d'indices
     const { hintUsed = false } = options;
     let hintPenalty = 0;
-    
+
     // Si c'est juste pour appliquer la pénalité d'indice (pas de réponse)
     if (playerAnswer === null && hintUsed) {
       hintPenalty = GAME_RULES.PENALTY_PER_HINT;
-      
+
       // Mettre à jour le joueur avec la pénalité d'indice
       const updatedPlayer = {
         ...currentPlayer,
@@ -688,10 +688,12 @@ function App() {
         },
         lastUpdate: new Date().toISOString(),
       };
-      
+
       setCurrentPlayer(updatedPlayer);
-      localStorage.setItem('currentPlayer', JSON.stringify(updatedPlayer));
-      console.log(`💡 Indice utilisé pour ${enigmaId}, pénalité: ${hintPenalty} points`);
+      localStorage.setItem("currentPlayer", JSON.stringify(updatedPlayer));
+      console.log(
+        `💡 Indice utilisé pour ${enigmaId}, pénalité: ${hintPenalty} points`
+      );
       return false; // Pas de résolution, juste pénalité
     }
 
@@ -976,7 +978,7 @@ function App() {
       <div className="app">
         <VictoryPage
           player={currentPlayer}
-          onRestart={clearAllData}
+          onRestart={resetStorage}
           onViewLeaderboard={() => setShowLeaderboard(true)}
           quizScore={quizScore}
           quizCompleted={quizCompleted}

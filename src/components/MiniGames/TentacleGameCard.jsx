@@ -13,7 +13,8 @@ const TentacleGameCard = ({ onComplete, onClose }) => {
   const [feedback, setFeedback] = useState(null);
 
   const challenge = {
-    question: "Combien de tentacules au total ?",
+    question:
+      "Alison a trouvé lors d'une de ses éxpédition le coffre légendaire du Capitaine Kraken, mais il est protégé par une serrure à code. Sur le couvercle, une inscription mystérieuse..",
     visual:
       "🐙 + 🐙 + 🦑 = 26\n 🐙 + 🦑 + 🦑 = 28\n 🐠 + 🐠 + 🐠 = 18\n 🦑 + 🐙 + 🐠 = ?  ",
     math: "",
