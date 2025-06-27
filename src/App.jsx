@@ -16,7 +16,10 @@ import VictoryPage from "./components/VictoryPage/VictoryPage";
 import FailurePage from "./components/FailurePage/FailurePage"; // CORRECTION: Ajouter FailurePage
 
 import AchievementSystem from "./components/AchievementSystem/AchievementSystem";
-import { AchievementNotificationProvider, useAchievementNotifications } from "./components/AchievementSystem";
+import {
+  AchievementNotificationProvider,
+  useAchievementNotifications,
+} from "./components/AchievementSystem";
 import TestNotifications from "./components/AchievementSystem/TestNotifications";
 import ParticleEffect from "./components/ParticleEffect/ParticleEffect";
 import TipsSystem from "./components/TipsSystem/TipsSystem";
@@ -306,7 +309,7 @@ function App() {
     if (currentPlayer?.name) {
       localStorage.removeItem(`quiz_${currentPlayer.name}`);
     }
-    
+
     setCurrentPlayer(null);
     setCurrentEnigma(null);
     setShowEnigma(false);
@@ -753,7 +756,10 @@ function App() {
     const lastEnigmaHasPhoto = enigma.hasPhoto;
 
     if (isLastEnigma) {
-      console.log("🏁 Dernière énigme traitée !", isCorrect ? "✅ Réussie" : "❌ Échouée");
+      console.log(
+        "🏁 Dernière énigme traitée !",
+        isCorrect ? "✅ Réussie" : "❌ Échouée"
+      );
 
       if (lastEnigmaHasPhoto) {
         console.log(
@@ -1021,6 +1027,7 @@ function App() {
           completedEnigmas={currentPlayer?.completed || []}
           failedEnigmas={currentPlayer?.failed || []}
           enigmas={currentEnigmas}
+          onResetStorage={resetStorage}
           onLocationClick={(enigmaId) => {
             const enigma = currentEnigmas.find((e) => e.id === enigmaId);
             const completed = currentPlayer?.completed || [];
@@ -1164,7 +1171,9 @@ function App() {
           onError={showParticles && particleType === "error"}
           onScan={showQRScanner}
         />
-
+        <button className="reset-btn" onClick={resetStorage}>
+          🗑️ Supprimer la partie
+        </button>
         {/* Indicateur de connexion (optionnel) */}
         <NetworkStatus />
 

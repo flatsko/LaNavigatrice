@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from "react";
 import "../../styles/worldmap.css";
 
 const WorldMap = ({
@@ -6,6 +6,7 @@ const WorldMap = ({
   failedEnigmas = [],
   enigmas = [],
   onLocationClick,
+  onResetStorage,
   player = null,
 }) => {
   const mapContainerRef = useRef(null);
@@ -122,15 +123,15 @@ const WorldMap = ({
         const touch = event.touches[0] || event.changedTouches[0];
         const relativeX = touch.clientX - rect.left;
         const relativeY = touch.clientY - rect.top;
-        
+
         // Ajuster la position pour éviter que le tooltip sorte du cadre
         const tooltipWidth = 200;
         const tooltipHeight = 80;
         const padding = 10;
-        
+
         let x = relativeX + padding;
         let y = relativeY - tooltipHeight - padding;
-        
+
         // Vérifier les limites horizontales
         if (x + tooltipWidth > rect.width) {
           x = relativeX - tooltipWidth - padding;
@@ -138,7 +139,7 @@ const WorldMap = ({
         if (x < 0) {
           x = padding;
         }
-        
+
         // Vérifier les limites verticales
         if (y < 0) {
           y = relativeY + padding;
@@ -146,7 +147,7 @@ const WorldMap = ({
         if (y + tooltipHeight > rect.height) {
           y = rect.height - tooltipHeight - padding;
         }
-        
+
         setTooltipPosition({ x, y });
       }
     }
@@ -187,7 +188,11 @@ const WorldMap = ({
       </div>
 
       {/* Carte du monde */}
-      <div className="world-map" ref={mapContainerRef} onTouchStart={handleMapTouch}>
+      <div
+        className="world-map"
+        ref={mapContainerRef}
+        onTouchStart={handleMapTouch}
+      >
         <div
           className="map-container"
           onWheel={handleWheel}
@@ -260,7 +265,7 @@ const WorldMap = ({
             style={{
               left: tooltipPosition.x,
               top: tooltipPosition.y,
-              position: 'absolute',
+              position: "absolute",
               zIndex: 1000,
             }}
           >
@@ -287,28 +292,32 @@ const WorldMap = ({
             <span className="card-number">{completedEnigmas.length}</span>
             <span className="card-label">Destinations Explorées</span>
             <div className="card-progress">
-              <div 
-                className="progress-bar-fill completed" 
-                style={{ width: `${(completedEnigmas.length / enigmas.length) * 100}%` }}
+              <div
+                className="progress-bar-fill completed"
+                style={{
+                  width: `${(completedEnigmas.length / enigmas.length) * 100}%`,
+                }}
               ></div>
             </div>
           </div>
         </div>
-        
+
         <div className="summary-card failed">
           <div className="card-icon">💔</div>
           <div className="card-content">
             <span className="card-number">{failedEnigmas.length}</span>
             <span className="card-label">Tentatives Échouées</span>
             <div className="card-progress">
-              <div 
-                className="progress-bar-fill failed" 
-                style={{ width: `${(failedEnigmas.length / enigmas.length) * 100}%` }}
+              <div
+                className="progress-bar-fill failed"
+                style={{
+                  width: `${(failedEnigmas.length / enigmas.length) * 100}%`,
+                }}
               ></div>
             </div>
           </div>
         </div>
-        
+
         <div className="summary-card remaining">
           <div className="card-icon">🗺️</div>
           <div className="card-content">
@@ -317,17 +326,25 @@ const WorldMap = ({
             </span>
             <span className="card-label">À Découvrir</span>
             <div className="card-progress">
-              <div 
-                className="progress-bar-fill remaining" 
-                style={{ width: `${((enigmas.length - completedEnigmas.length - failedEnigmas.length) / enigmas.length) * 100}%` }}
+              <div
+                className="progress-bar-fill remaining"
+                style={{
+                  width: `${
+                    ((enigmas.length -
+                      completedEnigmas.length -
+                      failedEnigmas.length) /
+                      enigmas.length) *
+                    100
+                  }%`,
+                }}
               ></div>
             </div>
           </div>
         </div>
       </div>
-      
+
       {/* Statistiques globales */}
-      <div className="global-stats">
+      {/* <div className="global-stats">
         <div className="stat-item">
           <span className="stat-label">Taux de réussite</span>
           <span className="stat-value">
@@ -340,7 +357,7 @@ const WorldMap = ({
             {enigmas.length > 0 ? Math.round(((completedEnigmas.length + failedEnigmas.length) / enigmas.length) * 100) : 0}%
           </span>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
